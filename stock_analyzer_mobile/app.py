@@ -128,17 +128,6 @@ if "init_defaults" not in st.session_state:
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 主力", "🔔 監控"])
 
-# ─── Load data ───
-with st.spinner("載入資料中..."):
-    df = get_stock_data(symbol, period)
-    info = get_stock_info(symbol)
-
-if df.empty:
-    st.error("無法取得股票資料，請確認代碼是否正確")
-    st.stop()
-
-df = calc_all_indicators(df, rsi_period=rsi_period, bb_period=bb_period, bb_std=bb_std, kd_period=kd_period)
-
 # ─── 讀取 session_state 中的選擇值 ───
 input_mode = st.session_state.get("input_mode", "下拉選擇")
 color_theme = st.session_state.get("color_theme", "紅漲綠跌")
