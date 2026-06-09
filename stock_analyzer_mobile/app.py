@@ -50,8 +50,6 @@ st.markdown("""
     .element-container { margin-bottom: 0.5rem; }
     div.stMarkdown p { line-height: 1.6; }
     .card { background: #1a1a2e; border-radius: 16px; padding: 16px 20px; margin: 12px 0; }
-    section[data-testid="stSidebar"] { position: fixed !important; z-index: 100 !important; height: 100vh !important; transition: width 0.3s ease !important; top: 0 !important;}
-    button[data-testid="collapsedControl"] { display: none !important; }
     .main .block-container { max-width: 100% !important; padding-left: 0 !important; }
 </style>
 """, unsafe_allow_html=True)
@@ -101,49 +99,9 @@ if not st.session_state["logged_in"]:
 
     st.stop()
 
-# ─── 已登入 ───
-c1, c2, c3 = st.columns([5, 1, 1])
-with c1:
-    st.title("📈 股票分析")
-with c2:
-    if st.button("☰", key="btn_hamburger"):
-        st.session_state.show_settings = not st.session_state.show_settings
-with c3:
-    if st.button("👤", key="btn_user"):
-        st.session_state.show_user = not st.session_state.show_user
-
-if st.session_state.get("show_user"):
-    st.markdown(f"<div style='text-align:right;margin-bottom:8px;'>👤 {st.session_state['username']} &nbsp;", unsafe_allow_html=True)
-    if st.button("🚪 登出", key="btn_logout", use_container_width=True):
-        st.session_state["logged_in"] = False
-        st.session_state["username"] = ""
-        st.rerun()
-
-# ─── 初始化預設值 (先於 sidebar) ───
-if "init_defaults" not in st.session_state:
-    st.session_state.init_defaults = True
-    st.session_state.input_mode = "下拉選擇"
-    st.session_state.color_theme = "紅漲綠跌"
-    st.session_state.cat = "台股"
-    st.session_state.stock_select = "2330"
-    st.session_state.manual_symbol = "2330"
-    st.session_state.period = "1 年"
-    st.session_state.ma5 = True
-    st.session_state.ma10 = True
-    st.session_state.ma20 = True
-    st.session_state.bb = True
-    st.session_state.kd = True
-    st.session_state.rsi_period = 14
-    st.session_state.bb_period = 20
-    st.session_state.bb_std = 2.0
-    st.session_state.kd_period = 14
-    st.session_state.strategy = "均線黃金交叉"
-    st.session_state.show_settings = False
-    st.session_state.show_user = False
-
-# ─── Sidebar 由左滑入選單 (widget 永遠存在) ───
-with st.sidebar:
-    st.markdown("## ⚙️ 設定")
+# ─── Dialog: 設定選單 ───
+@st.dialog("⚙️ 設定")
+def settings_dialog():
     st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
     st.radio("漲跌配色", ["紅漲綠跌", "綠漲紅跌"], horizontal=True, key="color_theme")
 
@@ -186,19 +144,86 @@ with st.sidebar:
     for p in strategy_info_ui["params"]:
         st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
     st.info("💡 設定完成後，切換到其他 Tab 查看分析")
+    if st.button("關閉", use_container_width=True):
+        st.rerun()
 
-# ─── CSS 控制 Sidebar 顯示/隱藏 ───
-if st.session_state.get("show_settings"):
-    st.markdown("""<style>
-    section[data-testid="stSidebar"] { width: 21rem !important; min-width: 21rem !important; overflow: visible !important; }
-    section[data-testid="stSidebar"] > div:first-child { width: 21rem !important; overflow-y: auto !important; }
-    </style>""", unsafe_allow_html=True)
-else:
-    st.markdown("""<style>
-    section[data-testid="stSidebar"] { width: 0 !important; min-width: 0 !important; overflow: hidden !important; }
-    section[data-testid="stSidebar"] > div:first-child { width: 0 !important; min-width: 0 !important; }
-    button[data-testid="collapsedControl"] { display: none !important; }
-    </style>""", unsafe_allow_html=True)
+# ─── 已登入 ───
+c1, c2, c3 = st.columns([5, 1, 1])
+with c1:
+    st.title("📈 股票分析")
+with c2:
+    if st.button("☰", key="btn_hamburger"):
+        settings_dialog()
+with c3:
+    if st.button("👤", key="btn_user"):
+        st.session_state.show_user = not st.session_state.show_user
+
+if st.session_state.get("show_user"):
+    st.markdown(f"<div style='text-align:right;margin-bottom:8px;'>👤 {st.session_state['username']} &nbsp;", unsafe_allow_html=True)
+    if st.button("🚪 登出", key="btn_logout", use_container_width=True):
+        st.session_state["logged_in"] = False
+        st.session_state["username"] = ""
+        st.rerun()
+
+# ─── 初始化預設值 ───
+if "init_defaults" not in st.session_state:
+    st.session_state.init_defaults = True
+    st.session_state.input_mode = "下拉選擇"
+    st.session_state.color_theme = "紅漲綠跌"
+    st.session_state.cat = "台股"
+    st.session_state.stock_select = "2330"
+    st.session_state.manual_symbol = "2330"
+    st.session_state.period = "1 年"
+    st.session_state.ma5 = True
+    st.session_state.ma10 = True
+    st.session_state.ma20 = True
+    st.session_state.bb = True
+    st.session_state.kd = True
+    st.session_state.rsi_period = 14
+    st.session_state.bb_period = 20
+    st.session_state.bb_std = 2.0
+    st.session_state.kd_period = 14
+    st.session_state.strategy = "均線黃金交叉"
+    st.session_state.show_user = False
+
+# ─── 已登入 ───
+c1, c2, c3 = st.columns([5, 1, 1])
+with c1:
+    st.title("📈 股票分析")
+with c2:
+    if st.button("☰", key="btn_hamburger"):
+        settings_dialog()
+with c3:
+    if st.button("👤", key="btn_user"):
+        st.session_state.show_user = not st.session_state.show_user
+
+if st.session_state.get("show_user"):
+    st.markdown(f"<div style='text-align:right;margin-bottom:8px;'>👤 {st.session_state['username']} &nbsp;", unsafe_allow_html=True)
+    if st.button("🚪 登出", key="btn_logout", use_container_width=True):
+        st.session_state["logged_in"] = False
+        st.session_state["username"] = ""
+        st.rerun()
+
+# ─── 初始化預設值 ───
+if "init_defaults" not in st.session_state:
+    st.session_state.init_defaults = True
+    st.session_state.input_mode = "下拉選擇"
+    st.session_state.color_theme = "紅漲綠跌"
+    st.session_state.cat = "台股"
+    st.session_state.stock_select = "2330"
+    st.session_state.manual_symbol = "2330"
+    st.session_state.period = "1 年"
+    st.session_state.ma5 = True
+    st.session_state.ma10 = True
+    st.session_state.ma20 = True
+    st.session_state.bb = True
+    st.session_state.kd = True
+    st.session_state.rsi_period = 14
+    st.session_state.bb_period = 20
+    st.session_state.bb_std = 2.0
+    st.session_state.kd_period = 14
+    st.session_state.strategy = "均線黃金交叉"
+    st.session_state.show_user = False
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 主力", "🔔 監控"])
 
