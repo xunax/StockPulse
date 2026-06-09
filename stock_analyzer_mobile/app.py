@@ -50,8 +50,8 @@ st.markdown("""
     .element-container { margin-bottom: 0.5rem; }
     div.stMarkdown p { line-height: 1.6; }
     .card { background: #1a1a2e; border-radius: 16px; padding: 16px 20px; margin: 12px 0; }
-    button[key="btn_hamburger"] { background: transparent !important; border: none !important; font-size: 1.5rem !important; min-height: 40px !important; padding: 0 !important; }
-    button[key="btn_hamburger"]:hover { background: rgba(255,255,255,0.1) !important; }
+    .st-emotion-cache-19rxjzo { display: inline-flex; }
+    button[data-testid="baseButton-tertiary"] { font-size: 1.5rem !important; padding: 0 4px !important; min-height: 0 !important; border: none !important; background: transparent !important; }
     .settings-panel { background: #16213e; border-radius: 16px; padding: 16px 20px; margin: 8px 0 16px 0; }
 </style>
 """, unsafe_allow_html=True)
@@ -102,15 +102,12 @@ if not st.session_state["logged_in"]:
     st.stop()
 
 # ─── 已登入 ───
-col_logo, col_h, col_u = st.columns([3, 0.4, 1.2])
+col_logo, col_h, col_u = st.columns([3, 0.3, 1.2])
 with col_logo:
     st.title("📈 股票分析")
 with col_h:
-    st.markdown("<div style='padding-top:1.2rem;text-align:center;'>", unsafe_allow_html=True)
-    if st.button("☰", key="btn_hamburger", use_container_width=True):
+    if st.button("☰", key="btn_hamburger", type="tertiary"):
         st.session_state.show_settings = not st.session_state.show_settings
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
 with col_u:
     st.markdown(f"<div style='text-align:right;padding-top:0.5rem;'><small>👤 {st.session_state['username']}</small></div>", unsafe_allow_html=True)
     if st.button("🚪", key="btn_logout", use_container_width=True):
