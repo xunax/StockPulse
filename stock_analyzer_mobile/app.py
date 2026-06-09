@@ -51,7 +51,7 @@ st.markdown("""
     div.stMarkdown p { line-height: 1.6; }
     .card { background: #1a1a2e; border-radius: 16px; padding: 16px 20px; margin: 12px 0; }
     .st-emotion-cache-19rxjzo { display: inline-flex; }
-    button[data-testid="baseButton-tertiary"] { font-size: 1.5rem !important; padding: 0 4px !important; min-height: 0 !important; border: none !important; background: transparent !important; }
+    button[data-testid="baseButton-tertiary"] { font-size: 1.8rem !important; padding: 0 4px !important; min-height: 0 !important; border: none !important; background: transparent !important; line-height: 1 !important; }
     .settings-panel { background: #16213e; border-radius: 16px; padding: 16px 20px; margin: 8px 0 16px 0; }
 </style>
 """, unsafe_allow_html=True)
