@@ -538,29 +538,10 @@ with tab1:
             for r in l_reasons:
                 st.markdown(f"- {r}")
 
-    st.markdown("### 📋 近期股價走勢")
-    recent_days = min(30, len(df))
-    df_recent = df.iloc[-recent_days:].copy()
-    price_rows = []
-    for i in range(len(df_recent)):
-        r = df_recent.iloc[i]
-        chg_i = r["close"] - r["open"]
-        chg_i_pct = chg_i / r["open"] * 100 if r["open"] > 0 else 0
-        color = up_color if chg_i >= 0 else down_color
-        arrow = "▲" if chg_i >= 0 else "▼"
-        price_rows.append({
-            "日期": r.name.strftime("%m/%d"),
-            "開": f"{r['open']:.1f}",
-            "高": f"{r['high']:.1f}",
-            "低": f"{r['low']:.1f}",
-            "收": f"<span style='color:{color};font-weight:bold;'>{arrow} {r['close']:.1f}</span>",
-            "漲跌": f"<span style='color:{color}'>{chg_i:+.1f} ({chg_i_pct:+.1f}%)</span>",
-            "量": f"{r['volume']:,.0f}",
-        })
-    price_rows.reverse()
-    for row in price_rows:
-        vals = " | ".join([f"**{k}** {v}" for k, v in row.items()])
-        st.markdown(f"<div style='font-size:0.75rem;padding:2px 0;border-bottom:1px solid #333;'>{vals}</div>", unsafe_allow_html=True)
+    st.markdown("### 📈 股價走勢")
+    st.line_chart(df[["close"]], use_container_width=True, height=250)
+    st.markdown("### 📊 成交量")
+    st.bar_chart(df[["volume"]], use_container_width=True, height=150)
 
     if stoch_k is not None and stoch_d is not None:
         kd_icon = "🔴" if stoch_k > 80 else "🟢" if stoch_k < 20 else "🟡"
@@ -790,16 +771,10 @@ with tab1:
     st.caption("⚠️ 以上分析僅基於技術指標，非投資建議。")
 
     if show_volume_profile:
-        st.markdown("**📊 成交量分布**（近20日）")
-        vp_recent = df.tail(20)
-        vp_max = vp_recent["volume"].max()
-        for i in range(len(vp_recent)):
-            r = vp_recent.iloc[i]
-            pct = r["volume"] / vp_max * 100 if vp_max > 0 else 0
-            bar = "█" * int(pct / 5)
-            chg_v = r["close"] - r["open"]
-            v_color = up_color if chg_v >= 0 else down_color
-            st.markdown(f"<div style='font-size:0.7rem;'>{r.name.strftime('%m/%d')} <span style='color:{v_color}'>{bar}</span> {r['volume']:,.0f}</div>", unsafe_allow_html=True)
+        st.markdown("**📊 價格 vs 成交量分布**")
+        df_vp = df[["close", "volume"]].copy()
+        df_vp.columns = ["價格", "成交量"]
+        st.line_chart(df_vp, use_container_width=True, height=200)
 
     with st.expander("📊 最新技術指標數值", expanded=False):
         latest_indicators = {
