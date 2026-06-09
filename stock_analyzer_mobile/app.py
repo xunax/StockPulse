@@ -506,7 +506,7 @@ with tab2:
                 "total_fees": f"${mt['total_fees']:,.0f}",
             }
             key_metrics = ["total_return", "annual_return", "sharpe_ratio", "max_drawdown", "win_rate", "total_trades", "final_value"]
-            rows = [[metric_names.get(k, k), fmt_map.get(k, str(v))]
+            rows = [[metric_names.get(k, k), fmt_map.get(k, str(mt[k]))]
                     for k in key_metrics if k in mt]
             st.dataframe(pd.DataFrame(rows, columns=["指標", "數值"]), hide_index=True, use_container_width=True)
 
