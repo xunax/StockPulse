@@ -1014,6 +1014,8 @@ with tab5:
 # ═══════════════════════════════════════
 with tab6:
     st.subheader("🔔 持股監控")
+    st.info("📅 **長期策略**以季線（MA20/MA60）為主判斷趨勢，短期 RSI 波動不計入評分。"
+            "建議持有至少 1 年以上，季線未翻轉前可忽略短期波動。")
 
     if "watchlist" not in st.session_state:
         st.session_state["watchlist"] = auth.get_watchlist(st.session_state["username"])
@@ -1115,21 +1117,15 @@ with tab6:
                     sell_score += 1
                     sell_reasons.append("⚠️ KD 死亡交叉")
             else:
-                if rsi_val_wl is not None and rsi_val_wl > 80:
-                    sell_score += 2
-                    sell_reasons.append(f"⚠️ RSI={rsi_val_wl:.1f} 嚴重超買")
                 if ma20_val_wl is not None and ma60_val_wl is not None and ma20_val_wl < ma60_val_wl:
                     sell_score += 2
-                    sell_reasons.append("⚠️ MA20 < MA60，趨勢翻空")
-                if chg_pct > 30:
+                    sell_reasons.append("⚠️ MA20 < MA60，中期趨勢轉空")
+                if chg_pct < -20:
                     sell_score += 2
-                    sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%")
-                elif chg_pct > 15:
+                    sell_reasons.append(f"🔴 虧損 {chg_pct:.1f}%，考慮停損")
+                if chg_pct > 12:
                     sell_score += 1
-                    sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%")
-                if chg_pct < -15:
-                    sell_score -= 1
-                    sell_reasons.append(f"⚠️ 虧損 {chg_pct:.1f}%")
+                    sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%，可考慮部分獲利了結")
                 if info and info.get("pe_ratio") and info["pe_ratio"] > 40:
                     sell_score += 1
                     sell_reasons.append(f"⚠️ 本益比 {info['pe_ratio']:.1f} 偏高")
