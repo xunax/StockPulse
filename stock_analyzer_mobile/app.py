@@ -98,17 +98,15 @@ if not st.session_state["logged_in"]:
     st.stop()
 
 # ─── 已登入 ───
-c1, c2, c3 = st.columns([3, 0.5, 0.5])
+c1, c2, c3 = st.columns([5, 1, 1])
 with c1:
     st.title("📈 股票分析")
 with c2:
     if st.button("☰", key="btn_hamburger"):
         st.session_state.show_settings = not st.session_state.show_settings
-        st.rerun()
 with c3:
     if st.button("👤", key="btn_user"):
         st.session_state.show_user = not st.session_state.show_user
-        st.rerun()
 
 if st.session_state.get("show_user"):
     st.sidebar.markdown(f"**👤 {st.session_state['username']}**")
