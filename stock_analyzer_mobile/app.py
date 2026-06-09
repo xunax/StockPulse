@@ -26,27 +26,30 @@ st.markdown("""
     html, body, [class*="css"] {
         font-family: "Microsoft JhengHei", "PingFang TC", "Heiti TC", "Noto Sans TC", "Source Han Sans TC", "Microsoft YaHei", "SimHei", sans-serif;
     }
-    .main > div { padding: 0 0.5rem; }
-    .stTabs [data-baseweb="tab-list"] { gap: 1px; overflow-x: auto; flex-wrap: nowrap; }
-    .stTabs [data-baseweb="tab"] { padding: 6px 10px; font-size: 0.8rem; white-space: nowrap; }
-    div[data-testid="stMetricValue"] { font-size: 1.2rem; }
+    .main > div { padding: 0 1rem; }
+    .stTabs [data-baseweb="tab-list"] { gap: 4px; overflow-x: auto; flex-wrap: nowrap; margin-bottom: 1rem; }
+    .stTabs [data-baseweb="tab"] { padding: 8px 14px; font-size: 0.85rem; white-space: nowrap; border-radius: 8px 8px 0 0; }
+    div[data-testid="stMetricValue"] { font-size: 1.5rem; }
+    div[data-testid="stMetricDelta"] { font-size: 0.85rem; }
+    div[data-testid="stMetricLabel"] { font-size: 0.8rem; }
     [data-baseweb="select"] { font-family: "Microsoft JhengHei", "PingFang TC", "Heiti TC", "Noto Sans TC", sans-serif !important; }
-    .stButton button { min-height: 44px; }
-    .stTextInput input { min-height: 44px; }
-    .stSelectbox div[data-baseweb="select"] { min-height: 44px; }
-    .stSlider div[data-baseweb="slider"] { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .stButton button { min-height: 48px; border-radius: 12px; font-size: 1rem; }
+    .stTextInput input { min-height: 48px; border-radius: 12px; font-size: 1rem; }
+    .stSelectbox div[data-baseweb="select"] { min-height: 48px; border-radius: 12px; }
+    .stSlider div[data-baseweb="slider"] { padding-top: 0.8rem; padding-bottom: 0.8rem; }
     @media (max-width: 768px) {
-        .main > div { padding: 0 0.25rem; }
-        .stMarkdown h1 { font-size: 1.3rem !important; }
-        .stMarkdown h2 { font-size: 1.1rem !important; }
-        .stMarkdown h3 { font-size: 1.0rem !important; }
-        div[data-testid="stMetricValue"] { font-size: 1.0rem; }
-        .stTabs [data-baseweb="tab"] { padding: 4px 6px; font-size: 0.7rem; }
+        .main > div { padding: 0 0.75rem; }
+        .stMarkdown h1 { font-size: 1.5rem !important; }
+        .stMarkdown h2 { font-size: 1.2rem !important; }
+        .stMarkdown h3 { font-size: 1.1rem !important; }
+        div[data-testid="stMetricValue"] { font-size: 1.3rem; }
+        .stTabs [data-baseweb="tab"] { padding: 6px 10px; font-size: 0.75rem; }
     }
     .stApp header { display: none; }
     .st-emotion-cache-1avcm0n { padding-top: 1rem; }
-    .row-widget.stRadio { display: flex; flex-wrap: wrap; }
-    .row-widget.stRadio label { font-size: 0.85rem; }
+    .element-container { margin-bottom: 0.5rem; }
+    div.stMarkdown p { line-height: 1.6; }
+    .card { background: #1a1a2e; border-radius: 16px; padding: 16px 20px; margin: 12px 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -252,40 +255,6 @@ with tab1:
     prev = df.iloc[-2]
     chg = latest["close"] - prev["close"]
     chg_pct = chg / prev["close"] * 100
-
-    st.markdown(f"### 📌 {stock_display_name} ({symbol}) — {df.index[-1].strftime('%m-%d')}")
-
-    col1, col2 = st.columns(2)
-    price_color = up_color if chg >= 0 else down_color
-    col1.markdown(f"**現價**<br><span style='font-size:1.4em;color:{price_color}'>{latest['close']:.2f}</span><br><small style='color:{price_color}'>{chg:+.2f} ({chg_pct:+.2f}%)</small>", unsafe_allow_html=True)
-    col2.markdown(f"**開/高/低/量**<br><span style='font-size:0.95em'>開 {latest['open']:.2f} 高 {latest['high']:.2f} 低 {latest['low']:.2f}</span><br><span style='font-size:0.85em'>量 {latest['volume']:,.0f}</span>", unsafe_allow_html=True)
-
-    if info and info.get("pe_ratio"):
-        c1, c2 = st.columns(2)
-        c1.markdown(f"**本益比**<br>{info['pe_ratio']:.2f}" if info['pe_ratio'] else "**本益比**<br>N/A", unsafe_allow_html=True)
-        c2.markdown(f"**EPS**<br>{info['eps']:.2f}" if info['eps'] else "**EPS**<br>N/A", unsafe_allow_html=True)
-
-    if info and info.get("high_52w") and info.get("low_52w"):
-        high_52w = info["high_52w"]
-        low_52w = info["low_52w"]
-        cur_price = float(latest["close"])
-        if high_52w > low_52w:
-            pct_52w = (cur_price - low_52w) / (high_52w - low_52w) * 100
-            pct_52w = max(0, min(100, pct_52w))
-            bar_color = up_color if pct_52w >= 50 else down_color
-            theme = st.session_state.get("color_theme", "紅漲綠跌 (台股)")
-            bg_color = "#333333" if theme == "紅漲綠跌 (台股)" else "#444444"
-            st.markdown(f"""
-**📊 52 週股價區間**
-<div style="background:{bg_color};border-radius:8px;padding:4px 0;width:100%;position:relative;height:24px;border:1px solid #555;">
-  <div style="background:{bar_color};width:{pct_52w:.1f}%;height:100%;border-radius:8px;opacity:0.9;"></div>
-  <span style="position:absolute;top:50%;left:0;transform:translateY(-50%);padding-left:8px;font-size:0.7em;color:#ccc;">低 {low_52w:.2f}</span>
-  <span style="position:absolute;top:50%;right:0;transform:translateY(-50%);padding-right:8px;font-size:0.7em;color:#ccc;">高 {high_52w:.2f}</span>
-  <span style="position:absolute;top:50%;left:{pct_52w:.1f}%;transform:translate(-50%,-50%);font-size:0.7em;color:#fff;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:4px;">{cur_price:.2f} ({pct_52w:.0f}%)</span>
-</div>
-""", unsafe_allow_html=True)
-
-    # ─── 預先定義評分所需變數 ───
     close = float(latest["close"])
     vol = float(latest["volume"])
     rsi_val = float(latest["rsi"]) if "rsi" in latest and not pd.isna(latest["rsi"]) else None
@@ -299,496 +268,90 @@ with tab1:
     vol_ma5 = float(latest["volume_ma5"]) if "volume_ma5" in latest and not pd.isna(latest["volume_ma5"]) else None
     stoch_k = float(latest["stoch_k"]) if "stoch_k" in latest and not pd.isna(latest["stoch_k"]) else None
     stoch_d = float(latest["stoch_d"]) if "stoch_d" in latest and not pd.isna(latest["stoch_d"]) else None
+    macd_val = float(latest["macd"]) if "macd" in latest and not pd.isna(latest["macd"]) else None
+    macd_sig = float(latest["macd_signal"]) if "macd_signal" in latest and not pd.isna(latest["macd_signal"]) else None
+    macd_hist = float(latest["macd_hist"]) if "macd_hist" in latest and not pd.isna(latest["macd_hist"]) else None
 
-    s_score = 0
-    s_reasons = []
+    price_color = up_color if chg >= 0 else down_color
+    st.markdown(f"""
+<div class="card" style="text-align:center;">
+  <div style="font-size:0.85rem;color:#888;">{stock_display_name} ({symbol})</div>
+  <div style="font-size:2.5rem;font-weight:bold;color:{price_color};">{latest['close']:.2f}</div>
+  <div style="font-size:1rem;color:{price_color};">{chg:+.2f} ({chg_pct:+.2f}%)</div>
+</div>""", unsafe_allow_html=True)
 
-    if rsi_val is not None:
-        if rsi_val > 80:
-            s_score -= 15
-            s_reasons.append(f"⚠️ RSI = {rsi_val:.1f}，嚴重超買，短期回檔機率極高")
-        elif rsi_val > 70:
-            s_score -= 10
-            s_reasons.append(f"⚠️ RSI = {rsi_val:.1f}，超買，短线不宜追高")
-        elif rsi_val > 55:
-            s_score += 10
-            s_reasons.append(f"✅ RSI = {rsi_val:.1f}，多頭動能充足")
-        elif rsi_val > 40:
-            s_score += 5
-            s_reasons.append(f"✅ RSI = {rsi_val:.1f}，中性偏多")
-        elif rsi_val < 25:
-            s_score -= 5
-            s_reasons.append(f"⚠️ RSI = {rsi_val:.1f}，超賣，可能有反彈但需確認")
-        elif rsi_val < 35:
-            s_score += 5
-            s_reasons.append(f"✅ RSI = {rsi_val:.1f}，低檔區，可觀察反彈訊號")
+    col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+    col_m1.metric("開盤", f"{latest['open']:.2f}")
+    col_m2.metric("最高", f"{latest['high']:.2f}")
+    col_m3.metric("最低", f"{latest['low']:.2f}")
+    col_m4.metric("成交量", f"{latest['volume']:,.0f}")
 
-    if vol_ma5 is not None and vol_ma5 > 0:
-        vol_ratio = vol / vol_ma5
-        if vol_ratio > 2.5 and chg > 0:
-            s_score += 15
-            s_reasons.append(f"✅ 量能爆發（{vol_ratio:.1f} 倍）且上漲，短線強勢表態")
-        elif vol_ratio > 2.0 and chg < 0:
-            s_score -= 15
-            s_reasons.append(f"⚠️ 量增價跌（{vol_ratio:.1f} 倍），主力大量出貨")
-        elif vol_ratio > 1.5 and chg > 0:
-            s_score += 10
-            s_reasons.append(f"✅ 量增價漲（{vol_ratio:.1f} 倍），短線動能強")
-        elif vol_ratio > 1.5 and chg < 0:
-            s_score -= 5
-            s_reasons.append(f"⚠️ 量增價跌（{vol_ratio:.1f} 倍），賣壓湧現")
-        elif vol_ratio < 0.5:
-            s_reasons.append(f"ℹ️ 成交量萎縮（{vol_ratio:.1f} 倍），短線方向不明")
-
-    if len(df) >= 6:
-        five_day_chg = (close - float(df.iloc[-6]["close"])) / float(df.iloc[-6]["close"]) * 100
-        if five_day_chg > 15:
-            s_score -= 15
-            s_reasons.append(f"⚠️ 近 5 日暴漲 {five_day_chg:.1f}%，嚴重過熱")
-        elif five_day_chg > 8:
-            s_score -= 5
-            s_reasons.append(f"⚠️ 近 5 日上漲 {five_day_chg:.1f}%，漲幅偏大")
-        elif five_day_chg > 2:
-            s_score += 10
-            s_reasons.append(f"✅ 近 5 日溫和上漲 {five_day_chg:.1f}%，趨勢健康")
-        elif five_day_chg < -10:
-            s_score -= 5
-            s_reasons.append(f"⚠️ 近 5 日大跌 {five_day_chg:.1f}%，短線偏弱")
-        elif five_day_chg < -3:
-            s_score += 5
-            s_reasons.append(f"✅ 近 5 日回檔 {five_day_chg:.1f}%，可觀察反彈")
-
-    if stoch_k is not None and stoch_d is not None:
-        if stoch_k > 85 and stoch_d > 80:
-            s_score -= 10
-            s_reasons.append(f"⚠️ KD（K={stoch_k:.1f}）超買區，短線回檔風險高")
-        elif stoch_k < 20 and stoch_d < 25:
-            s_score += 10
-            s_reasons.append(f"✅ KD（K={stoch_k:.1f}）超賣區，短線反彈機會")
-        if stoch_k > stoch_d and stoch_k < 50:
-            s_score += 5
-            s_reasons.append("✅ KD 黃金交叉且低位，短線轉多")
-        elif stoch_k < stoch_d and stoch_k > 50:
-            s_score -= 5
-            s_reasons.append("⚠️ KD 死亡交叉且高位，短線轉空")
-
-    if bb_u is not None and bb_l is not None:
-        bb_width = bb_u - bb_l
-        if bb_width > 0:
-            bb_pos = (close - bb_l) / bb_width
-            if bb_pos > 0.95:
-                s_score -= 10
-                s_reasons.append("⚠️ 觸及布林上軌，短線超漲")
-            elif bb_pos > 0.8:
-                s_score += 5
-                s_reasons.append("✅ 強勢區，接近上軌")
-            elif bb_pos < 0.05:
-                s_score -= 5
-                s_reasons.append("⚠️ 觸及布林下軌，短線超賣")
-            elif bb_pos < 0.2:
-                s_score += 5
-                s_reasons.append("✅ 弱勢區接近下軌，可能反彈")
-
-    if ma5_val is not None and ma10_val is not None:
-        if ma5_val > ma10_val:
-            s_score += 5
-            s_reasons.append("✅ MA5 > MA10，短線多頭排列")
-        else:
-            s_score -= 5
-            s_reasons.append("⚠️ MA5 < MA10，短線空頭排列")
-
-    l_score = 0
-    l_reasons = []
+    if info:
+        col_i1, col_i2, col_i3, col_i4 = st.columns(4)
+        if info.get("pe_ratio"):
+            col_i1.metric("本益比", f"{info['pe_ratio']:.1f}")
+        if info.get("eps"):
+            col_i2.metric("EPS", f"{info['eps']:.1f}")
+        if info.get("dividend_yield"):
+            col_i3.metric("殖利率", f"{info['dividend_yield']*100:.1f}%")
+        if info.get("market_cap"):
+            col_i4.metric("市值", f"{info['market_cap']/1e8:.1f}億")
 
     if info and info.get("high_52w") and info.get("low_52w"):
-        h52 = float(info["high_52w"])
-        l52 = float(info["low_52w"])
+        h52, l52 = float(info["high_52w"]), float(info["low_52w"])
         if h52 > l52:
-            pos = (close - l52) / (h52 - l52)
-            if pos >= 0.85:
-                l_score -= 20
-                l_reasons.append(f"⚠️ 股價在 52 週高點 {pos*100:.0f}% 位置，長期追高風險大")
-            elif pos >= 0.6:
-                l_score += 5
-                l_reasons.append(f"✅ 股價在 52 週中高段（{pos*100:.0f}%），趨勢明確")
-            elif pos >= 0.3:
-                l_score += 15
-                l_reasons.append(f"✅ 股價在 52 週中低段（{pos*100:.0f}%），長期佈局空間大")
-            else:
-                l_score += 10
-                l_reasons.append(f"✅ 股價在 52 週低位（{pos*100:.0f}%），有估值修復空間")
+            pct_52w = max(0, min(100, (close - l52) / (h52 - l52) * 100))
+            bar_color = up_color if pct_52w >= 50 else down_color
+            st.markdown(f"""
+<div style="margin: 1rem 0;">
+  <div style="font-size:0.8rem;color:#888;margin-bottom:4px;">📊 52週區間</div>
+  <div style="background:#333;border-radius:8px;height:24px;position:relative;">
+    <div style="background:{bar_color};width:{pct_52w}%;height:100%;border-radius:8px;"></div>
+    <span style="position:absolute;top:50%;left:8px;transform:translateY(-50%);font-size:0.65rem;color:#ccc;">{l52:.1f}</span>
+    <span style="position:absolute;top:50%;right:8px;transform:translateY(-50%);font-size:0.65rem;color:#ccc;">{h52:.1f}</span>
+    <span style="position:absolute;top:50%;left:{pct_52w}%;transform:translate(-50%,-50%);font-size:0.65rem;color:#fff;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:4px;">{close:.1f}</span>
+  </div>
+</div>""", unsafe_allow_html=True)
 
-    if ma20_val is not None and ma60_val is not None:
-        if ma20_val > ma60_val:
-            l_score += 10
-            l_reasons.append("✅ MA20 > MA60，中期趨勢向上")
-        else:
-            l_score -= 10
-            l_reasons.append("⚠️ MA20 < MA60，中期趨勢向下")
-
-    if ma60_val is not None and ma120_val is not None:
-        if ma60_val > ma120_val:
-            l_score += 10
-            l_reasons.append("✅ MA60 > MA120，長期趨勢向上")
-        else:
-            l_score -= 10
-            l_reasons.append("⚠️ MA60 < MA120，長期趨勢偏空")
-
-    if ma20_val is not None:
-        diff20 = (close - ma20_val) / ma20_val * 100
-        if diff20 > 15:
-            l_score -= 10
-            l_reasons.append(f"⚠️ 股價高於 MA20 達 {diff20:.1f}%，乖離過大，回檔風險高")
-        elif diff20 > 5:
-            l_score += 5
-            l_reasons.append(f"✅ 股價在 MA20 之上 {diff20:.1f}%，均線多頭")
-        elif diff20 < -15:
-            l_score -= 5
-            l_reasons.append(f"⚠️ 股價低於 MA20 達 {diff20:.1f}%，偏弱")
-        elif diff20 < -5:
-            l_reasons.append(f"ℹ️ 股價低於 MA20 {diff20:.1f}%，均線空頭，等待止跌")
-
-    if ma60_val is not None:
-        diff60 = (close - ma60_val) / ma60_val * 100
-        if diff60 > 25:
-            l_score -= 15
-            l_reasons.append(f"⚠️ 股價高於 MA60 達 {diff60:.1f}%，嚴重超漲")
-        elif diff60 > 10:
-            l_score += 5
-            l_reasons.append(f"✅ 中期趨勢向上（高於 MA60 {diff60:.1f}%）")
-        elif diff60 < -15:
-            l_score -= 10
-            l_reasons.append(f"⚠️ 股價低於 MA60 達 {diff60:.1f}%，中期偏弱")
-
-    if info and info.get("pe_ratio") and info["pe_ratio"] > 0:
-        pe = info["pe_ratio"]
-        if pe < 12:
-            l_score += 10
-            l_reasons.append(f"✅ 本益比 {pe:.1f} 倍，估值偏低，長期投資價值高")
-        elif pe < 20:
-            l_score += 5
-            l_reasons.append(f"✅ 本益比 {pe:.1f} 倍，估值合理")
-        elif pe > 40:
-            l_score -= 10
-            l_reasons.append(f"⚠️ 本益比 {pe:.1f} 倍，估值偏高")
-        elif pe > 25:
-            l_score -= 5
-            l_reasons.append(f"⚠️ 本益比 {pe:.1f} 倍，估值偏高")
-
-    if info and info.get("dividend_yield") and info["dividend_yield"] > 0:
-        dy = info["dividend_yield"] * 100
-        if dy > 5:
-            l_score += 10
-            l_reasons.append(f"✅ 殖利率 {dy:.2f}%，存股收益佳")
-        elif dy > 3:
-            l_score += 5
-            l_reasons.append(f"✅ 殖利率 {dy:.2f}%，穩定配息")
-        elif dy < 1:
-            l_reasons.append(f"ℹ️ 殖利率 {dy:.2f}%，配息偏低")
-
-    if len(df) >= 60:
-        returns = df["close"].pct_change().dropna()
-        annual_vol = float(returns.std() * np.sqrt(252) * 100)
-        if annual_vol < 15:
-            l_score += 5
-            l_reasons.append(f"✅ 年化波動率 {annual_vol:.1f}%，波動低適合存股")
-        elif annual_vol > 50:
-            l_score -= 5
-            l_reasons.append(f"⚠️ 年化波動率 {annual_vol:.1f}%，波動大需注意風險")
-        else:
-            l_reasons.append(f"ℹ️ 年化波動率 {annual_vol:.1f}%，波動適中")
-
-    def get_verdict(score):
-        if score >= 20:
-            return "🟢 強烈建議買入", "#26a69a"
-        elif score >= 10:
-            return "🟢 偏多，可考慮買入", "#26a69a"
-        elif score >= 0:
-            return "🟡 中性，建議觀望", "#FF9800"
-        elif score >= -15:
-            return "🔴 偏空，不建議追高", "#ef5350"
-        else:
-            return "🔴 強烈不建議買入", "#ef5350"
-
-    s_verdict, s_color = get_verdict(s_score)
-    l_verdict, l_color = get_verdict(l_score)
-
-    col_s, col_l = st.columns(2)
-    with col_s:
-        st.markdown(f"""
-<div style="background:#1a1a2e;border:2px solid {s_color};border-radius:12px;padding:10px 14px;margin:8px 0;">
-  <div style="font-size:0.95em;font-weight:bold;color:{s_color};">⚡ 短期</div>
-  <div style="font-size:0.85em;color:{s_color};">{s_verdict}</div>
-  <div style="font-size:0.75em;color:#aaa;">評分：<b style="color:#fff">{s_score}</b></div>
-</div>
-""", unsafe_allow_html=True)
-        with st.expander("📋 短期評估", expanded=False):
-            for r in s_reasons:
-                st.markdown(f"- {r}")
-
-    with col_l:
-        st.markdown(f"""
-<div style="background:#1a1a2e;border:2px solid {l_color};border-radius:12px;padding:10px 14px;margin:8px 0;">
-  <div style="font-size:0.95em;font-weight:bold;color:{l_color};">📅 長期</div>
-  <div style="font-size:0.85em;color:{l_color};">{l_verdict}</div>
-  <div style="font-size:0.75em;color:#aaa;">評分：<b style="color:#fff">{l_score}</b></div>
-</div>
-""", unsafe_allow_html=True)
-        with st.expander("📋 長期評估", expanded=False):
-            for r in l_reasons:
-                st.markdown(f"- {r}")
-
+    st.markdown("##")
     st.markdown("### 📈 股價走勢")
     st.line_chart(df[["close"]], use_container_width=True, height=250)
     st.markdown("### 📊 成交量")
     st.bar_chart(df[["volume"]], use_container_width=True, height=150)
 
-    if stoch_k is not None and stoch_d is not None:
-        kd_icon = "🔴" if stoch_k > 80 else "🟢" if stoch_k < 20 else "🟡"
-        kd_label = "超買" if stoch_k > 80 else "超賣" if stoch_k < 20 else "正常"
-        cross = "↑ 黃金交叉" if stoch_k > stoch_d and stoch_k < 30 else "↓ 死亡交叉" if stoch_k < stoch_d and stoch_k > 70 else ""
-        st.markdown(f"""
-<div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.75rem;margin:4px 0;">
-  <span><b>KD</b></span>
-  <span>K <b>{stoch_k:.1f}</b></span>
-  <span>D <b>{stoch_d:.1f}</b></span>
-  <span style="color:{'#ef5350' if stoch_k > 80 else '#26a69a' if stoch_k < 20 else '#FF9800'};">{kd_icon} {kd_label}</span>
-  <span style="color:#888;">{cross}</span>
-</div>""", unsafe_allow_html=True)
-
-    macd_val = float(latest["macd"]) if "macd" in latest and not pd.isna(latest["macd"]) else None
-    macd_sig = float(latest["macd_signal"]) if "macd_signal" in latest and not pd.isna(latest["macd_signal"]) else None
-    macd_hist = float(latest["macd_hist"]) if "macd_hist" in latest and not pd.isna(latest["macd_hist"]) else None
-    ma5_val = float(latest["ma5"]) if "ma5" in latest and not pd.isna(latest["ma5"]) else None
-    ma10_val = float(latest["ma10"]) if "ma10" in latest and not pd.isna(latest["ma10"]) else None
-    stoch_k = float(latest["stoch_k"]) if "stoch_k" in latest and not pd.isna(latest["stoch_k"]) else None
-    stoch_d = float(latest["stoch_d"]) if "stoch_d" in latest and not pd.isna(latest["stoch_d"]) else None
-    recent_20 = df.tail(20)
-    resistance = float(recent_20["high"].max())
-    support = float(recent_20["low"].min())
-
-    st.markdown("### 📖 指標解讀")
-    with st.expander("🔵 K線", expanded=False):
-        st.markdown(f"""
-- 🔴 紅 K：**收盤 > 開盤**（上漲） 🟢 綠 K：**收盤 < 開盤**（下跌）
-- 當前收盤：**{close:.2f}**，距 20日高點 {resistance:.2f}（{resistance-close:.2f}），低點 {support:.2f}（{close-support:.2f}）
-""")
-
-    with st.expander("📈 均線（MA）", expanded=False):
-        ma_texts = []
-        if ma5_val is not None and ma20_val is not None:
-            if ma5_val > ma20_val:
-                ma_texts.append(f"✅ 5日({ma5_val:.1f}) > 20日({ma20_val:.1f}) — 短線偏多")
-            else:
-                ma_texts.append(f"⚠️ 5日({ma5_val:.1f}) < 20日({ma20_val:.1f}) — 短線偏空")
-        if ma20_val is not None and ma60_val is not None:
-            if ma20_val > ma60_val:
-                ma_texts.append(f"✅ 20日({ma20_val:.1f}) > 60日({ma60_val:.1f}) — 中期向上")
-            else:
-                ma_texts.append(f"⚠️ 20日({ma20_val:.1f}) < 60日({ma60_val:.1f}) — 中期向下")
-        st.markdown(chr(10).join(ma_texts) if ma_texts else "資料不足")
-
-    with st.expander(f"📊 RSI（{rsi_period}日）", expanded=False):
-        if rsi_val is not None:
-            if rsi_val >= 70:
-                zone = "⚠️ 超買區（70↑）"
-                strategy = "不建議追高"
-            elif rsi_val <= 30:
-                zone = "💡 超賣區（30↓）"
-                strategy = "可分批進場"
-            elif rsi_val >= 50:
-                zone = "✅ 偏多區（50-70）"
-                strategy = "順勢操作"
-            else:
-                zone = "⚠️ 偏空區（30-50）"
-                strategy = "觀望為主"
-            st.markdown(f"**當前值：{rsi_val:.1f} — {zone}**\n\n📌 建議：{strategy}")
-
-    with st.expander("📉 MACD", expanded=False):
-        if macd_val is not None and macd_sig is not None:
-            if macd_val > macd_sig and macd_hist is not None and macd_hist > 0:
-                state = "✅ 多頭訊號"
-            elif macd_val < macd_sig and macd_hist is not None and macd_hist < 0:
-                state = "⚠️ 空頭訊號"
-            elif macd_val > macd_sig:
-                state = "🔄 轉強中"
-            else:
-                state = "🔄 轉弱中"
-            st.markdown(f"**{state}**")
-
-    with st.expander("🔀 KD（0~100）", expanded=False):
-        if stoch_k is not None and stoch_d is not None:
-            if stoch_k >= 80:
-                kd_zone = "⚠️ 超買區"
-                kd_strategy = "不建議追高"
-            elif stoch_k <= 20:
-                kd_zone = "💡 超賣區"
-                kd_strategy = "可留意反彈"
-            elif stoch_k > stoch_d:
-                kd_zone = "✅ 偏多"
-                kd_strategy = "順勢操作"
-            else:
-                kd_zone = "⚠️ 偏空"
-                kd_strategy = "觀望為主"
-            st.markdown(f"K={stoch_k:.1f} D={stoch_d:.1f} — {kd_zone}\n\n📌 {kd_strategy}")
-
-    with st.expander("📦 布林通道", expanded=False):
-        if bb_u is not None and bb_l is not None:
-            bb_width = (bb_u - bb_l) / close * 100
-            bb_pct = (close - bb_l) / (bb_u - bb_l) * 100 if (bb_u - bb_l) > 0 else 50
-            if close >= bb_u * 0.99:
-                bb_zone = "🔴 接近上軌（過熱）"
-            elif close <= bb_l * 1.01:
-                bb_zone = "🟢 接近下軌（超跌）"
-            elif bb_pct > 50:
-                bb_zone = "✅ 上半部（偏多）"
-            else:
-                bb_zone = "⚠️ 下半部（偏空）"
-            st.markdown(f"上軌 {bb_u:.2f} 下軌 {bb_l:.2f} | 寬度 {bb_width:.1f}%\n位置 {bb_pct:.0f}% — {bb_zone}")
-
-    with st.expander("📊 成交量", expanded=False):
-        if vol_ma5 is not None:
-            vol_ratio = vol / vol_ma5 if vol_ma5 > 0 else 1
-            if vol_ratio >= 1.5:
-                vol_text = "🔥 爆量"
-            elif vol_ratio >= 0.8:
-                vol_text = "✅ 正常量"
-            else:
-                vol_text = "⚠️ 縮量"
-            st.markdown(f"今日 {vol:,.0f} | 5日均 {vol_ma5:,.0f} | 量比 {vol_ratio:.2f} 倍\n{vol_text}")
-
-    with st.expander("📌 支撐與壓力", expanded=False):
-        dist_to_res = (resistance - close) / close * 100
-        dist_to_sup = (close - support) / close * 100
-        st.markdown(f"🔴 **壓力：{resistance:.2f}**（距現價 {dist_to_res:+.2f}%）\n🟢 **支撐：{support:.2f}**（距現價 {dist_to_sup:+.2f}%）")
-
-    st.markdown("### 🔮 綜合分析")
-    signals = []
-    bullish = 0
-    bearish = 0
-
-    if ma5_val is not None and ma20_val is not None:
-        if ma5_val > ma20_val:
-            signals.append(("均線", "偏多", f"5日({ma5_val:.1f})在20日({ma20_val:.1f})之上"))
-            bullish += 1
-        else:
-            signals.append(("均線", "偏空", f"5日({ma5_val:.1f})在20日({ma20_val:.1f})之下"))
-            bearish += 1
-
-    if ma20_val is not None and ma60_val is not None:
-        if ma20_val > ma60_val:
-            signals.append(("中期", "偏多", "20日線在60日線之上"))
-            bullish += 1
-        else:
-            signals.append(("中期", "偏空", "20日線在60日線之下"))
-            bearish += 1
-
-    if rsi_val is not None:
-        if rsi_val >= 70:
-            signals.append(("RSI", "過熱", f"{rsi_val:.1f} 超買區"))
-            bearish += 1
-        elif rsi_val <= 30:
-            signals.append(("RSI", "超跌", f"{rsi_val:.1f} 超賣區"))
-            bullish += 1
-        elif rsi_val >= 50:
-            signals.append(("RSI", "偏多", f"{rsi_val:.1f} 偏多區"))
-            bullish += 1
-        else:
-            signals.append(("RSI", "偏空", f"{rsi_val:.1f} 偏空區"))
-            bearish += 1
-
-    if macd_val is not None and macd_sig is not None:
-        if macd_val > macd_sig:
-            signals.append(("MACD", "偏多", "MACD在信號線之上"))
-            bullish += 1
-        else:
-            signals.append(("MACD", "偏空", "MACD在信號線之下"))
-            bearish += 1
-
-    if stoch_k is not None and stoch_d is not None:
-        if stoch_k >= 80:
-            signals.append(("KD", "過熱", f"K={stoch_k:.1f} 超買區"))
-            bearish += 1
-        elif stoch_k <= 20:
-            signals.append(("KD", "超跌", f"K={stoch_k:.1f} 超賣區"))
-            bullish += 1
-        elif stoch_k > stoch_d:
-            signals.append(("KD", "偏多", f"K={stoch_k:.1f} > D={stoch_d:.1f}"))
-            bullish += 1
-        else:
-            signals.append(("KD", "偏空", f"K={stoch_k:.1f} < D={stoch_d:.1f}"))
-            bearish += 1
-
-    if vol_ma5 is not None:
-        vol_ratio = vol / vol_ma5 if vol_ma5 > 0 else 1
-        prev_close = float(df.iloc[-2]["close"])
-        if vol_ratio >= 1.5 and close > prev_close:
-            signals.append(("量能", "偏多", "價漲量增"))
-            bullish += 1
-        elif vol_ratio >= 1.5 and close < prev_close:
-            signals.append(("量能", "偏空", "價跌量增"))
-            bearish += 1
-        elif vol_ratio < 0.8 and close > prev_close:
-            signals.append(("量能", "偏空", "價漲量縮"))
-            bearish += 1
-        elif vol_ratio < 0.8 and close < prev_close:
-            signals.append(("量能", "偏多", "價跌量縮"))
-            bullish += 1
-
-    if close >= resistance * 0.98:
-        signals.append(("位置", "接近壓力", f"距壓力 {resistance:.2f} 不到 2%"))
-    elif close <= support * 1.02:
-        signals.append(("位置", "接近支撐", f"距支撐 {support:.2f} 不到 2%"))
-
-    total = bullish + bearish
-    if total == 0:
-        overall = "⚪ **訊號不明**"
-    elif bullish >= bearish + 2:
-        overall = "🟢 **強烈偏多**"
-    elif bullish > bearish:
-        overall = "🟢 **偏多**"
-    elif bearish > bullish + 1:
-        overall = "🔴 **強烈偏空**"
-    else:
-        overall = "🔴 **偏空**"
-
-    st.markdown(f"**{overall}** ｜ 多 {bullish} 票 / 空 {bearish} 票")
-
-    signal_df_rows = []
-    for name, verdict, detail in signals:
-        if "偏多" in verdict or "超跌" in verdict:
-            color = "🟢"
-        elif "偏空" in verdict or "過熱" in verdict:
-            color = "🔴"
-        else:
-            color = "🟡"
-        signal_df_rows.append([color, name, verdict, detail])
-    st.dataframe(
-        pd.DataFrame(signal_df_rows, columns=["", "指標", "訊號", "說明"]),
-        hide_index=True, use_container_width=True,
-    )
-
-    st.caption("⚠️ 以上分析僅基於技術指標，非投資建議。")
-
     if show_volume_profile:
-        st.markdown("**📊 價格 vs 成交量分布**")
-        df_vp = df[["close", "volume"]].copy()
-        df_vp.columns = ["價格", "成交量"]
+        st.markdown("### 📊 價格 vs 成交量")
+        df_vp = df[["close", "volume"]].rename(columns={"close": "價格", "volume": "成交量"})
         st.line_chart(df_vp, use_container_width=True, height=200)
 
-    with st.expander("📊 最新技術指標數值", expanded=False):
-        latest_indicators = {
-            f"RSI({rsi_period}日)": f"{latest['rsi']:.2f}" if "rsi" in latest and not pd.isna(latest['rsi']) else "N/A",
-            "MACD": f"{latest['macd']:.2f}" if "macd" in latest and not pd.isna(latest['macd']) else "N/A",
-            "KD K值": f"{latest['stoch_k']:.2f}" if "stoch_k" in latest and not pd.isna(latest['stoch_k']) else "N/A",
-            "KD D值": f"{latest['stoch_d']:.2f}" if "stoch_d" in latest and not pd.isna(latest['stoch_d']) else "N/A",
-            "布林上軌": f"{latest['bb_upper']:.2f}" if "bb_upper" in latest and not pd.isna(latest['bb_upper']) else "N/A",
-            "布林下軌": f"{latest['bb_lower']:.2f}" if "bb_lower" in latest and not pd.isna(latest['bb_lower']) else "N/A",
-        }
-        st.dataframe(
-            pd.DataFrame(list(latest_indicators.items()), columns=["指標", "數值"]),
-            use_container_width=True, hide_index=True,
-        )
+    # 指標摘要
+    st.markdown("##")
+    st.markdown("### 📋 技術指標摘要")
+    ind_rows = []
+    if rsi_val is not None:
+        icon = "🟢" if rsi_val > 50 else "🔴"
+        ind_rows.append({"指標": f"RSI({rsi_period})", "數值": f"{rsi_val:.1f}", "訊號": icon})
+    if macd_val is not None and macd_sig is not None:
+        icon = "🟢" if macd_val > macd_sig else "🔴"
+        ind_rows.append({"指標": "MACD", "數值": f"{macd_val:.2f}", "訊號": icon})
+    if stoch_k is not None and stoch_d is not None:
+        icon = "🟢" if stoch_k > stoch_d else "🔴"
+        ind_rows.append({"指標": f"KD({kd_period})", "數值": f"K={stoch_k:.1f}", "訊號": icon})
+    if bb_u is not None and bb_l is not None:
+        bb_pos = (close - bb_l) / (bb_u - bb_l) * 100
+        icon = "🟢" if bb_pos > 50 else "🔴"
+        ind_rows.append({"指標": "布林", "數值": f"{bb_pos:.0f}%位置", "訊號": icon})
+    if vol_ma5 is not None and vol_ma5 > 0:
+        vr = vol / vol_ma5
+        icon = "🔥" if vr > 1.5 else "✅" if vr > 0.8 else "⚠️"
+        ind_rows.append({"指標": "量比", "數值": f"{vr:.2f}倍", "訊號": icon})
+    if ma5_val is not None and ma20_val is not None:
+        icon = "🟢" if ma5_val > ma20_val else "🔴"
+        ind_rows.append({"指標": "均線", "數值": f"MA5={ma5_val:.1f}", "訊號": icon})
+    if ind_rows:
+        st.dataframe(pd.DataFrame(ind_rows), hide_index=True, use_container_width=True)
+
+    st.caption("⚠️ 以上分析僅基於技術指標，非投資建議。")
 
 # ═══════════════════════════════════════
 # TAB 2: 回測系統
