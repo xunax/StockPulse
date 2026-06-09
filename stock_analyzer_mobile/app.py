@@ -314,7 +314,90 @@ with tab1:
   </div>
 </div>""", unsafe_allow_html=True)
 
-    st.markdown("##")
+    # ─── 買入評分 ───
+    s_score = 0; s_reasons = []
+    if rsi_val is not None:
+        if rsi_val > 80: s_score -= 15; s_reasons.append(f"⚠️ RSI={rsi_val:.1f} 嚴重超買")
+        elif rsi_val > 70: s_score -= 10; s_reasons.append(f"⚠️ RSI={rsi_val:.1f} 超買")
+        elif rsi_val > 55: s_score += 10; s_reasons.append(f"✅ RSI={rsi_val:.1f} 多頭動能充足")
+        elif rsi_val > 40: s_score += 5; s_reasons.append(f"✅ RSI={rsi_val:.1f} 中性偏多")
+        elif rsi_val < 25: s_score -= 5; s_reasons.append(f"⚠️ RSI={rsi_val:.1f} 超賣")
+        elif rsi_val < 35: s_score += 5; s_reasons.append(f"✅ RSI={rsi_val:.1f} 低檔區")
+    if vol_ma5 and vol_ma5 > 0:
+        vr = vol / vol_ma5
+        if vr > 2.5 and chg > 0: s_score += 15; s_reasons.append(f"✅ 量能爆發({vr:.1f}倍)")
+        elif vr > 2.0 and chg < 0: s_score -= 15; s_reasons.append(f"⚠️ 爆量下跌出貨")
+        elif vr > 1.5 and chg > 0: s_score += 10; s_reasons.append(f"✅ 量增價漲({vr:.1f}倍)")
+        elif vr > 1.5 and chg < 0: s_score -= 5; s_reasons.append(f"⚠️ 量增價跌({vr:.1f}倍)")
+    if len(df) >= 6:
+        fdc = (close - float(df.iloc[-6]["close"])) / float(df.iloc[-6]["close"]) * 100
+        if fdc > 15: s_score -= 15; s_reasons.append(f"⚠️ 近5日暴漲{fdc:.1f}%")
+        elif fdc > 8: s_score -= 5; s_reasons.append(f"⚠️ 近5日漲幅{fdc:.1f}%偏大")
+        elif fdc > 2: s_score += 10; s_reasons.append(f"✅ 近5日溫和上漲{fdc:.1f}%")
+        elif fdc < -10: s_score -= 5; s_reasons.append(f"⚠️ 近5日大跌{fdc:.1f}%")
+        elif fdc < -3: s_score += 5; s_reasons.append(f"✅ 近5日回檔{fdc:.1f}%可觀察")
+    if stoch_k is not None and stoch_d is not None:
+        if stoch_k > 85 and stoch_d > 80: s_score -= 10; s_reasons.append(f"⚠️ KD超買區 K={stoch_k:.1f}")
+        elif stoch_k < 20 and stoch_d < 25: s_score += 10; s_reasons.append(f"✅ KD超賣區 K={stoch_k:.1f}")
+        if stoch_k > stoch_d and stoch_k < 50: s_score += 5; s_reasons.append("✅ KD黃金交叉低位")
+        elif stoch_k < stoch_d and stoch_k > 50: s_score -= 5; s_reasons.append("⚠️ KD死亡交叉高位")
+    if bb_u is not None and bb_l is not None and (bb_u - bb_l) > 0:
+        bp = (close - bb_l) / (bb_u - bb_l)
+        if bp > 0.95: s_score -= 10; s_reasons.append("⚠️ 觸及布林上軌")
+        elif bp > 0.8: s_score += 5; s_reasons.append("✅ 強勢區接近上軌")
+        elif bp < 0.05: s_score -= 5; s_reasons.append("⚠️ 觸及布林下軌")
+        elif bp < 0.2: s_score += 5; s_reasons.append("✅ 弱勢區接近下軌")
+    if ma5_val is not None and ma10_val is not None:
+        if ma5_val > ma10_val: s_score += 5; s_reasons.append("✅ MA5>MA10 短線多頭")
+        else: s_score -= 5; s_reasons.append("⚠️ MA5<MA10 短線空頭")
+
+    l_score = 0; l_reasons = []
+    if info and info.get("high_52w") and info.get("low_52w"):
+        h52, l52 = float(info["high_52w"]), float(info["low_52w"])
+        if h52 > l52:
+            pos = (close - l52) / (h52 - l52)
+            if pos >= 0.85: l_score -= 20; l_reasons.append(f"⚠️ 股價在52週高點{pos*100:.0f}%")
+            elif pos >= 0.6: l_score += 5; l_reasons.append(f"✅ 52週中高段{pos*100:.0f}%")
+            elif pos >= 0.3: l_score += 15; l_reasons.append(f"✅ 52週中低段{pos*100:.0f}%佈局空間")
+            else: l_score += 10; l_reasons.append(f"✅ 52週低位{pos*100:.0f}%估值修復")
+    if ma20_val is not None and ma60_val is not None:
+        if ma20_val > ma60_val: l_score += 10; l_reasons.append("✅ MA20>MA60 中期向上")
+        else: l_score -= 10; l_reasons.append("⚠️ MA20<MA60 中期向下")
+    if ma60_val is not None and ma120_val is not None:
+        if ma60_val > ma120_val: l_score += 10; l_reasons.append("✅ MA60>MA120 長期向上")
+        else: l_score -= 10; l_reasons.append("⚠️ MA60<MA120 長期偏空")
+    if info and info.get("pe_ratio") and info["pe_ratio"] > 0:
+        pe = info["pe_ratio"]
+        if pe < 12: l_score += 10; l_reasons.append(f"✅ 本益比{pe:.1f}偏低")
+        elif pe < 20: l_score += 5; l_reasons.append(f"✅ 本益比{pe:.1f}合理")
+        elif pe > 40: l_score -= 10; l_reasons.append(f"⚠️ 本益比{pe:.1f}偏高")
+        elif pe > 25: l_score -= 5; l_reasons.append(f"⚠️ 本益比{pe:.1f}偏高")
+    if info and info.get("dividend_yield") and info["dividend_yield"] > 0:
+        dy = info["dividend_yield"] * 100
+        if dy > 5: l_score += 10; l_reasons.append(f"✅ 殖利率{dy:.1f}%優")
+        elif dy > 3: l_score += 5; l_reasons.append(f"✅ 殖利率{dy:.1f}%穩定")
+
+    def verdict(sc):
+        if sc >= 20: return "🟢 強烈買入", "#26a69a"
+        elif sc >= 10: return "🟢 偏多買入", "#26a69a"
+        elif sc >= 0: return "🟡 中性觀望", "#FF9800"
+        elif sc >= -15: return "🔴 偏空", "#ef5350"
+        else: return "🔴 強烈不建議", "#ef5350"
+    sv, sc = verdict(s_score)
+    lv, lc = verdict(l_score)
+
+    col_s, col_l = st.columns(2)
+    with col_s:
+        st.markdown(f"<div style='background:#1a1a2e;border:2px solid {sc};border-radius:12px;padding:10px;text-align:center;'>"
+                    f"<div style='font-size:0.8rem;color:#888;'>⚡ 短期</div>"
+                    f"<div style='font-size:1rem;font-weight:bold;color:{sc};'>{sv}</div>"
+                    f"<div style='font-size:0.75rem;color:#aaa;'>評分 {s_score}</div></div>", unsafe_allow_html=True)
+    with col_l:
+        st.markdown(f"<div style='background:#1a1a2e;border:2px solid {lc};border-radius:12px;padding:10px;text-align:center;'>"
+                    f"<div style='font-size:0.8rem;color:#888;'>📅 長期</div>"
+                    f"<div style='font-size:1rem;font-weight:bold;color:{lc};'>{lv}</div>"
+                    f"<div style='font-size:0.75rem;color:#aaa;'>評分 {l_score}</div></div>", unsafe_allow_html=True)
+
     st.markdown("### 📈 股價走勢")
     st.line_chart(df[["close"]], use_container_width=True, height=250)
     st.markdown("### 📊 成交量")
