@@ -7,4 +7,5 @@ user_data/
 .DS_Store
 Thumbs.db
 .env.local
-.secrets.toml
+secrets.toml
+.streamlit/secrets.toml
