@@ -117,6 +117,7 @@ if "init_defaults" not in st.session_state:
     st.session_state.show_user = False
     st.session_state.cat = "台股"
     st.session_state.stock_select = "2330"
+    st.session_state.manual_symbol = ""
 
 # ─── 已登入 ───
 c1, c2 = st.columns([5, 1])
@@ -171,6 +172,13 @@ with col_dum:
         for p in strategy_info_ui["params"]:
             st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
 
+# ─── 手動輸入（選填）───
+manual_tab, auto_tab = st.columns([4, 6])
+with manual_tab:
+    st.text_input("🔍 手動輸入代碼", key="manual_symbol", placeholder="如 2330、AAPL", label_visibility="collapsed")
+with auto_tab:
+    st.caption("非清單內的股票也可直接輸入代碼查詢")
+
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 主力", "🔔 監控"])
 
 # ─── 讀取 session_state 中的選擇值 ───
@@ -181,9 +189,14 @@ down_color = "#26a69a" if color_theme == "紅漲綠跌" else "#ef5350"
 cat = st.session_state.get("cat", "台股")
 stock_options = STOCKS.get(cat, {})
 code_list = list(stock_options.keys())
-sym = st.session_state.get("stock_select", "2330")
-symbol = sym if sym in code_list else (code_list[0] if code_list else "2330")
-stock_name = stock_options.get(symbol, symbol)
+manual = st.session_state.get("manual_symbol", "").strip()
+if manual:
+    symbol = manual.upper()
+    stock_name = symbol
+else:
+    sym = st.session_state.get("stock_select", "2330")
+    symbol = sym if sym in code_list else (code_list[0] if code_list else "2330")
+    stock_name = stock_options.get(symbol, symbol)
 
 period_map = {"1 個月": "1mo", "3 個月": "3mo", "6 個月": "6mo", "1 年": "1y", "2 年": "2y", "5 年": "5y"}
 period_label = st.session_state.get("period", "1 年")
