@@ -50,8 +50,9 @@ st.markdown("""
     .element-container { margin-bottom: 0.5rem; }
     div.stMarkdown p { line-height: 1.6; }
     .card { background: #1a1a2e; border-radius: 16px; padding: 16px 20px; margin: 12px 0; }
-    @keyframes slideDown { from { opacity:0; max-height:0; } to { opacity:1; max-height:2000px; } }
-    .settings-panel { animation: slideDown 0.3s ease-out; overflow: hidden; }
+    section[data-testid="stSidebar"] { position: fixed !important; z-index: 100 !important; height: 100vh !important; transition: width 0.3s ease !important; top: 0 !important;}
+    button[data-testid="collapsedControl"] { display: none !important; }
+    .main .block-container { max-width: 100% !important; padding-left: 0 !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -118,7 +119,7 @@ if st.session_state.get("show_user"):
         st.session_state["username"] = ""
         st.rerun()
 
-# ─── 初始化預設值 ───
+# ─── 初始化預設值 (先於 sidebar) ───
 if "init_defaults" not in st.session_state:
     st.session_state.init_defaults = True
     st.session_state.input_mode = "下拉選擇"
@@ -140,8 +141,9 @@ if "init_defaults" not in st.session_state:
     st.session_state.show_settings = False
     st.session_state.show_user = False
 
-if st.session_state.get("show_settings"):
-    st.markdown("<div style='background:#1a1a2e;border:2px solid #333;border-radius:16px;padding:16px 20px;margin:8px 0 16px 0;'>", unsafe_allow_html=True)
+# ─── Sidebar 由左滑入選單 (widget 永遠存在) ───
+with st.sidebar:
+    st.markdown("## ⚙️ 設定")
     st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
     st.radio("漲跌配色", ["紅漲綠跌", "綠漲紅跌"], horizontal=True, key="color_theme")
 
@@ -184,7 +186,19 @@ if st.session_state.get("show_settings"):
     for p in strategy_info_ui["params"]:
         st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
     st.info("💡 設定完成後，切換到其他 Tab 查看分析")
-    st.markdown("</div>", unsafe_allow_html=True)
+
+# ─── CSS 控制 Sidebar 顯示/隱藏 ───
+if st.session_state.get("show_settings"):
+    st.markdown("""<style>
+    section[data-testid="stSidebar"] { width: 21rem !important; min-width: 21rem !important; overflow: visible !important; }
+    section[data-testid="stSidebar"] > div:first-child { width: 21rem !important; overflow-y: auto !important; }
+    </style>""", unsafe_allow_html=True)
+else:
+    st.markdown("""<style>
+    section[data-testid="stSidebar"] { width: 0 !important; min-width: 0 !important; overflow: hidden !important; }
+    section[data-testid="stSidebar"] > div:first-child { width: 0 !important; min-width: 0 !important; }
+    button[data-testid="collapsedControl"] { display: none !important; }
+    </style>""", unsafe_allow_html=True)
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 主力", "🔔 監控"])
 
