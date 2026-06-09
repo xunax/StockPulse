@@ -106,24 +106,27 @@ with col_user:
         st.session_state["username"] = ""
         st.rerun()
 
-# ─── Sidebar (params via expander on mobile) ───
-with st.sidebar:
-    st.header("📊 參數設定")
-
-    color_theme = st.radio("漲跌配色", ["紅漲綠跌 (台股)", "綠漲紅跌 (美股)"], horizontal=True, key="color_theme")
-    if color_theme == "紅漲綠跌 (台股)":
+# ─── 股票選擇（直接顯示在主頁） ───
+st.markdown("### 🔍 選擇股票")
+col_s1, col_s2 = st.columns([1, 1])
+with col_s1:
+    input_mode = st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
+with col_s2:
+    color_theme = st.radio("漲跌配色", ["紅漲綠跌", "綠漲紅跌"], horizontal=True, key="color_theme")
+    if color_theme == "紅漲綠跌":
         up_color = "#ef5350"
         down_color = "#26a69a"
     else:
         up_color = "#26a69a"
         down_color = "#ef5350"
 
-    input_mode = st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
-
-    if input_mode == "下拉選擇":
+if input_mode == "下拉選擇":
+    col_a, col_b = st.columns([1, 1])
+    with col_a:
         cat = st.selectbox("分類", list(STOCKS.keys()), key="cat")
         stock_options = STOCKS[cat]
         code_list = list(stock_options.keys())
+    with col_b:
         if "stock_select" not in st.session_state or st.session_state.stock_select not in code_list:
             st.session_state.stock_select = code_list[0]
         symbol = st.selectbox(
@@ -133,42 +136,41 @@ with st.sidebar:
             format_func=lambda c: stock_options[c],
         )
         stock_name = stock_options[symbol]
-    else:
-        symbol = st.text_input("股票代碼", "2330", key="manual_symbol").strip()
-        stock_name = symbol
+else:
+    symbol = st.text_input("股票代碼", "2330", key="manual_symbol").strip()
+    stock_name = symbol
 
-    period_map = {
-        "1 個月": "1mo", "3 個月": "3mo", "6 個月": "6mo",
-        "1 年": "1y", "2 年": "2y", "5 年": "5y",
-    }
-    period_label = st.selectbox("資料區間", list(period_map.keys()), index=3, key="period")
-    period = period_map[period_label]
+period_map = {
+    "1 個月": "1mo", "3 個月": "3mo", "6 個月": "6mo",
+    "1 年": "1y", "2 年": "2y", "5 年": "5y",
+}
+period_label = st.selectbox("資料區間", list(period_map.keys()), index=3, key="period")
+period = period_map[period_label]
+
+# ─── 進階設定（收合在 expander 裡） ───
+with st.expander("⚙️ 技術指標 & 回測設定", expanded=False):
+    col_x1, col_x2 = st.columns(2)
+    with col_x1:
+        st.markdown("**🔧 技術指標**")
+        show_ma5 = st.checkbox("5日均線", True, key="ma5")
+        show_ma10 = st.checkbox("10日均線", True, key="ma10")
+        show_ma20 = st.checkbox("20日均線", True, key="ma20")
+        show_ma60 = st.checkbox("60日均線", False, key="ma60")
+        show_ma120 = st.checkbox("120日均線", False, key="ma120")
+        show_bb = st.checkbox("布林通道", True, key="bb")
+        show_kd = st.checkbox("KD 指標", True, key="kd")
+        show_volume_profile = st.checkbox("成交量分布圖", False, key="vp")
+    with col_x2:
+        st.markdown("**⚙️ 指標參數**")
+        rsi_period = st.slider("RSI 天數", 6, 30, 14, key="rsi_period")
+        bb_period = st.slider("布林天數", 10, 40, 20, key="bb_period")
+        bb_std = st.slider("布林標準差", 1.0, 3.0, 2.0, 0.1, key="bb_std")
+        kd_period = st.slider("KD 天數", 5, 30, 14, key="kd_period")
 
     st.divider()
-    st.header("🔧 技術指標")
-    show_ma5 = st.checkbox("5日均線", True, key="ma5")
-    show_ma10 = st.checkbox("10日均線", True, key="ma10")
-    show_ma20 = st.checkbox("20日均線", True, key="ma20")
-    show_ma60 = st.checkbox("60日均線", False, key="ma60")
-    show_ma120 = st.checkbox("120日均線", False, key="ma120")
-    show_bb = st.checkbox("布林通道", True, key="bb")
-    show_kd = st.checkbox("KD 指標", True, key="kd")
-    show_volume_profile = st.checkbox("成交量分布圖", False, key="vp")
-
-    st.divider()
-    st.header("⚙️ 指標參數")
-    rsi_period = st.slider("RSI 計算天數", 6, 30, 14, key="rsi_period")
-    bb_period = st.slider("布林通道天數", 10, 40, 20, key="bb_period")
-    bb_std = st.slider("布林標準差倍數", 1.0, 3.0, 2.0, 0.1, key="bb_std")
-    kd_period = st.slider("KD 計算天數", 5, 30, 14, key="kd_period")
-
-    st.divider()
-    st.header("🔄 回測設定")
+    st.markdown("**🔄 回測設定**")
     strategy_name = st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
     bt_initial = st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
-
-    st.divider()
-    st.header("⚙️ 策略參數")
     strategy_info = STRATEGIES[strategy_name]
     strategy_params = {}
     for p in strategy_info["params"]:
