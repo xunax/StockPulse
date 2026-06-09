@@ -51,7 +51,6 @@ st.markdown("""
     div.stMarkdown p { line-height: 1.6; }
     .card { background: #1a1a2e; border-radius: 16px; padding: 16px 20px; margin: 12px 0; }
     div[data-testid="stPopover"] button { font-size: 1.6rem !important; min-height: 0 !important; padding: 0 6px !important; line-height: 1 !important; }
-    .settings-panel { background: #16213e; border-radius: 16px; padding: 16px 20px; margin: 8px 0 16px 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -101,7 +100,7 @@ if not st.session_state["logged_in"]:
     st.stop()
 
 # ─── 已登入 ───
-col_logo, col_h, col_u = st.columns([3, 0.5, 1.2])
+col_logo, col_h, col_u = st.columns([3, 0.5, 0.5])
 with col_logo:
     st.title("📈 股票分析")
 with col_h:
@@ -149,11 +148,12 @@ with col_h:
             st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
         st.info("💡 設定完成後，切換到其他 Tab 查看分析")
 with col_u:
-    st.markdown(f"<div style='text-align:right;padding-top:0.5rem;'><small>👤 {st.session_state['username']}</small></div>", unsafe_allow_html=True)
-    if st.button("🚪", key="btn_logout", use_container_width=True):
-        st.session_state["logged_in"] = False
-        st.session_state["username"] = ""
-        st.rerun()
+    with st.popover("👤"):
+        st.markdown(f"**{st.session_state['username']}**")
+        if st.button("🚪 登出", key="btn_logout", use_container_width=True):
+            st.session_state["logged_in"] = False
+            st.session_state["username"] = ""
+            st.rerun()
 
 # ─── 初始化預設值 ───
 if "init_defaults" not in st.session_state:
