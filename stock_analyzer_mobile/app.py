@@ -118,6 +118,28 @@ if st.session_state.get("show_user"):
         st.session_state["username"] = ""
         st.rerun()
 
+# ─── 初始化預設值 ───
+if "init_defaults" not in st.session_state:
+    st.session_state.init_defaults = True
+    st.session_state.input_mode = "下拉選擇"
+    st.session_state.color_theme = "紅漲綠跌"
+    st.session_state.cat = "台股"
+    st.session_state.stock_select = "2330"
+    st.session_state.manual_symbol = "2330"
+    st.session_state.period = "1 年"
+    st.session_state.ma5 = True
+    st.session_state.ma10 = True
+    st.session_state.ma20 = True
+    st.session_state.bb = True
+    st.session_state.kd = True
+    st.session_state.rsi_period = 14
+    st.session_state.bb_period = 20
+    st.session_state.bb_std = 2.0
+    st.session_state.kd_period = 14
+    st.session_state.strategy = "均線黃金交叉"
+    st.session_state.show_settings = False
+    st.session_state.show_user = False
+
 if st.session_state.get("show_settings"):
     st.markdown("<div style='background:#16213e;border-radius:16px;padding:16px 20px;margin:8px 0 16px 0;'>", unsafe_allow_html=True)
     st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
@@ -163,28 +185,6 @@ if st.session_state.get("show_settings"):
         st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
     st.info("💡 設定完成後，切換到其他 Tab 查看分析")
     st.markdown("</div>", unsafe_allow_html=True)
-
-# ─── 初始化預設值 ───
-if "init_defaults" not in st.session_state:
-    st.session_state.init_defaults = True
-    st.session_state.input_mode = "下拉選擇"
-    st.session_state.color_theme = "紅漲綠跌"
-    st.session_state.cat = "台股"
-    st.session_state.stock_select = "2330"
-    st.session_state.manual_symbol = "2330"
-    st.session_state.period = "1 年"
-    st.session_state.ma5 = True
-    st.session_state.ma10 = True
-    st.session_state.ma20 = True
-    st.session_state.bb = True
-    st.session_state.kd = True
-    st.session_state.rsi_period = 14
-    st.session_state.bb_period = 20
-    st.session_state.bb_std = 2.0
-    st.session_state.kd_period = 14
-    st.session_state.strategy = "均線黃金交叉"
-    st.session_state.show_settings = False
-    st.session_state.show_user = False
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 主力", "🔔 監控"])
 
