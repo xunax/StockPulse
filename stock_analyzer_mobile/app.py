@@ -106,78 +106,25 @@ with col_user:
         st.session_state["username"] = ""
         st.rerun()
 
-# ─── 股票選擇（直接顯示在主頁） ───
-st.markdown("### 🔍 選擇股票")
-col_s1, col_s2 = st.columns([1, 1])
-with col_s1:
-    input_mode = st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
-with col_s2:
-    color_theme = st.radio("漲跌配色", ["紅漲綠跌", "綠漲紅跌"], horizontal=True, key="color_theme")
-    if color_theme == "紅漲綠跌":
-        up_color = "#ef5350"
-        down_color = "#26a69a"
-    else:
-        up_color = "#26a69a"
-        down_color = "#ef5350"
-
-if input_mode == "下拉選擇":
-    col_a, col_b = st.columns([1, 1])
-    with col_a:
-        cat = st.selectbox("分類", list(STOCKS.keys()), key="cat")
-        stock_options = STOCKS[cat]
-        code_list = list(stock_options.keys())
-    with col_b:
-        if "stock_select" not in st.session_state or st.session_state.stock_select not in code_list:
-            st.session_state.stock_select = code_list[0]
-        symbol = st.selectbox(
-            "選擇標的",
-            code_list,
-            key="stock_select",
-            format_func=lambda c: stock_options[c],
-        )
-        stock_name = stock_options[symbol]
-else:
-    symbol = st.text_input("股票代碼", "2330", key="manual_symbol").strip()
-    stock_name = symbol
-
-period_map = {
-    "1 個月": "1mo", "3 個月": "3mo", "6 個月": "6mo",
-    "1 年": "1y", "2 年": "2y", "5 年": "5y",
-}
-period_label = st.selectbox("資料區間", list(period_map.keys()), index=3, key="period")
-period = period_map[period_label]
-
-# ─── 進階設定（收合在 expander 裡） ───
-with st.expander("⚙️ 技術指標 & 回測設定", expanded=False):
-    col_x1, col_x2 = st.columns(2)
-    with col_x1:
-        st.markdown("**🔧 技術指標**")
-        show_ma5 = st.checkbox("5日均線", True, key="ma5")
-        show_ma10 = st.checkbox("10日均線", True, key="ma10")
-        show_ma20 = st.checkbox("20日均線", True, key="ma20")
-        show_ma60 = st.checkbox("60日均線", False, key="ma60")
-        show_ma120 = st.checkbox("120日均線", False, key="ma120")
-        show_bb = st.checkbox("布林通道", True, key="bb")
-        show_kd = st.checkbox("KD 指標", True, key="kd")
-        show_volume_profile = st.checkbox("成交量分布圖", False, key="vp")
-    with col_x2:
-        st.markdown("**⚙️ 指標參數**")
-        rsi_period = st.slider("RSI 天數", 6, 30, 14, key="rsi_period")
-        bb_period = st.slider("布林天數", 10, 40, 20, key="bb_period")
-        bb_std = st.slider("布林標準差", 1.0, 3.0, 2.0, 0.1, key="bb_std")
-        kd_period = st.slider("KD 天數", 5, 30, 14, key="kd_period")
-
-    st.divider()
-    st.markdown("**🔄 回測設定**")
-    strategy_name = st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
-    bt_initial = st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
-    strategy_info = STRATEGIES[strategy_name]
-    strategy_params = {}
-    for p in strategy_info["params"]:
-        strategy_params[p["name"]] = st.slider(
-            p["label"], p["min"], p["max"], p["default"],
-            step=p["step"], key=f"sp_{p['name']}"
-        )
+# ─── 初始化預設值 ───
+if "init_defaults" not in st.session_state:
+    st.session_state.init_defaults = True
+    st.session_state.input_mode = "下拉選擇"
+    st.session_state.color_theme = "紅漲綠跌"
+    st.session_state.cat = "台股"
+    st.session_state.stock_select = "2330"
+    st.session_state.manual_symbol = "2330"
+    st.session_state.period = "1 年"
+    st.session_state.ma5 = True
+    st.session_state.ma10 = True
+    st.session_state.ma20 = True
+    st.session_state.bb = True
+    st.session_state.kd = True
+    st.session_state.rsi_period = 14
+    st.session_state.bb_period = 20
+    st.session_state.bb_std = 2.0
+    st.session_state.kd_period = 14
+    st.session_state.strategy = "均線黃金交叉"
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 主力", "🔔 監控"])
 
@@ -192,6 +139,62 @@ if df.empty:
 
 df = calc_all_indicators(df, rsi_period=rsi_period, bb_period=bb_period, bb_std=bb_std, kd_period=kd_period)
 
+# ─── 讀取 session_state 中的選擇值 ───
+input_mode = st.session_state.get("input_mode", "下拉選擇")
+color_theme = st.session_state.get("color_theme", "紅漲綠跌")
+up_color = "#ef5350" if color_theme == "紅漲綠跌" else "#26a69a"
+down_color = "#26a69a" if color_theme == "紅漲綠跌" else "#ef5350"
+
+if input_mode == "下拉選擇":
+    cat = st.session_state.get("cat", "台股")
+    stock_options = STOCKS.get(cat, {})
+    code_list = list(stock_options.keys())
+    sym = st.session_state.get("stock_select", "2330")
+    symbol = sym if sym in code_list else (code_list[0] if code_list else "2330")
+    stock_name = stock_options.get(symbol, symbol)
+else:
+    symbol = st.session_state.get("manual_symbol", "2330").strip()
+    stock_name = symbol
+
+period_map = {"1 個月": "1mo", "3 個月": "3mo", "6 個月": "6mo", "1 年": "1y", "2 年": "2y", "5 年": "5y"}
+period_label = st.session_state.get("period", "1 年")
+period = period_map.get(period_label, "1y")
+
+strategy_name = st.session_state.get("strategy", "均線黃金交叉")
+strategy_info = STRATEGIES[strategy_name]
+strategy_params = {}
+for p in strategy_info["params"]:
+    strategy_params[p["name"]] = st.session_state.get(f"sp_{p['name']}", p["default"])
+
+rsi_period = st.session_state.get("rsi_period", 14)
+bb_period = st.session_state.get("bb_period", 20)
+bb_std = st.session_state.get("bb_std", 2.0)
+kd_period = st.session_state.get("kd_period", 14)
+
+show_ma5 = st.session_state.get("ma5", True)
+show_ma10 = st.session_state.get("ma10", True)
+show_ma20 = st.session_state.get("ma20", True)
+show_ma60 = st.session_state.get("ma60", False)
+show_ma120 = st.session_state.get("ma120", False)
+show_bb = st.session_state.get("bb", True)
+show_kd = st.session_state.get("kd", True)
+show_volume_profile = st.session_state.get("vp", False)
+bt_initial = st.session_state.get("bt_init", 1000000)
+
+# ─── Load data（共用） ───
+with st.spinner("載入資料中..."):
+    df = get_stock_data(symbol, period)
+    info = get_stock_info(symbol)
+
+if df.empty:
+    st.error("無法取得股票資料，請確認代碼是否正確")
+    st.stop()
+
+df = calc_all_indicators(df, rsi_period=rsi_period, bb_period=bb_period, bb_std=bb_std, kd_period=kd_period)
+
+all_stocks_flat = {k: v for cat in STOCKS.values() for k, v in cat.items()}
+stock_display_name = all_stocks_flat.get(symbol, symbol)
+
 # ═══════════════════════════════════════
 # TAB 1: 技術分析
 # ═══════════════════════════════════════
@@ -202,13 +205,57 @@ with tab1:
         st.success(f"已從主力動向導向至 **{r_name}({r_code})** 的技術分析頁面")
         st.session_state["redirect_stock"] = None
 
+    st.markdown("### 🔍 選擇股票")
+    st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
+    st.radio("漲跌配色", ["紅漲綠跌", "綠漲紅跌"], horizontal=True, key="color_theme")
+
+    if st.session_state.input_mode == "下拉選擇":
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.selectbox("分類", list(STOCKS.keys()), key="cat")
+            stock_options = STOCKS.get(st.session_state.cat, {})
+            code_list = list(stock_options.keys())
+        with col_b:
+            if st.session_state.stock_select not in code_list:
+                st.session_state.stock_select = code_list[0] if code_list else "2330"
+            st.selectbox("標的", code_list, key="stock_select", format_func=lambda c: stock_options.get(c, c))
+    else:
+        st.text_input("股票代碼", "2330", key="manual_symbol")
+
+    st.selectbox("資料區間", list(period_map.keys()), index=3, key="period")
+
+    with st.expander("⚙️ 進階設定", expanded=False):
+        col_x1, col_x2 = st.columns(2)
+        with col_x1:
+            st.markdown("**🔧 技術指標**")
+            st.checkbox("5日均線", True, key="ma5")
+            st.checkbox("10日均線", True, key="ma10")
+            st.checkbox("20日均線", True, key="ma20")
+            st.checkbox("60日均線", False, key="ma60")
+            st.checkbox("120日均線", False, key="ma120")
+            st.checkbox("布林通道", True, key="bb")
+            st.checkbox("KD 指標", True, key="kd")
+            st.checkbox("成交量分布圖", False, key="vp")
+        with col_x2:
+            st.markdown("**⚙️ 指標參數**")
+            st.slider("RSI 天數", 6, 30, 14, key="rsi_period")
+            st.slider("布林天數", 10, 40, 20, key="bb_period")
+            st.slider("布林標準差", 1.0, 3.0, 2.0, 0.1, key="bb_std")
+            st.slider("KD 天數", 5, 30, 14, key="kd_period")
+        st.divider()
+        st.markdown("**🔄 回測設定**")
+        st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
+        st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
+        strategy_info_ui = STRATEGIES[st.session_state.strategy]
+        for p in strategy_info_ui["params"]:
+            st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
+
+    st.divider()
+
     latest = df.iloc[-1]
     prev = df.iloc[-2]
     chg = latest["close"] - prev["close"]
     chg_pct = chg / prev["close"] * 100
-
-    all_stocks = {k: v for cat in STOCKS.values() for k, v in cat.items()}
-    stock_display_name = all_stocks.get(symbol, symbol)
 
     st.markdown(f"### 📌 {stock_display_name} ({symbol}) — {df.index[-1].strftime('%m-%d')}")
 
