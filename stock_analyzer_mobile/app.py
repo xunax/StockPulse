@@ -597,18 +597,24 @@ with tab3:
     display_cols = [c for c in display_cols if c in df.columns]
     df_display = df[display_cols].copy()
     df_display.columns = [col_map.get(c, c) for c in df_display.columns]
-    df_display.index = pd.to_datetime(df_display.index).strftime("%m-%d")
+    df_display = df_display.sort_index(ascending=False)
+    display_idx = pd.to_datetime(df_display.index).strftime("%m-%d")
+    df_display.index = display_idx
 
     st.dataframe(
-        df_display.sort_index(ascending=False),
+        df_display,
         use_container_width=True,
         height=400,
     )
 
-    csv = df_display.to_csv().encode("utf-8-sig")
+    csv = df[display_cols].copy()
+    csv.columns = [col_map.get(c, c) for c in csv.columns]
+    csv = csv.sort_index(ascending=False)
+    csv.index = pd.to_datetime(csv.index).strftime("%Y-%m-%d")
+    csv_data = csv.to_csv().encode("utf-8-sig")
     st.download_button(
         label="📥 下載 CSV",
-        data=csv,
+        data=csv_data,
         file_name=f"{symbol}_data.csv",
         mime="text/csv",
         use_container_width=True,
