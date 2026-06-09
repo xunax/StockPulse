@@ -505,7 +505,7 @@ with tab1:
     fig = plot_candlestick(df, stock_display_name, indicators + ["volume", "rsi", "macd", "kd"], up_color=up_color, down_color=down_color)
     if fig:
         st.plotly_chart(fig, use_container_width=True, key=f"kline_{symbol}_{period}", config={
-            "scrollZoom": True,
+            "scrollZoom": False,
             "displayModeBar": True,
             "responsive": True,
             "doubleClick": "reset",

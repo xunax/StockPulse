@@ -181,7 +181,7 @@ def plot_candlestick(df, stock_name="", indicators=None, show_sr=True, up_color=
         template="plotly_white",
         height=180 * rows,
         margin=dict(l=20, r=20, t=30, b=10),
-        dragmode="pan",
+        dragmode=False,
         font=dict(size=10),
         legend=dict(font=dict(size=9), orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     )
