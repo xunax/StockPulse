@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+user_data/
+*.db
+.DS_Store
+Thumbs.db
+.env.local
+.secrets.toml
