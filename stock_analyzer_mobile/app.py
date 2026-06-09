@@ -392,11 +392,17 @@ with tab1:
                     f"<div style='font-size:0.8rem;color:#888;'>⚡ 短期</div>"
                     f"<div style='font-size:1rem;font-weight:bold;color:{sc};'>{sv}</div>"
                     f"<div style='font-size:0.75rem;color:#aaa;'>評分 {s_score}</div></div>", unsafe_allow_html=True)
+        with st.expander("📋 詳細評估", expanded=False):
+            for r in s_reasons:
+                st.markdown(f"- {r}")
     with col_l:
         st.markdown(f"<div style='background:#1a1a2e;border:2px solid {lc};border-radius:12px;padding:10px;text-align:center;'>"
                     f"<div style='font-size:0.8rem;color:#888;'>📅 長期</div>"
                     f"<div style='font-size:1rem;font-weight:bold;color:{lc};'>{lv}</div>"
                     f"<div style='font-size:0.75rem;color:#aaa;'>評分 {l_score}</div></div>", unsafe_allow_html=True)
+        with st.expander("📋 詳細評估", expanded=False):
+            for r in l_reasons:
+                st.markdown(f"- {r}")
 
     st.markdown("### 📈 股價走勢")
     st.line_chart(df[["close"]], use_container_width=True, height=250)
