@@ -414,26 +414,31 @@ with tab1:
                 st.markdown(f"- {r}")
 
     st.markdown("### 📈 股價走勢")
-    fig_px = go.Figure()
-    fig_px.add_trace(go.Scatter(x=df.index, y=df["close"], mode="lines",
-        line=dict(color="#2196F3", width=2), name="收盤價"))
-    fig_px.update_layout(height=250, margin=dict(l=10, r=10, t=10, b=10),
-        template="plotly_dark", showlegend=False, dragmode=False)
-    fig_px.update_xaxes(showgrid=False, visible=False)
-    fig_px.update_yaxes(showgrid=False, visible=False)
-    st.plotly_chart(fig_px, use_container_width=True, config={"scrollZoom": False, "displayModeBar": False, "responsive": True})
+    try:
+        fig_px = go.Figure()
+        fig_px.add_trace(go.Scatter(x=df.index, y=df["close"], mode="lines",
+            line=dict(color="#2196F3", width=2), name="收盤價"))
+        fig_px.update_layout(height=250, margin=dict(l=5, r=5, t=5, b=5),
+            template="plotly_dark", showlegend=False, dragmode=False, hovermode=False)
+        fig_px.update_xaxes(showgrid=False, visible=False)
+        fig_px.update_yaxes(showgrid=False, visible=False)
+        st.plotly_chart(fig_px, use_container_width=True,
+            config={"scrollZoom": False, "displayModeBar": False, "staticPlot": True, "responsive": True})
+    except Exception:
+        st.line_chart(df[["close"]], use_container_width=True, height=250)
     st.markdown("### 📊 成交量")
-    fig_vx = go.Figure()
-    if "open" in df.columns:
+    try:
+        fig_vx = go.Figure()
         vc = [up_color if df.iloc[i]["close"] >= df.iloc[i]["open"] else down_color for i in range(len(df))]
-    else:
-        vc = up_color
-    fig_vx.add_trace(go.Bar(x=df.index, y=df["volume"], marker_color=vc, name="成交量"))
-    fig_vx.update_layout(height=150, margin=dict(l=10, r=10, t=10, b=10),
-        template="plotly_dark", showlegend=False, dragmode=False)
-    fig_vx.update_xaxes(showgrid=False, visible=False)
-    fig_vx.update_yaxes(showgrid=False, visible=False)
-    st.plotly_chart(fig_vx, use_container_width=True, config={"scrollZoom": False, "displayModeBar": False, "responsive": True})
+        fig_vx.add_trace(go.Bar(x=df.index, y=df["volume"], marker_color=vc, name="成交量"))
+        fig_vx.update_layout(height=150, margin=dict(l=5, r=5, t=5, b=5),
+            template="plotly_dark", showlegend=False, dragmode=False, hovermode=False)
+        fig_vx.update_xaxes(showgrid=False, visible=False)
+        fig_vx.update_yaxes(showgrid=False, visible=False)
+        st.plotly_chart(fig_vx, use_container_width=True,
+            config={"scrollZoom": False, "displayModeBar": False, "staticPlot": True, "responsive": True})
+    except Exception:
+        st.bar_chart(df[["volume"]], use_container_width=True, height=150)
 
     if show_volume_profile:
         st.markdown("### 📊 價格 vs 成交量")
