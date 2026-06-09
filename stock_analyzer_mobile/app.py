@@ -212,7 +212,7 @@ with tab_select:
                 stock_options_ui = STOCKS.get(st.session_state.cat, {})
                 code_list_ui = list(stock_options_ui.keys())
             with col_b:
-                if st.session_state.stock_select not in code_list_ui:
+                if st.session_state.get("stock_select") not in code_list_ui:
                     st.session_state.stock_select = code_list_ui[0] if code_list_ui else "2330"
                 st.selectbox("標的", code_list_ui, key="stock_select", format_func=lambda c: stock_options_ui.get(c, c))
         else:
