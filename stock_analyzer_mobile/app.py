@@ -100,60 +100,62 @@ if not st.session_state["logged_in"]:
     st.stop()
 
 # ─── 已登入 ───
-col_logo, col_h, col_u = st.columns([3, 0.5, 0.5])
+col_logo, col_right = st.columns([3, 1])
 with col_logo:
     st.title("📈 股票分析")
-with col_h:
-    with st.popover("☰"):
-        st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
-        st.radio("漲跌配色", ["紅漲綠跌", "綠漲紅跌"], horizontal=True, key="color_theme")
+with col_right:
+    r1, r2 = st.columns(2)
+    with r1:
+        with st.popover("☰"):
+            st.radio("輸入方式", ["下拉選擇", "手動輸入"], horizontal=True, key="input_mode")
+            st.radio("漲跌配色", ["紅漲綠跌", "綠漲紅跌"], horizontal=True, key="color_theme")
 
-        if st.session_state.input_mode == "下拉選擇":
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.selectbox("分類", list(STOCKS.keys()), key="cat")
-                stock_options_ui = STOCKS.get(st.session_state.cat, {})
-                code_list_ui = list(stock_options_ui.keys())
-            with col_b:
-                if st.session_state.get("stock_select") not in code_list_ui:
-                    st.session_state.stock_select = code_list_ui[0] if code_list_ui else "2330"
-                st.selectbox("標的", code_list_ui, key="stock_select", format_func=lambda c: stock_options_ui.get(c, c))
-        else:
-            st.text_input("股票代碼", "2330", key="manual_symbol")
+            if st.session_state.input_mode == "下拉選擇":
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    st.selectbox("分類", list(STOCKS.keys()), key="cat")
+                    stock_options_ui = STOCKS.get(st.session_state.cat, {})
+                    code_list_ui = list(stock_options_ui.keys())
+                with col_b:
+                    if st.session_state.get("stock_select") not in code_list_ui:
+                        st.session_state.stock_select = code_list_ui[0] if code_list_ui else "2330"
+                    st.selectbox("標的", code_list_ui, key="stock_select", format_func=lambda c: stock_options_ui.get(c, c))
+            else:
+                st.text_input("股票代碼", "2330", key="manual_symbol")
 
-        st.selectbox("資料區間", ["1 個月", "3 個月", "6 個月", "1 年", "2 年", "5 年"], index=3, key="period")
+            st.selectbox("資料區間", ["1 個月", "3 個月", "6 個月", "1 年", "2 年", "5 年"], index=3, key="period")
 
-        st.markdown("**🔧 技術指標**")
-        col_x1, col_x2 = st.columns(2)
-        with col_x1:
-            st.checkbox("5日均線", True, key="ma5")
-            st.checkbox("10日均線", True, key="ma10")
-            st.checkbox("20日均線", True, key="ma20")
-            st.checkbox("60日均線", False, key="ma60")
-            st.checkbox("120日均線", False, key="ma120")
-            st.checkbox("布林通道", True, key="bb")
-            st.checkbox("KD 指標", True, key="kd")
-            st.checkbox("成交量分布圖", False, key="vp")
-        with col_x2:
-            st.markdown("**⚙️ 指標參數**")
-            st.slider("RSI 天數", 6, 30, 14, key="rsi_period")
-            st.slider("布林天數", 10, 40, 20, key="bb_period")
-            st.slider("布林標準差", 1.0, 3.0, 2.0, 0.1, key="bb_std")
-            st.slider("KD 天數", 5, 30, 14, key="kd_period")
-        st.markdown("**🔄 回測設定**")
-        st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
-        st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
-        strategy_info_ui = STRATEGIES[st.session_state.strategy]
-        for p in strategy_info_ui["params"]:
-            st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
-        st.info("💡 設定完成後，切換到其他 Tab 查看分析")
-with col_u:
-    with st.popover("👤"):
-        st.markdown(f"**{st.session_state['username']}**")
-        if st.button("🚪 登出", key="btn_logout", use_container_width=True):
-            st.session_state["logged_in"] = False
-            st.session_state["username"] = ""
-            st.rerun()
+            st.markdown("**🔧 技術指標**")
+            col_x1, col_x2 = st.columns(2)
+            with col_x1:
+                st.checkbox("5日均線", True, key="ma5")
+                st.checkbox("10日均線", True, key="ma10")
+                st.checkbox("20日均線", True, key="ma20")
+                st.checkbox("60日均線", False, key="ma60")
+                st.checkbox("120日均線", False, key="ma120")
+                st.checkbox("布林通道", True, key="bb")
+                st.checkbox("KD 指標", True, key="kd")
+                st.checkbox("成交量分布圖", False, key="vp")
+            with col_x2:
+                st.markdown("**⚙️ 指標參數**")
+                st.slider("RSI 天數", 6, 30, 14, key="rsi_period")
+                st.slider("布林天數", 10, 40, 20, key="bb_period")
+                st.slider("布林標準差", 1.0, 3.0, 2.0, 0.1, key="bb_std")
+                st.slider("KD 天數", 5, 30, 14, key="kd_period")
+            st.markdown("**🔄 回測設定**")
+            st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
+            st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
+            strategy_info_ui = STRATEGIES[st.session_state.strategy]
+            for p in strategy_info_ui["params"]:
+                st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
+            st.info("💡 設定完成後，切換到其他 Tab 查看分析")
+    with r2:
+        with st.popover("👤"):
+            st.markdown(f"**{st.session_state['username']}**")
+            if st.button("🚪 登出", key="btn_logout", use_container_width=True):
+                st.session_state["logged_in"] = False
+                st.session_state["username"] = ""
+                st.rerun()
 
 # ─── 初始化預設值 ───
 if "init_defaults" not in st.session_state:
