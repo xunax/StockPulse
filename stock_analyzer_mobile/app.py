@@ -315,9 +315,35 @@ with tab1:
 
     st.markdown("##")
     st.markdown("### 📈 股價走勢")
-    st.line_chart(df[["close"]], use_container_width=True, height=250)
+    up_dn = [up_color if df.iloc[i]["close"] >= df.iloc[i]["open"] else down_color for i in range(len(df))]
+    fig_price = go.Figure()
+    fig_price.add_trace(go.Scatter(
+        x=df.index, y=df["close"], mode="lines+markers",
+        name="收盤價", line=dict(color="#888", width=1.5),
+        marker=dict(color=up_dn, size=6, symbol="circle"),
+    ))
+    # 最後一筆用箭頭
+    last_up = df.iloc[-1]["close"] >= df.iloc[-1]["open"]
+    fig_price.add_trace(go.Scatter(
+        x=[df.index[-1]], y=[df.iloc[-1]["close"]],
+        mode="markers", showlegend=False,
+        marker=dict(color=up_dn[-1], size=14, symbol="triangle-up" if last_up else "triangle-down"),
+    ))
+    fig_price.update_layout(height=250, margin=dict(l=10, r=10, t=10, b=10), template="plotly_dark",
+                           showlegend=False, dragmode=False, hovermode="x unified")
+    fig_price.update_xaxes(showgrid=False)
+    fig_price.update_yaxes(showgrid=True, gridcolor="#333")
+    st.plotly_chart(fig_price, use_container_width=True, config={"scrollZoom": False, "displayModeBar": False, "responsive": True})
+
     st.markdown("### 📊 成交量")
-    st.bar_chart(df[["volume"]], use_container_width=True, height=150)
+    vol_colors = [up_color if df.iloc[i]["close"] >= df.iloc[i]["open"] else down_color for i in range(len(df))]
+    fig_vol = go.Figure()
+    fig_vol.add_trace(go.Bar(x=df.index, y=df["volume"], marker_color=vol_colors, name="成交量"))
+    fig_vol.update_layout(height=150, margin=dict(l=10, r=10, t=10, b=10), template="plotly_dark",
+                         showlegend=False, dragmode=False, hovermode="x unified")
+    fig_vol.update_xaxes(showgrid=False)
+    fig_vol.update_yaxes(showgrid=True, gridcolor="#333")
+    st.plotly_chart(fig_vol, use_container_width=True, config={"scrollZoom": False, "displayModeBar": False, "responsive": True})
 
     if show_volume_profile:
         st.markdown("### 📊 價格 vs 成交量")
