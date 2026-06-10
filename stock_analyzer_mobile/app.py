@@ -135,17 +135,17 @@ if st.session_state.get("show_user"):
         st.rerun()
 
 # ─── 股票選擇 (永遠在畫面上) ───
-col_cat, col_sym, col_dum = st.columns([4, 4, 2])
-with col_cat:
-    st.selectbox("分類", list(STOCKS.keys()), key="cat")
-    stock_opts = STOCKS.get(st.session_state.cat, {})
-    code_list_ui = list(stock_opts.keys())
-with col_sym:
-    if st.session_state.get("stock_select") not in code_list_ui:
-        st.session_state.stock_select = code_list_ui[0] if code_list_ui else "2330"
-    st.selectbox("標的", code_list_ui, key="stock_select", format_func=lambda c: stock_opts.get(c, c))
+CAT_MARKET = {
+    "台股上市": "上市", "台股上櫃": "上櫃",
+    "台股ETF": "上市",
+    "美股": "國際", "美股ETF": "國際",
+}
+
+col_mkt, col_dum = st.columns([5, 1])
+with col_mkt:
+    st.radio("市場", ["上市", "上櫃", "國際"], horizontal=True, key="market", label_visibility="collapsed")
 with col_dum:
-    with st.popover("☰ 設定", use_container_width=True):
+    with st.popover("☰", use_container_width=True):
         st.radio("漲跌配色", ["紅漲綠跌", "綠漲紅跌"], horizontal=True, key="color_theme")
         st.selectbox("資料區間", ["1 個月", "3 個月", "6 個月", "1 年", "2 年", "5 年"], index=3, key="period")
         st.markdown("**🔧 技術指標**")
@@ -172,12 +172,21 @@ with col_dum:
         for p in strategy_info_ui["params"]:
             st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
 
-# ─── 手動輸入（選填）───
-manual_tab, auto_tab = st.columns([4, 6])
-with manual_tab:
-    st.text_input("🔍 手動輸入代碼", key="manual_symbol", placeholder="如 2330、AAPL", label_visibility="collapsed")
-with auto_tab:
-    st.caption("非清單內的股票也可直接輸入代碼查詢")
+col_cat, col_sym, col_manual = st.columns([3, 3.5, 2.5])
+with col_cat:
+    filtered_cats = [k for k, v in CAT_MARKET.items() if v == st.session_state.market]
+    if st.session_state.get("cat") not in filtered_cats:
+        st.session_state.cat = filtered_cats[0]
+    st.selectbox("分類", filtered_cats, key="cat", label_visibility="collapsed")
+    stock_opts = STOCKS.get(st.session_state.cat, {})
+    code_list_ui = list(stock_opts.keys())
+with col_sym:
+    if st.session_state.get("stock_select") not in code_list_ui:
+        st.session_state.stock_select = code_list_ui[0] if code_list_ui else "2330"
+    st.selectbox("標的", code_list_ui, key="stock_select", label_visibility="collapsed", format_func=lambda c: stock_opts.get(c, c))
+with col_manual:
+    st.text_input("🔍", key="manual_symbol", placeholder="代碼", label_visibility="collapsed")
+    st.caption("非清單內可手動輸入")
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 主力", "🔔 監控"])
 
@@ -186,7 +195,7 @@ color_theme = st.session_state.get("color_theme", "紅漲綠跌")
 up_color = "#ef5350" if color_theme == "紅漲綠跌" else "#26a69a"
 down_color = "#26a69a" if color_theme == "紅漲綠跌" else "#ef5350"
 
-cat = st.session_state.get("cat", "台股")
+cat = st.session_state.get("cat", "台股上市")
 stock_options = STOCKS.get(cat, {})
 code_list = list(stock_options.keys())
 manual = st.session_state.get("manual_symbol", "").strip()
@@ -1002,6 +1011,7 @@ with tab5:
                                 for c in STOCKS:
                                     if r["code"] in STOCKS[c]:
                                         st.session_state.cat = c
+                                        st.session_state.market = CAT_MARKET.get(c, "上市")
                                         break
                                 st.session_state.stock_select = r["code"]
                                 st.rerun()
@@ -1020,18 +1030,30 @@ with tab6:
     if "watchlist" not in st.session_state:
         st.session_state["watchlist"] = auth.get_watchlist(st.session_state["username"])
 
-    with st.expander("➕ 新增持股", expanded=True):
+    def _auto_fill_name():
+        sym = st.session_state.get("wl_sym", "").strip().upper()
+        if not sym:
+            return
+        for stocks in STOCKS.values():
+            if sym in stocks:
+                st.session_state.wl_name = stocks[sym]
+                return
+        st.session_state.wl_name = sym
+
+    with st.expander("➕ 新增買入記錄（DCA 分批加碼）", expanded=True):
         c1, c2 = st.columns(2)
         with c1:
-            wl_symbol = st.text_input("股票代碼", "2330", key="wl_sym")
-            wl_price = st.number_input("買入均價", min_value=0.0, value=600.0, step=0.1, key="wl_price")
-            wl_date = st.date_input("買入日期", key="wl_date")
+            wl_symbol = st.text_input("股票代碼", "2330", key="wl_sym", on_change=_auto_fill_name)
+            wl_price = st.number_input("買入價格", min_value=0.0, value=600.0, step=0.1, key="wl_price")
+            wl_shares = st.number_input("買入股數", min_value=1, value=1000, step=100, key="wl_shares")
         with c2:
-            wl_name = st.text_input("股票名稱", "台積電", key="wl_name")
-            wl_shares = st.number_input("購買股數", min_value=1, value=1000, step=100, key="wl_shares")
+            if st.session_state.get("wl_sym") and not st.session_state.get("wl_name"):
+                _auto_fill_name()
+            wl_name = st.text_input("股票名稱", key="wl_name")
+            wl_date = st.date_input("買入日期", key="wl_date")
             wl_strategy = st.selectbox("策略", ["短期", "長期"], key="wl_strat")
 
-        if st.button("➕ 加入監控", type="primary", use_container_width=True):
+        if st.button("➕ 新增買入記錄", type="primary", use_container_width=True):
             entry = {
                 "symbol": wl_symbol.strip(),
                 "name": wl_name.strip(),
@@ -1040,34 +1062,37 @@ with tab6:
                 "buy_date": wl_date.strftime("%Y-%m-%d"),
                 "strategy": wl_strategy,
             }
-            exists = any(w["symbol"] == entry["symbol"] and w["buy_price"] == entry["buy_price"] for w in st.session_state["watchlist"])
-            if not exists:
-                auth.add_to_watchlist(st.session_state["username"], entry)
-                st.session_state["watchlist"] = auth.get_watchlist(st.session_state["username"])
-                st.success(f"已加入 {entry['name']}({entry['symbol']})")
-                st.rerun()
-            else:
-                st.warning("此持股已在監控列表中")
+            auth.add_to_watchlist(st.session_state["username"], entry)
+            st.session_state["watchlist"] = auth.get_watchlist(st.session_state["username"])
+            st.success(f"已加入 {entry['name']}({entry['symbol']}) 買入記錄")
+            st.rerun()
 
     if not st.session_state["watchlist"]:
         st.info("尚無監控持股，請先新增。")
     else:
-        st.markdown(f"### 📋 監控列表（{len(st.session_state['watchlist'])} 檔）")
+        from collections import defaultdict
+        grouped = defaultdict(list)
+        for wl in st.session_state["watchlist"]:
+            grouped[wl["symbol"]].append(wl)
+
+        # load data for all symbols
         all_data = {}
-        symbols_needed = list(set(w["symbol"] for w in st.session_state["watchlist"]))
+        symbols_needed = list(grouped.keys())
         with st.spinner("載入監控持股資料..."):
             for sym in symbols_needed:
                 d = get_stock_data(sym, "6mo")
                 if not d.empty:
                     all_data[sym] = d
 
-        for idx, wl in enumerate(st.session_state["watchlist"]):
-            sym = wl["symbol"]
-            name = wl["name"]
-            buy_price = wl["buy_price"]
-            shares = wl.get("shares", 0)
-            buy_date = wl["buy_date"]
-            strategy = wl["strategy"]
+        st.markdown(f"### 📋 監控列表（{len(grouped)} 檔標的）")
+
+        for sym, items in grouped.items():
+            name = items[0]["name"]
+            total_shares = sum(w.get("shares", 0) for w in items)
+            total_cost_val = sum(w["buy_price"] * w.get("shares", 0) for w in items)
+            avg_cost = total_cost_val / total_shares if total_shares > 0 else 0
+            earliest_date = min(w["buy_date"] for w in items)
+            strategy = "長期" if any(w["strategy"] == "長期" for w in items) else "短期"
 
             if sym not in all_data or all_data[sym].empty:
                 st.warning(f"⚠️ {name}({sym}) 無法取得資料")
@@ -1077,8 +1102,8 @@ with tab6:
             df_wl = calc_all_indicators(df_wl)
             latest = df_wl.iloc[-1]
             cur_price = float(latest["close"])
-            chg = cur_price - buy_price
-            chg_pct = chg / buy_price * 100
+            chg = cur_price - avg_cost
+            chg_pct = chg / avg_cost * 100
 
             sell_score = 0
             sell_reasons = []
@@ -1094,64 +1119,44 @@ with tab6:
 
             if strategy == "短期":
                 if rsi_val_wl is not None and rsi_val_wl > 75:
-                    sell_score += 2
-                    sell_reasons.append(f"⚠️ RSI={rsi_val_wl:.1f} 超買")
+                    sell_score += 2; sell_reasons.append(f"⚠️ RSI={rsi_val_wl:.1f} 超買")
                 if stoch_k_wl is not None and stoch_k_wl > 85:
-                    sell_score += 2
-                    sell_reasons.append(f"⚠️ KD K={stoch_k_wl:.1f} 超買")
+                    sell_score += 2; sell_reasons.append(f"⚠️ KD K={stoch_k_wl:.1f} 超買")
                 if vol_ma5_wl is not None and vol_ma5_wl > 0 and vol_wl / vol_ma5_wl > 2.0 and chg < 0:
-                    sell_score += 2
-                    sell_reasons.append("⚠️ 爆量下跌")
+                    sell_score += 2; sell_reasons.append("⚠️ 爆量下跌")
                 if bb_u_wl is not None and bb_l_wl is not None and (bb_u_wl - bb_l_wl) > 0:
                     bb_pos = (cur_price - bb_l_wl) / (bb_u_wl - bb_l_wl)
                     if bb_pos > 0.95:
-                        sell_score += 1
-                        sell_reasons.append("⚠️ 觸及布林上軌")
+                        sell_score += 1; sell_reasons.append("⚠️ 觸及布林上軌")
                 if chg_pct > 15:
-                    sell_score += 2
-                    sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%")
+                    sell_score += 2; sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%")
                 elif chg_pct > 8:
-                    sell_score += 1
-                    sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%")
+                    sell_score += 1; sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%")
                 if stoch_k_wl is not None and stoch_d_wl is not None and stoch_k_wl < stoch_d_wl and stoch_k_wl > 70:
-                    sell_score += 1
-                    sell_reasons.append("⚠️ KD 死亡交叉")
+                    sell_score += 1; sell_reasons.append("⚠️ KD 死亡交叉")
             else:
                 if ma20_val_wl is not None and ma60_val_wl is not None and ma20_val_wl < ma60_val_wl:
-                    sell_score += 2
-                    sell_reasons.append("⚠️ MA20 < MA60，中期趨勢轉空")
+                    sell_score += 2; sell_reasons.append("⚠️ MA20 < MA60，中期趨勢轉空")
                 if chg_pct < -20:
-                    sell_score += 2
-                    sell_reasons.append(f"🔴 虧損 {chg_pct:.1f}%，考慮停損")
+                    sell_score += 2; sell_reasons.append(f"🔴 虧損 {chg_pct:.1f}%，考慮停損")
                 if chg_pct > 12:
-                    sell_score += 1
-                    sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%，可考慮部分獲利了結")
-                if info and info.get("pe_ratio") and info["pe_ratio"] > 40:
-                    sell_score += 1
-                    sell_reasons.append(f"⚠️ 本益比 {info['pe_ratio']:.1f} 偏高")
-
+                    sell_score += 1; sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%，可考慮部分獲利了結")
             if sell_score >= 4:
-                action = "🔴 強烈建議賣出"
-                action_color = "#ef5350"
+                action = "🔴 強烈建議賣出"; action_color = "#ef5350"
             elif sell_score >= 2:
-                action = "🟠 建議考慮賣出"
-                action_color = "#FF9800"
+                action = "🟠 建議考慮賣出"; action_color = "#FF9800"
             elif sell_score >= 1:
-                action = "🟡 可觀察賣出"
-                action_color = "#FFC107"
+                action = "🟡 可觀察賣出"; action_color = "#FFC107"
             elif chg_pct > 5:
-                action = "🟢 繼續持有"
-                action_color = "#26a69a"
+                action = "🟢 繼續持有"; action_color = "#26a69a"
             else:
-                action = "🟢 觀望持有"
-                action_color = "#26a69a"
+                action = "🟢 觀望持有"; action_color = "#26a69a"
 
             profit_color = up_color if chg >= 0 else down_color
-            strat_icon = "⚡" if strategy == "短期" else "📅"
-            total_cost = buy_price * shares
-            total_value = cur_price * shares
-            total_pnl = total_value - total_cost
+            total_value = cur_price * total_shares
+            total_pnl = total_value - total_cost_val
             pnl_color = up_color if total_pnl >= 0 else down_color
+            strat_icon = "⚡" if strategy == "短期" else "📅"
 
             with st.container():
                 st.markdown(f"""
@@ -1159,14 +1164,14 @@ with tab6:
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
     <div>
       <span style="font-size:1em;font-weight:bold;">{name} ({sym})</span>
-      <span style="font-size:0.75em;color:#888;margin-left:6px;">{strat_icon} {shares:,}股</span>
+      <span style="font-size:0.75em;color:#888;margin-left:6px;">{strat_icon} {total_shares:,}股</span>
     </div>
     <div style="text-align:right;">
       <span style="font-size:1.2em;font-weight:bold;color:{profit_color};">{chg_pct:+.2f}%</span>
     </div>
   </div>
   <div style="display:flex;justify-content:space-between;margin-top:4px;flex-wrap:wrap;">
-    <div style="font-size:0.8em;color:#aaa;">買 {buy_price:.2f} → 現 {cur_price:.2f}</div>
+    <div style="font-size:0.8em;color:#aaa;">均價 {avg_cost:.2f} → 現 {cur_price:.2f}</div>
     <div style="font-size:0.85em;font-weight:bold;color:{pnl_color};">{total_pnl:+,.0f} 元</div>
   </div>
   <div style="margin-top:2px;font-size:0.85em;color:{action_color};font-weight:bold;">{action}</div>
@@ -1178,9 +1183,15 @@ with tab6:
                         for r in sell_reasons:
                             st.markdown(f"- {r}")
 
-                if st.button(f"🗑️ 移除 {name}", key=f"wl_del_{idx}", use_container_width=True):
-                    item_id = wl.get("id")
-                    if item_id:
-                        auth.remove_from_watchlist(st.session_state["username"], item_id)
-                    st.session_state["watchlist"] = auth.get_watchlist(st.session_state["username"])
-                    st.rerun()
+                with st.expander("📋 交易明細", expanded=False):
+                    for w in sorted(items, key=lambda x: x["buy_date"]):
+                        c_a, c_b, c_c = st.columns([3, 2, 1])
+                        with c_a:
+                            st.text(f"📅 {w['buy_date']}")
+                        with c_b:
+                            st.text(f"買 {w.get('shares',0)} 股 @ {w['buy_price']:.2f}")
+                        with c_c:
+                            if st.button("🗑️", key=f"wl_del_{w.get('id')}"):
+                                auth.remove_from_watchlist(st.session_state["username"], w.get("id"))
+                                st.session_state["watchlist"] = auth.get_watchlist(st.session_state["username"])
+                                st.rerun()

@@ -4,7 +4,7 @@ import numpy as np
 import streamlit as st
 
 STOCKS = {
-    "台股": {
+    "台股上市": {
         "2330": "台積電", "2317": "鴻海", "2454": "聯發科", "2412": "中華電信",
         "2308": "台達電", "2881": "富邦金控", "2882": "國泰金控", "3008": "大立光",
         "1301": "台塑", "1303": "南亞", "2002": "中鋼", "1101": "台泥",
@@ -20,6 +20,19 @@ STOCKS = {
         "2353": "宏碁", "2377": "微星科技", "2395": "研華", "6415": "矽力*-KY",
         "5269": "祥碩", "3443": "創意電子", "3661": "世芯-KY", "5274": "信驊科技",
         "6649": "台光電子", "6278": "台表科", "4958": "臻鼎-KY", "8150": "南茂",
+    },
+    "台股上櫃": {
+        "3105": "穩懋", "5483": "中美晶", "4966": "譜瑞-KY",
+        "8299": "群聯", "6121": "新普", "8069": "元太科技", "8086": "宏捷科",
+        "5347": "世界先進", "6732": "昇佳電子", "3218": "大學光", "6274": "台燿",
+        "3227": "原相", "3374": "精材", "6182": "合晶", "6510": "精測",
+        "6679": "鈺太", "6683": "雍智科技", "6719": "力智", "1785": "光洋科",
+        "1815": "富喬", "3260": "威剛", "5009": "榮剛", "5905": "南仁湖",
+        "8436": "大江", "4123": "晟德", "4743": "合一", "4766": "南寶",
+        "4736": "泰博", "4162": "智擎", "6541": "泰福-KY", "6561": "是方",
+        "6757": "台灣虎航", "6763": "綠界科技", "6805": "富世達", "6811": "宏碁資訊",
+        "6854": "創威", "6861": "睿生光電", "6870": "騰雲", "6901": "鑽石投資",
+        "6928": "攸泰科技",
     },
     "美股": {
         "AAPL": "蘋果", "MSFT": "微軟", "GOOGL": "谷歌", "AMZN": "亞馬遜",
@@ -62,19 +75,24 @@ STOCKS = {
 
 @st.cache_data(ttl=3600)
 def get_stock_data(symbol, period="6mo"):
-    if symbol.isdigit() or symbol.endswith(".TW"):
-        sym = f"{symbol}.TW" if not symbol.endswith(".TW") else symbol
+    if symbol.isdigit():
+        sym_variants = [f"{symbol}.TW", f"{symbol}.TWO"]
+    elif symbol.endswith(".TW") or symbol.endswith(".TWO"):
+        sym_variants = [symbol]
     else:
-        sym = symbol
-    for attempt in range(3):
-        try:
-            df = yf.download(sym, period=period, auto_adjust=True, progress=False)
-            if not df.empty:
-                break
-        except Exception:
-            import time
-            time.sleep(1)
-            df = pd.DataFrame()
+        sym_variants = [symbol]
+    for sym in sym_variants:
+        for attempt in range(3):
+            try:
+                df = yf.download(sym, period=period, auto_adjust=True, progress=False)
+                if not df.empty:
+                    break
+            except Exception:
+                import time
+                time.sleep(1)
+                df = pd.DataFrame()
+        if not df.empty:
+            break
     if df.empty:
         return df
     if isinstance(df.columns, pd.MultiIndex):
@@ -85,11 +103,18 @@ def get_stock_data(symbol, period="6mo"):
 
 @st.cache_data(ttl=3600)
 def get_stock_info(symbol):
-    sym = f"{symbol}.TW" if symbol.isdigit() else symbol
-    try:
-        tk = yf.Ticker(sym)
-        info = tk.info
-        return {
+    if symbol.isdigit():
+        sym_variants = [f"{symbol}.TW", f"{symbol}.TWO"]
+    elif symbol.endswith(".TW") or symbol.endswith(".TWO"):
+        sym_variants = [symbol]
+    else:
+        sym_variants = [symbol]
+    for sym in sym_variants:
+        try:
+            tk = yf.Ticker(sym)
+            info = tk.info
+            if info and info.get("regularMarketPrice"):
+                return {
             "name": info.get("longName", info.get("shortName", symbol)),
             "market_cap": info.get("marketCap", 0),
             "pe_ratio": info.get("trailingPE", 0),
@@ -99,8 +124,9 @@ def get_stock_info(symbol):
             "low_52w": info.get("fiftyTwoWeekLow", 0),
             "volume_avg": info.get("averageVolume", 0),
         }
-    except:
-        return {"name": symbol}
+        except:
+            continue
+    return {"name": symbol}
 
 SECTORS_TW = {
     "半導體": ["2330", "2454", "2303", "2317", "2382", "3231", "2376", "3034",
