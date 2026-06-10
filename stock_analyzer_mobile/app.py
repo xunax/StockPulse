@@ -244,7 +244,7 @@ if df.empty:
 df = calc_all_indicators(df, rsi_period=rsi_period, bb_period=bb_period, bb_std=bb_std, kd_period=kd_period)
 
 all_stocks_flat = {k: v for cat in STOCKS.values() for k, v in cat.items()}
-stock_display_name = all_stocks_flat.get(symbol, symbol)
+stock_display_name = all_stocks_flat.get(symbol, info.get("name", symbol))
 
 # ═══════════════════════════════════════
 # TAB 1: 技術分析
