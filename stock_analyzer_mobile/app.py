@@ -7,6 +7,10 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
+import re
+
+def _has_chinese(text):
+    return bool(re.search(r'[\u4e00-\u9fff]', str(text)))
 
 from utils import get_stock_data, get_stock_info, calc_all_indicators, STOCKS, SECTORS_TW, SECTORS_US, SECTORS_ETF
 from charts import plot_candlestick, plot_volume_profile
@@ -244,7 +248,8 @@ if df.empty:
 df = calc_all_indicators(df, rsi_period=rsi_period, bb_period=bb_period, bb_std=bb_std, kd_period=kd_period)
 
 all_stocks_flat = {k: v for cat in STOCKS.values() for k, v in cat.items()}
-stock_display_name = all_stocks_flat.get(symbol, info.get("name", symbol))
+name_from_info = info.get("name", "")
+stock_display_name = all_stocks_flat.get(symbol) or (_has_chinese(name_from_info) and name_from_info) or symbol
 
 # ═══════════════════════════════════════
 # TAB 1: 技術分析
