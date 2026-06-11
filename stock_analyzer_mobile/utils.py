@@ -126,7 +126,7 @@ def _fetch_twse_history(symbol, n_months=6):
             y -= 1
         try:
             resp = requests.get(
-                f"https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY?stockNo={symbol}&date={y}{m:02d}01",
+                f"https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date={y}{m:02d}01&stockNo={symbol}",
                 timeout=10,
             )
             if resp.status_code == 200:
