@@ -2,9 +2,11 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import streamlit as st
+import requests
+from datetime import datetime
 
 STOCKS = {
-    "台股": {
+    "台股上市": {
         "2330": "台積電", "2317": "鴻海", "2454": "聯發科", "2412": "中華電信",
         "2308": "台達電", "2881": "富邦金控", "2882": "國泰金控", "3008": "大立光",
         "1301": "台塑", "1303": "南亞", "2002": "中鋼", "1101": "台泥",
@@ -20,21 +22,35 @@ STOCKS = {
         "2353": "宏碁", "2377": "微星科技", "2395": "研華", "6415": "矽力*-KY",
         "5269": "祥碩", "3443": "創意電子", "3661": "世芯-KY", "5274": "信驊科技",
         "6649": "台光電子", "6278": "台表科", "4958": "臻鼎-KY", "8150": "南茂",
+        "8043": "蜜望實",
+    },
+    "台股上櫃": {
+        "3105": "穩懋", "5483": "中美晶", "4966": "譜瑞-KY",
+        "8299": "群聯", "6121": "新普", "8069": "元太科技", "8086": "宏捷科",
+        "5347": "世界先進", "6732": "昇佳電子", "3218": "大學光", "6274": "台燿",
+        "3227": "原相", "3374": "精材", "6182": "合晶", "6510": "精測",
+        "6679": "鈺太", "6683": "雍智科技", "6719": "力智", "1785": "光洋科",
+        "1815": "富喬", "3260": "威剛", "5009": "榮剛", "5905": "南仁湖",
+        "8436": "大江", "4123": "晟德", "4743": "合一", "4766": "南寶",
+        "4736": "泰博", "4162": "智擎", "6541": "泰福-KY", "6561": "是方",
+        "6757": "台灣虎航", "6763": "綠界科技", "6805": "富世達", "6811": "宏碁資訊",
+        "6854": "創威", "6861": "睿生光電", "6870": "騰雲", "6901": "鑽石投資",
+        "6928": "攸泰科技",
     },
     "美股": {
-        "AAPL": "蘋果", "MSFT": "微軟", "GOOGL": "谷歌", "AMZN": "亞馬遜",
-        "META": "Meta", "NVDA": "輝達", "TSLA": "特斯拉", "AVGO": "博通",
-        "JPM": "摩根大通", "V": "VISA", "MA": "萬事達卡", "JNJ": "嬌生",
-        "WMT": "沃爾瑪", "PG": "寶鹼", "XOM": "埃克森美孚",
-        "UNH": "聯合健康", "HD": "家得寶", "BAC": "美國銀行",
-        "DIS": "迪士尼", "ADBE": "奧多比", "NFLX": "網飛", "CRM": "賽富時",
-        "INTC": "英特爾", "AMD": "超微半導體", "COST": "好市多", "KO": "可口可樂",
-        "PEP": "百事可樂", "MRK": "默克", "ABBV": "艾伯維", "TMO": "賽默飛世爾",
-        "NKE": "耐吉", "ORCL": "甲骨文", "IBM": "IBM", "CSCO": "思科",
-        "QCOM": "高通", "TXN": "德州儀器", "BA": "波音",
-        "GE": "奇異", "CAT": "卡特彼勒", "MCD": "麥當勞",
-        "SBUX": "星巴克", "UBER": "優步", "ABNB": "Airbnb", "PYPL": "PayPal",
-        "SNAP": "Snap", "SNOW": "Snowflake", "PLTR": "Palantir", "DASH": "DoorDash",
+        "AAPL": "AAPL", "MSFT": "MSFT", "GOOGL": "GOOGL", "AMZN": "AMZN",
+        "META": "META", "NVDA": "NVDA", "TSLA": "TSLA", "AVGO": "AVGO",
+        "JPM": "JPM", "V": "V", "MA": "MA", "JNJ": "JNJ",
+        "WMT": "WMT", "PG": "PG", "XOM": "XOM",
+        "UNH": "UNH", "HD": "HD", "BAC": "BAC",
+        "DIS": "DIS", "ADBE": "ADBE", "NFLX": "NFLX", "CRM": "CRM",
+        "INTC": "INTC", "AMD": "AMD", "COST": "COST", "KO": "KO",
+        "PEP": "PEP", "MRK": "MRK", "ABBV": "ABBV", "TMO": "TMO",
+        "NKE": "NKE", "ORCL": "ORCL", "IBM": "IBM", "CSCO": "CSCO",
+        "QCOM": "QCOM", "TXN": "TXN", "BA": "BA",
+        "GE": "GE", "CAT": "CAT", "MCD": "MCD",
+        "SBUX": "SBUX", "UBER": "UBER", "ABNB": "ABNB", "PYPL": "PYPL",
+        "SNAP": "SNAP", "SNOW": "SNOW", "PLTR": "PLTR", "DASH": "DASH",
     },
     "台股ETF": {
         "0050": "元大台灣50", "0056": "元大高股息", "00878": "國泰永續高股息",
@@ -46,53 +62,193 @@ STOCKS = {
         "00690": "兆豐藍籌30", "00900": "富邦特選高股息30", "00922": "國泰台灣領袖50",
     },
     "美股ETF": {
-        "SPY": "SPDR 標普500", "QQQ": "Invesco 納斯達克100", "VTI": "先鋒整體市場",
-        "VOO": "先鋒標普500", "IVV": "iShares 核心標普500",
-        "IWM": "iShares 羅素2000", "DIA": "SPDR 道瓊",
-        "TLT": "iShares 20年期以上公債", "AGG": "iShares 核心美國債券",
-        "BND": "先鋒總債券", "GLD": "SPDR 黃金", "SLV": "iShares 白銀",
-        "VNQ": "先鋒不動產", "XLF": "金融類股",
-        "XLK": "科技類股", "XLE": "能源類股",
-        "XLV": "醫療保健類股", "XLI": "工業類股",
-        "SMH": "費城半導體", "SOXX": "iShares 半導體",
-        "ARKK": "ARK 創新", "TQQQ": "ProShares 3倍看多納指",
-        "SQQQ": "ProShares 3倍放空納指", "UPRO": "ProShares 3倍看多標普",
+        "SPY": "SPY", "QQQ": "QQQ", "VTI": "VTI",
+        "VOO": "VOO", "IVV": "IVV",
+        "IWM": "IWM", "DIA": "DIA",
+        "TLT": "TLT", "AGG": "AGG",
+        "BND": "BND", "GLD": "GLD", "SLV": "SLV",
+        "VNQ": "VNQ", "XLF": "XLF",
+        "XLK": "XLK", "XLE": "XLE",
+        "XLV": "XLV", "XLI": "XLI",
+        "SMH": "SMH", "SOXX": "SOXX",
+        "ARKK": "ARKK", "TQQQ": "TQQQ",
+        "SQQQ": "SQQQ", "UPRO": "UPRO",
     },
 }
 
-@st.cache_data(ttl=3600)
+_OTC_CODES = {
+    3105, 5483, 4966, 8299, 6121, 8069, 8086, 5347, 6732, 3218,
+    6274, 3227, 3374, 6182, 6510, 6679, 6683, 6719, 1785, 1815,
+    3260, 5009, 5905, 8436, 4123, 4743, 4766, 4736, 4162, 6541,
+    6561, 6757, 6763, 6805, 6811, 6854, 6861, 6870, 6901, 6928,
+}
+
+_PERIOD_MONTHS = {"6mo": 6, "1y": 12, "2y": 24, "3y": 36, "5y": 60, "ytd": 6, "max": 60}
+
+
+def _roc_to_ad(roc_str):
+    parts = roc_str.split("/")
+    return f"{int(parts[0]) + 1911}-{parts[1]}-{parts[2]}"
+
+
+def _is_tw_stock(symbol):
+    return symbol.isdigit()
+
+
+def _tw_prefix(symbol):
+    return "otc" if int(symbol) >= 5000 or int(symbol) in _OTC_CODES else "tse"
+
+
+def _fetch_twse_realtime(symbol):
+    prefix = _tw_prefix(symbol)
+    try:
+        resp = requests.get(
+            f"https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch={prefix}_{symbol}.tw&json=1",
+            timeout=5,
+        )
+        if resp.status_code == 200:
+            rt = resp.json()
+            if rt.get("msgArray"):
+                return rt["msgArray"][0]
+    except:
+        pass
+    return None
+
+
+def _fetch_twse_history(symbol, n_months=6):
+    all_rows = []
+    today = datetime.today()
+    for i in range(n_months):
+        m = today.month - i
+        y = today.year
+        while m < 1:
+            m += 12
+            y -= 1
+        try:
+            resp = requests.get(
+                f"https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date={y}{m:02d}01&stockNo={symbol}",
+                timeout=10,
+            )
+            if resp.status_code == 200:
+                d = resp.json()
+                if d.get("stat") == "OK" and d.get("data"):
+                    all_rows.extend(d["data"])
+                    fields = d.get("fields", [])
+        except:
+            continue
+
+    if not all_rows:
+        return pd.DataFrame(), []
+
+    fields = d.get("fields", [])
+    df = pd.DataFrame(all_rows, columns=fields)
+    col_map = {
+        "日期": "date", "成交股數": "volume", "開盤價": "open",
+        "最高價": "high", "最低價": "low", "收盤價": "close",
+    }
+    df.rename(columns={k: v for k, v in col_map.items() if k in df.columns}, inplace=True)
+    df["date"] = df["date"].apply(_roc_to_ad)
+    for col in ["open", "high", "low", "close"]:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col].astype(str).str.replace(",", ""), errors="coerce")
+    if "volume" in df.columns:
+        df["volume"] = pd.to_numeric(df["volume"].astype(str).str.replace(",", ""), errors="coerce")
+    df = df.dropna(subset=["open", "high", "low", "close"])
+    df = df.sort_values("date").drop_duplicates(subset="date")
+    df.set_index("date", inplace=True)
+    df.index = pd.to_datetime(df.index)
+    cols = [c for c in ["open", "high", "low", "close", "volume"] if c in df.columns]
+    df = df[cols]
+    return df, cols
+
+
+@st.cache_data(ttl=60)
 def get_stock_data(symbol, period="6mo"):
-    if symbol.isdigit() or symbol.endswith(".TW"):
-        sym = f"{symbol}.TW" if not symbol.endswith(".TW") else symbol
-    else:
+    if not _is_tw_stock(symbol):
         sym = symbol
-    df = yf.download(sym, period=period, auto_adjust=True, progress=False)
+        df = yf.download(sym, period=period, auto_adjust=True, progress=False)
+        if df.empty:
+            return df
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [col[0].lower() for col in df.columns]
+        else:
+            df.columns = [c.lower() for c in df.columns]
+        return df
+
+    n_months = _PERIOD_MONTHS.get(period, 6)
+    df, cols = _fetch_twse_history(symbol, n_months)
     if df.empty:
         return df
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = [col[0].lower() for col in df.columns]
-    else:
-        df.columns = [c.lower() for c in df.columns]
+
+    item = _fetch_twse_realtime(symbol)
+    if item:
+        z = item.get("z")
+        if z and z != "-":
+            today_str = datetime.today().strftime("%Y-%m-%d")
+            close = float(z)
+            open_p = float(item["o"]) if item.get("o", "-") != "-" else close
+            high_v = float(item["h"]) if item.get("h", "-") != "-" else close
+            low_v = float(item["l"]) if item.get("l", "-") != "-" else close
+            vol = int(item["v"].replace(",", "")) if item.get("v", "-") != "-" else 0
+            if today_str not in df.index:
+                nr = pd.DataFrame(
+                    [[open_p, high_v, low_v, close, vol]],
+                    columns=cols,
+                    index=[pd.Timestamp(today_str)],
+                )
+                df = pd.concat([df, nr])
+            else:
+                df.loc[today_str, "close"] = close
+                df.loc[today_str, "high"] = max(df.loc[today_str, "high"], high_v)
+                df.loc[today_str, "low"] = min(df.loc[today_str, "low"], low_v)
+
     return df
 
-@st.cache_data(ttl=3600)
+
+@st.cache_data(ttl=60)
 def get_stock_info(symbol):
-    sym = f"{symbol}.TW" if symbol.isdigit() else symbol
-    try:
-        tk = yf.Ticker(sym)
-        info = tk.info
-        return {
-            "name": info.get("longName", info.get("shortName", symbol)),
-            "market_cap": info.get("marketCap", 0),
-            "pe_ratio": info.get("trailingPE", 0),
-            "eps": info.get("trailingEps", 0),
-            "dividend_yield": info.get("dividendYield", 0),
-            "high_52w": info.get("fiftyTwoWeekHigh", 0),
-            "low_52w": info.get("fiftyTwoWeekLow", 0),
-            "volume_avg": info.get("averageVolume", 0),
-        }
-    except:
+    if not _is_tw_stock(symbol):
+        try:
+            tk = yf.Ticker(symbol)
+            info = tk.info
+            if info and info.get("regularMarketPrice"):
+                return {
+                    "name": info.get("longName", info.get("shortName", symbol)),
+                    "market_cap": info.get("marketCap", 0),
+                    "pe_ratio": info.get("trailingPE", 0),
+                    "eps": info.get("trailingEps", 0),
+                    "dividend_yield": info.get("dividendYield", 0),
+                    "high_52w": info.get("fiftyTwoWeekHigh", 0),
+                    "low_52w": info.get("fiftyTwoWeekLow", 0),
+                    "volume_avg": info.get("averageVolume", 0),
+                }
+        except:
+            pass
         return {"name": symbol}
+
+    for cat in STOCKS.values():
+        if symbol in cat:
+            name = cat[symbol]
+            break
+    else:
+        name = symbol
+
+    item = _fetch_twse_realtime(symbol)
+    if item:
+        z = item.get("z")
+        price = float(z) if z and z != "-" else 0
+        return {
+            "name": name,
+            "market_cap": 0,
+            "pe_ratio": 0,
+            "eps": 0,
+            "dividend_yield": 0,
+            "high_52w": 0,
+            "low_52w": 0,
+            "volume_avg": 0,
+        }
+    return {"name": name}
+
 
 SECTORS_TW = {
     "半導體": ["2330", "2454", "2303", "2317", "2382", "3231", "2376", "3034",
@@ -129,6 +285,7 @@ SECTORS_ETF = {
     "產業ETF": ["XLF", "XLK", "XLE", "XLV", "XLI", "SMH", "SOXX"],
 }
 
+
 def calc_rsi(series, period=14):
     delta = series.diff()
     gain = delta.clip(lower=0)
@@ -139,6 +296,7 @@ def calc_rsi(series, period=14):
     rsi = 100 - (100 / (1 + rs))
     return rsi
 
+
 def calc_macd(series, fast=12, slow=26, signal=9):
     ema_fast = series.ewm(span=fast, adjust=False).mean()
     ema_slow = series.ewm(span=slow, adjust=False).mean()
@@ -147,6 +305,7 @@ def calc_macd(series, fast=12, slow=26, signal=9):
     histogram = macd_line - signal_line
     return macd_line, signal_line, histogram
 
+
 def calc_bollinger(series, period=20, std_dev=2):
     ma = series.rolling(window=period).mean()
     sd = series.rolling(window=period).std()
@@ -154,8 +313,9 @@ def calc_bollinger(series, period=20, std_dev=2):
     lower = ma - std_dev * sd
     return ma, upper, lower
 
+
 def calc_all_indicators(df, rsi_period=14, bb_period=20, bb_std=2, kd_period=14):
-    if df.empty or len(df) < 50:
+    if df.empty or len(df) < 15:
         return df
 
     df["ma5"] = df["close"].rolling(5).mean()
