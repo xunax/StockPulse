@@ -310,7 +310,8 @@ with tab1:
         if info.get("eps"):
             col_i2.metric("EPS", f"{info['eps']:.1f}")
         if info.get("dividend_yield"):
-            col_i3.metric("殖利率", f"{info['dividend_yield']*100:.1f}%")
+            dy_val = info['dividend_yield'] * 100 if info['dividend_yield'] < 1 else info['dividend_yield']
+            col_i3.metric("殖利率", f"{dy_val:.1f}%")
         if info.get("market_cap"):
             col_i4.metric("市值", f"{info['market_cap']/1e8:.1f}億")
 

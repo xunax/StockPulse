@@ -272,7 +272,8 @@ with tab1:
         c1, c2, c3, c4 = st.columns(4)
         c1.markdown(f"**本益比**<br>{info['pe_ratio']:.2f}" if info['pe_ratio'] else "**本益比**<br>N/A", unsafe_allow_html=True)
         c2.markdown(f"**EPS**<br>{info['eps']:.2f}" if info['eps'] else "**EPS**<br>N/A", unsafe_allow_html=True)
-        c3.markdown(f"**殖利率**<br>{info['dividend_yield']*100:.2f}%" if info['dividend_yield'] else "**殖利率**<br>N/A", unsafe_allow_html=True)
+        dy_val = info['dividend_yield'] * 100 if info['dividend_yield'] < 1 else info['dividend_yield']
+        c3.markdown(f"**殖利率**<br>{dy_val:.2f}%" if info['dividend_yield'] else "**殖利率**<br>N/A", unsafe_allow_html=True)
         c4.markdown(f"**市值**<br>{info['market_cap']/1e8:.1f}億" if info['market_cap'] else "**市值**<br>N/A", unsafe_allow_html=True)
 
     if info and info.get("high_52w") and info.get("low_52w"):
@@ -815,7 +816,7 @@ with tab1:
 
     with st.expander("📌 支撐與壓力線 — 關鍵價位", expanded=True):
         dist_to_res = (resistance - close) / close * 100
-        dist_to_sup = (close - support) / close * 100
+        dist_to_sup = (support - close) / close * 100
         st.markdown(f"""
 **支撐線**：近期股價跌到這價位附近會止跌的位置（買方進場意願強）
 **壓力線**：近期股價漲到這價位附近會遇到賣壓的位置（賣方出貨意願強）
@@ -937,9 +938,9 @@ with tab1:
     st.table(signal_df_rows)
 
     st.markdown("#### 🎯 未來可能的三種情境")
-    scenario_bullish_pct = max(20, min(80, 50 + (bullish - bearish) * 15))
-    scenario_bearish_pct = max(20, min(80, 50 + (bearish - bullish) * 15))
-    scenario_neutral_pct = 100 - scenario_bullish_pct - scenario_bearish_pct
+    scenario_bullish_pct = max(20, min(75, 50 + (bullish - bearish) * 15))
+    scenario_bearish_pct = max(20, min(75, 50 + (bearish - bullish) * 15))
+    scenario_neutral_pct = max(10, 100 - scenario_bullish_pct - scenario_bearish_pct)
     st.markdown(f"""
 **🟢 多頭情境**（機率約 {scenario_bullish_pct}%）
 - 條件：股價站穩所有均線、成交量放大、MACD 翻正
