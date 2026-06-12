@@ -32,8 +32,8 @@ st.markdown("""
         font-family: "Microsoft JhengHei", "PingFang TC", "Heiti TC", "Noto Sans TC", "Source Han Sans TC", "Microsoft YaHei", "SimHei", sans-serif;
     }
     .main > div { padding: 0 1rem; }
-    .stTabs [data-baseweb="tab-list"] { gap: 4px; overflow-x: auto; flex-wrap: nowrap; margin-bottom: 1rem; }
-    .stTabs [data-baseweb="tab"] { padding: 8px 14px; font-size: 0.85rem; white-space: nowrap; border-radius: 8px 8px 0 0; }
+    .stTabs [data-baseweb="tab-list"] { gap: 4px; overflow-x: auto !important; flex-wrap: nowrap !important; margin-bottom: 1rem; scrollbar-width: thin; }
+    .stTabs [data-baseweb="tab"] { padding: 8px 14px; font-size: 0.85rem; white-space: nowrap; border-radius: 8px 8px 0 0; flex-shrink: 0; }
     div[data-testid="stMetricValue"] { font-size: 1.5rem; }
     div[data-testid="stMetricDelta"] { font-size: 0.85rem; }
     div[data-testid="stMetricLabel"] { font-size: 0.8rem; }
@@ -197,7 +197,7 @@ with col_manual:
     st.text_input("🔍", key="manual_symbol", placeholder="代碼", label_visibility="collapsed")
     st.caption("非清單內可手動輸入")
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 比價", "🔔 監控"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊技術", "💰回測", "📋資料", "📈對比", "🏛價位", "🔔監控"])
 
 # ─── 讀取 session_state 中的選擇值 ───
 color_theme = st.session_state.get("color_theme", "紅漲綠跌")
@@ -263,7 +263,7 @@ with tab1:
     if "redirect_stock" in st.session_state and st.session_state["redirect_stock"]:
         r_name = st.session_state.get("redirect_name", "")
         r_code = st.session_state["redirect_stock"]
-        st.success(f"已從主力動向導向至 **{r_name}({r_code})** 的技術分析頁面")
+        st.success(f"已從比價導向至 **{r_name}({r_code})** 的技術分析頁面")
         st.session_state["redirect_stock"] = None
 
     latest = df.iloc[-1]
@@ -315,7 +315,7 @@ with tab1:
         elif ma5_val < ma20_val and rsi_val > 50:
             verdict_icon, verdict_text = "🟡", "短空但醞釀反彈 — 均線偏空，但 RSI 脫離弱勢區"
         else:
-            verdict_icon, verdict_text = "⚪", "方向不明 — 多空指標分歧，建議觀望"
+            verdict_icon, verdict_text = "⚪", "方向不明 — 多空指標分歧"
         st.markdown(f"<div style='background:#1a1a2e;border-radius:12px;padding:10px 14px;margin:8px 0;font-size:0.9rem;'>"
                     f"{verdict_icon} <b>{verdict_text}</b></div>", unsafe_allow_html=True)
 
@@ -411,11 +411,11 @@ with tab1:
         elif dy > 3: l_score += 5; l_reasons.append(f"✅ 殖利率{dy:.1f}%穩定")
 
     def verdict(sc):
-        if sc >= 20: return "🟢 強烈買入", "#26a69a"
-        elif sc >= 10: return "🟢 偏多買入", "#26a69a"
-        elif sc >= 0: return "🟡 中性觀望", "#FF9800"
-        elif sc >= -15: return "🔴 偏空", "#ef5350"
-        else: return "🔴 強烈不建議", "#ef5350"
+        if sc >= 20: return "🟢 技術面強勢", "#26a69a"
+        elif sc >= 10: return "🟢 技術面偏多", "#26a69a"
+        elif sc >= 0: return "🟡 技術面中性", "#FF9800"
+        elif sc >= -15: return "🔴 技術面偏空", "#ef5350"
+        else: return "🔴 技術面弱勢", "#ef5350"
     sv, sc = verdict(s_score)
     lv, lc = verdict(l_score)
 
@@ -560,6 +560,17 @@ with tab2:
             rows = [[metric_names.get(k, k), fmt_map.get(k, str(mt[k]))]
                     for k in key_metrics if k in mt]
             st.dataframe(pd.DataFrame(rows, columns=["指標", "數值"]), hide_index=True, use_container_width=True)
+
+            if result.trades:
+                trades = result.trades
+                last_trade = trades[-1]
+                best_trade = max(trades, key=lambda t: t.return_pct)
+                worst_trade = min(trades, key=lambda t: t.return_pct)
+                st.caption(f"📋 {mt['total_trades']} 筆交易 · "
+                           f"最近：{last_trade.buy_date.strftime('%m/%d')}買→{last_trade.sell_date.strftime('%m/%d')}賣 "
+                           f"{last_trade.return_pct:+.2f}% · "
+                           f"最賺 {best_trade.return_pct:+.2f}% · "
+                           f"最賠 {worst_trade.return_pct:+.2f}%")
 
             with st.expander("📈 權益曲線", expanded=True):
                 ec = result.equity_curve
@@ -769,9 +780,9 @@ with tab5:
     st.info("⚠️ **使用提醒**：\n\n"
             "• **買超** ≠ 馬上買：主力可能早已佈局，追高容易住套房\n"
             "• **賣超 + 漲停**：主力趁漲停出貨給散戶，隔天易開高走低\n"
-            "• **賣超 + 大跌**：主力正在倒貨，建議避開\n"
+            "• **賣超 + 大跌**：主力正在倒貨，技術面偏空\n"
             "• **買超 + 低位（52週<50%）**：相對安全的跟單區\n\n"
-            "建議找到標的後，到「📊 技術」Tab 用買賣建議卡片 + 指標摘要表交叉確認，再決定是否進場。")
+            "找到標的後，到「📊 技術」Tab 用技術面卡片 + 指標摘要表交叉確認市場定位。")
 
     col_f1, col_f2 = st.columns(2)
     with col_f1:
@@ -1053,8 +1064,8 @@ with tab5:
 # ═══════════════════════════════════════
 with tab6:
     st.subheader("🔔 持股監控")
-    st.info("📅 **長期策略**以季線（MA20/MA60）為主判斷趨勢，短期 RSI 波動不計入評分。"
-            "建議持有至少 1 年以上，季線未翻轉前可忽略短期波動。")
+    st.info("📅 **技術面備註**：長期以季線（MA20/MA60）為趨勢參考，短期 RSI 波動不納入評分。"
+            "技術面未翻轉前可視為趨勢延續。")
 
     if "watchlist" not in st.session_state:
         st.session_state["watchlist"] = auth.get_watchlist(st.session_state["username"])
@@ -1171,15 +1182,15 @@ with tab6:
                 if chg_pct > 12:
                     sell_score += 1; sell_reasons.append(f"✅ 獲利 {chg_pct:.1f}%，可考慮部分獲利了結")
             if sell_score >= 4:
-                action = "🔴 強烈建議賣出"; action_color = "#ef5350"
+                action = "🔴 技術面偏空"; action_color = "#ef5350"
             elif sell_score >= 2:
-                action = "🟠 建議考慮賣出"; action_color = "#FF9800"
+                action = "🟠 技術面轉弱"; action_color = "#FF9800"
             elif sell_score >= 1:
-                action = "🟡 可觀察賣出"; action_color = "#FFC107"
+                action = "🟡 技術面觀望"; action_color = "#FFC107"
             elif chg_pct > 5:
-                action = "🟢 繼續持有"; action_color = "#26a69a"
+                action = "🟢 技術面偏多"; action_color = "#26a69a"
             else:
-                action = "🟢 觀望持有"; action_color = "#26a69a"
+                action = "🟢 技術面中性"; action_color = "#26a69a"
 
             profit_color = up_color if chg >= 0 else down_color
             total_value = cur_price * total_shares

@@ -268,6 +268,16 @@ with tab1:
         c3.markdown(f"**殖利率**<br>{dy_val:.2f}%" if info['dividend_yield'] else "**殖利率**<br>N/A", unsafe_allow_html=True)
         c4.markdown(f"**市值**<br>{info['market_cap']/1e8:.1f}億" if info['market_cap'] else "**市值**<br>N/A", unsafe_allow_html=True)
 
+    # ─── 預先定義評分所需變數 ───
+    close = float(latest["close"])
+    vol = float(latest["volume"])
+    rsi_val = float(latest["rsi"]) if "rsi" in latest and not pd.isna(latest["rsi"]) else None
+    ma5_val = float(latest["ma5"]) if "ma5" in latest and not pd.isna(latest["ma5"]) else None
+    ma10_val = float(latest["ma10"]) if "ma10" in latest and not pd.isna(latest["ma10"]) else None
+    ma20_val = float(latest["ma20"]) if "ma20" in latest and not pd.isna(latest["ma20"]) else None
+    ma60_val = float(latest["ma60"]) if "ma60" in latest and not pd.isna(latest["ma60"]) else None
+    ma120_val = float(latest["ma120"]) if "ma120" in latest and not pd.isna(latest["ma120"]) else None
+
     # 一句話結論
     if ma5_val is not None and ma20_val is not None and rsi_val is not None:
         if ma5_val > ma20_val and rsi_val > 50:
@@ -279,7 +289,7 @@ with tab1:
         elif ma5_val < ma20_val and rsi_val > 50:
             verdict = f"🟡 短空但醞釀反彈 — 均線偏空，但 RSI {rsi_val:.1f} 脫離弱勢區"
         else:
-            verdict = "⚪ 方向不明 — 多空指標分歧，建議觀望"
+            verdict = "⚪ 方向不明 — 多空指標分歧"
         st.info(verdict)
 
     if info and info.get("high_52w") and info.get("low_52w"):
@@ -303,15 +313,6 @@ with tab1:
 </div>
 """, unsafe_allow_html=True)
 
-    # ─── 預先定義評分所需變數 ───
-    close = float(latest["close"])
-    vol = float(latest["volume"])
-    rsi_val = float(latest["rsi"]) if "rsi" in latest and not pd.isna(latest["rsi"]) else None
-    ma5_val = float(latest["ma5"]) if "ma5" in latest and not pd.isna(latest["ma5"]) else None
-    ma10_val = float(latest["ma10"]) if "ma10" in latest and not pd.isna(latest["ma10"]) else None
-    ma20_val = float(latest["ma20"]) if "ma20" in latest and not pd.isna(latest["ma20"]) else None
-    ma60_val = float(latest["ma60"]) if "ma60" in latest and not pd.isna(latest["ma60"]) else None
-    ma120_val = float(latest["ma120"]) if "ma120" in latest and not pd.isna(latest["ma120"]) else None
     bb_u = float(latest["bb_upper"]) if "bb_upper" in latest and not pd.isna(latest["bb_upper"]) else None
     bb_l = float(latest["bb_lower"]) if "bb_lower" in latest and not pd.isna(latest["bb_lower"]) else None
     vol_ma5 = float(latest["volume_ma5"]) if "volume_ma5" in latest and not pd.isna(latest["volume_ma5"]) else None
@@ -533,15 +534,15 @@ with tab1:
     # ─── 顯示結果（雙欄）───
     def get_verdict(score):
         if score >= 20:
-            return "🟢 強烈建議買入", "#26a69a"
+            return "🟢 技術面強勢", "#26a69a"
         elif score >= 10:
-            return "🟢 偏多，可考慮買入", "#26a69a"
+            return "🟢 技術面偏多", "#26a69a"
         elif score >= 0:
-            return "🟡 中性，建議觀望", "#FF9800"
+            return "🟡 技術面中性", "#FF9800"
         elif score >= -15:
-            return "🔴 偏空，不建議追高", "#ef5350"
+            return "🔴 技術面偏空", "#ef5350"
         else:
-            return "🔴 強烈不建議買入", "#ef5350"
+            return "🔴 技術面弱勢", "#ef5350"
 
     s_verdict, s_color = get_verdict(s_score)
     l_verdict, l_color = get_verdict(l_score)
@@ -644,19 +645,19 @@ with tab1:
             if rsi_val >= 70:
                 zone = "⚠️ **超買區**（70 以上）"
                 meaning = "短期內漲太多，技術上有回檔壓力，未來 1-2 週回跌機率高"
-                strategy = "謹慎為主，不建議追高，可考慮部分獲利了結"
+                strategy = "超買區通常伴隨回檔壓力，短線波動加大"
             elif rsi_val <= 30:
                 zone = "💡 **超賣區**（30 以下）"
                 meaning = "短期內跌太多，技術上有反彈機會，未來 1-2 週止跌回升機率高"
-                strategy = "可分批進場佈局，但須設好停損"
+                strategy = "超賣區通常醞釀反彈機會，短線波動加大"
             elif rsi_val >= 50:
                 zone = "✅ **偏多區**（50-70）"
                 meaning = "多方力道略佔上風，趨勢偏多但尚未過熱"
-                strategy = "可持續持有，順勢操作"
+                strategy = "偏多區表示多方力道略佔上風"
             else:
                 zone = "⚠️ **偏空區**（30-50）"
                 meaning = "空方力道略佔上風，趨勢偏弱但尚未超跌"
-                strategy = "觀望為主，等待止跌訊號"
+                strategy = "偏空區表示空方力道略佔上風"
 
             st.markdown(f"""
 **RSI 是什麼**：衡量過去 {rsi_period} 天內「漲的力道」相對於「跌的力道」，數值 0-100。
@@ -668,7 +669,7 @@ with tab1:
 
 **當前值：{rsi_val:.1f} — {zone}**
 - 💡 意義：{meaning}
-- 📌 建議：{strategy}
+- 📌 對策：{strategy}
 """)
         else:
             st.markdown("資料不足")
@@ -711,19 +712,19 @@ with tab1:
             if stoch_k >= 80:
                 kd_zone = "⚠️ **超買區**（80 以上）"
                 kd_meaning = "短期內漲幅過大，K 值在高檔鈍化，隨時可能回檔修正"
-                kd_strategy = "不建議追高，可分批減碼或觀望等待回落"
+                kd_strategy = "超買區通常醞釀回檔修正"
             elif stoch_k <= 20:
                 kd_zone = "💡 **超賣區**（20 以下）"
                 kd_meaning = "短期內跌幅過大，K 值在低檔鈍化，隨時可能反彈"
-                kd_strategy = "可留意止跌訊號，分批進場佈局，須設好停損"
+                kd_strategy = "超賣區通常醞釀反彈機會"
             elif stoch_k > stoch_d:
                 kd_zone = "✅ **偏多**：K 值在 D 值之上"
                 kd_meaning = "短期多方力道較強，股價有上漲動能"
-                kd_strategy = "可順勢偏多操作，但留意上方壓力"
+                kd_strategy = "短線多方力道較強"
             else:
                 kd_zone = "⚠️ **偏空**：K 值在 D 值之下"
                 kd_meaning = "短期空方力道較強，股價有下跌壓力"
-                kd_strategy = "觀望為主，等待 K 值向上突破 D 值的黃金交叉"
+                kd_strategy = "短線空方力道較強"
 
             if stoch_k > stoch_d and stoch_k < 50:
                 kd_signal = "✅ **黃金交叉**：K 值由下往上穿越 D 值，偏多訊號"
@@ -745,7 +746,7 @@ with tab1:
 
 **當前值：K = {stoch_k:.1f}，D = {stoch_d:.1f} — {kd_zone}**
 - 💡 意義：{kd_meaning}
-- 📌 建議：{kd_strategy}
+- 📌 對策：{kd_strategy}
 - 🔀 {kd_signal}
 """)
         else:
@@ -831,9 +832,9 @@ with tab1:
 - 🔴 **壓力線：{resistance:.2f}**（距離現價 {dist_to_res:+.2f}%）— 突破後上看，可能開啟新一波上漲
 - 🟢 **支撐線：{support:.2f}**（距離現價 {dist_to_sup:+.2f}%）— 跌破後下殺，可能加速趨勢走弱
 
-**操作建議**：
-- 股價接近**壓力線**時：留意是否帶量突破，突破失敗可考慮減碼
-- 股價接近**支撐線**時：留意是否止跌回穩，守住支撐可考慮加碼
+**技術應對參考**：
+- 股價接近**壓力線**時：留意是否帶量突破，突破失敗可能回測支撐
+- 股價接近**支撐線**時：留意是否止跌回穩，守住支撐可能延續反彈
 """)
 
     # 綜合走勢分析
@@ -918,15 +919,15 @@ with tab1:
 
     total = bullish + bearish
     if total == 0:
-        overall = "⚪ **訊號不明** — 各指標無明確方向，建議觀望"
+        overall = "⚪ **訊號不明** — 各指標無明確方向"
     elif bullish >= bearish + 2:
         overall = "🟢 **強烈偏多** — 多項指標看多，未來上漲機率高"
     elif bullish > bearish:
-        overall = "🟢 **偏多** — 多數指標看多，可順勢偏多操作"
+        overall = "🟢 **偏多** — 多數指標看多"
     elif bearish > bullish + 1:
         overall = "🔴 **強烈偏空** — 多項指標看空，未來下跌機率高"
     else:
-        overall = "🔴 **偏空** — 多數指標看空，宜保守或減碼"
+        overall = "🔴 **偏空** — 多數指標看空"
 
     st.markdown(f"#### 整體判斷：{overall}")
     st.markdown(f"**多空票數：偏多 {bullish} 票 / 偏空 {bearish} 票**")
@@ -960,7 +961,7 @@ with tab1:
 
 **🔴 空頭情境**（機率約 {scenario_bearish_pct}%）
 - 條件：跌破支撐線 {support:.2f}、均線空頭排列、量縮
-- 目標價：下看更低支撐（建議參考 60日均線 {ma60_val:.1f} 若有）
+- 目標價：下看更低支撐（可觀察 60日均線 {ma60_val:.1f} 若有）
 - 時間：1~2 週內可能發生
 """)
 
@@ -1065,6 +1066,17 @@ with tab2:
                         for k, v in mt.items()]
                 metrics_df = pd.DataFrame(rows, columns=["指標", "數值"])
                 st.dataframe(metrics_df, hide_index=True, use_container_width=True)
+
+            if result.trades:
+                trades = result.trades
+                last_trade = trades[-1]
+                best_trade = max(trades, key=lambda t: t.return_pct)
+                worst_trade = min(trades, key=lambda t: t.return_pct)
+                st.markdown(f"**📋 交易摘要**  ·  {mt['total_trades']} 筆 · "
+                            f"最近：{last_trade.buy_date.strftime('%m/%d')}買 {last_trade.sell_date.strftime('%m/%d')}賣 "
+                            f"{last_trade.return_pct:+.2f}% · "
+                            f"最賺：{best_trade.return_pct:+.2f}% · "
+                            f"最賠：{worst_trade.return_pct:+.2f}%")
 
             with col_b:
                 st.subheader("📈 權益曲線")
@@ -1656,7 +1668,7 @@ with tab5:
 # TAB 6: 持股監控
 # ═══════════════════════════════════════
 with tab6:
-    st.subheader("🔔 持股監控 — 賣出時機建議")
+    st.subheader("🔔 持股監控 — 技術面訊號")
 
     if "watchlist" not in st.session_state:
         st.session_state["watchlist"] = auth.get_watchlist(st.session_state["username"])
@@ -1792,19 +1804,19 @@ with tab6:
 
             # 判斷建議
             if sell_score >= 4:
-                action = "🔴 強烈建議賣出"
+                action = "🔴 技術面偏空"
                 action_color = "#ef5350"
             elif sell_score >= 2:
-                action = "🟠 建議考慮賣出"
+                action = "🟠 技術面轉弱"
                 action_color = "#FF9800"
             elif sell_score >= 1:
-                action = "🟡 可觀察賣出時機"
+                action = "🟡 技術面觀望"
                 action_color = "#FFC107"
             elif chg_pct > 5:
-                action = "🟢 繼續持有"
+                action = "🟢 技術面偏多"
                 action_color = "#26a69a"
             else:
-                action = "🟢 觀望持有"
+                action = "🟢 技術面中性"
                 action_color = "#26a69a"
 
             # 顯示卡片
@@ -1838,11 +1850,11 @@ with tab6:
 """, unsafe_allow_html=True)
 
                 if sell_reasons:
-                    with st.expander(f"📋 賣出訊號分析 — {name}", expanded=False):
+                    with st.expander(f"📋 技術訊號分析 — {name}", expanded=False):
                         for r in sell_reasons:
                             st.markdown(f"- {r}")
                         if sell_score < 1 and chg_pct <= 5:
-                            st.markdown("- ℹ️ 目前無明顯賣出訊號，建議繼續持有觀望")
+                            st.markdown("- ℹ️ 目前無明顯技術面賣出訊號")
 
                 # 刪除按鈕
                 if st.button(f"🗑️ 移除 {name}", key=f"wl_del_{idx}"):

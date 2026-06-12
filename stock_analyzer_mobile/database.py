@@ -1,7 +1,8 @@
 import os
+from typing import Optional
 from supabase import create_client, Client
 
-_client: Client | None = None
+_client: Optional[Client] = None
 
 
 def _get_config():
@@ -36,13 +37,13 @@ def restore_session(access_token: str, refresh_token: str):
     client.auth.set_session(access_token, refresh_token)
 
 
-def get_user_by_username(username: str) -> dict | None:
+def get_user_by_username(username: str) -> Optional[dict]:
     client = get_client()
     result = client.table("users").select("*").eq("username", username).execute()
     return result.data[0] if result.data else None
 
 
-def get_user_by_auth_id(auth_id: str) -> dict | None:
+def get_user_by_auth_id(auth_id: str) -> Optional[dict]:
     client = get_client()
     result = client.table("users").select("*").eq("auth_id", auth_id).execute()
     return result.data[0] if result.data else None

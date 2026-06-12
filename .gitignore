@@ -4,6 +4,9 @@ __pycache__/
 .env
 user_data/
 *.db
+*.xlsx
+*.txt
+.playwright-mcp/
 .DS_Store
 Thumbs.db
 .env.local

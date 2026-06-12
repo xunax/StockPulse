@@ -11,21 +11,25 @@ def register(username: str, password: str) -> tuple[bool, str]:
         return False, "密碼至少 4 個字元"
     try:
         email = f"{username}{SUPABASE_EMAIL_DOMAIN}"
-        admin = db.get_admin_client()
-        result = admin.auth.admin.create_user({
+        client = db.get_client()
+        result = client.auth.sign_up({
             "email": email,
             "password": password,
-            "email_confirm": True,
-            "user_metadata": {"username": username},
+            "options": {"data": {"username": username}},
         })
         if result.user:
             auth_id = result.user.id
-            db.create_user(username, auth_id)
+            client.rpc("create_user_profile", {
+                "p_username": username,
+                "p_auth_id": auth_id,
+            }).execute()
             return True, "註冊成功，請登入"
         return False, "註冊失敗"
     except Exception as e:
         msg = str(e)
         if "already" in msg.lower():
+            return False, "此帳號已被註冊"
+        if "User already registered" in msg:
             return False, "此帳號已被註冊"
         return False, msg
 
