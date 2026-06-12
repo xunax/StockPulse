@@ -1,0 +1,6 @@
+[    3489ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://stockpulse-app-stock-analyzer.hf.space/:0
+[    3489ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://stockpulse-app-stock-analyzer.hf.space/:0
+[    3489ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://stockpulse-app-stock-analyzer.hf.space/:0
+[  622331ms] [WARNING] WebSocket onclose @ https://stockpulse-app-stock-analyzer.hf.space/static/js/index.dkY5s53S.js:183
+[ 1287544ms] [WARNING] WebSocket onclose @ https://stockpulse-app-stock-analyzer.hf.space/static/js/index.dkY5s53S.js:183
+[ 1464240ms] [WARNING] WebSocket onclose @ https://stockpulse-app-stock-analyzer.hf.space/static/js/index.dkY5s53S.js:183

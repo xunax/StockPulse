@@ -1,0 +1,60 @@
+- generic [ref=e2]:
+  - generic [ref=e70]:
+    - paragraph [ref=e75]:
+      - text: 👤
+      - strong [ref=e76]: testotc
+    - button "🚪 登出" [ref=e79] [cursor=pointer]:
+      - paragraph [ref=e83]: 🚪 登出
+    - heading "📊 參數設定" [level=2] [ref=e87]
+    - separator [ref=e104]
+    - heading "🔧 技術指標" [level=2] [ref=e108]
+    - separator [ref=e129]
+    - heading "⚙️ 指標參數" [level=2] [ref=e133]
+    - separator [ref=e146]
+    - heading "🔄 回測設定" [level=2] [ref=e150]
+    - separator [ref=e159]
+    - heading "⚙️ 策略參數" [level=2] [ref=e163]
+  - generic [ref=e3]:
+    - banner [ref=e6]:
+      - button "Main menu" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+    - generic [ref=e15]:
+      - heading "📈 股票技術分析與回測系統" [level=1] [ref=e20]:
+        - text: 📈 股票技術分析與回測系統
+        - generic [ref=e21]:
+          - link "Link to heading":
+            - /url: "#5b8c596d"
+            - img
+      - generic [ref=e23]:
+        - tablist [ref=e25]:
+          - tab "📊 技術分析" [selected] [ref=e170] [cursor=pointer]:
+            - paragraph [ref=e28]: 📊 技術分析
+          - tab "💰 回測系統" [ref=e171] [cursor=pointer]:
+            - paragraph [ref=e31]: 💰 回測系統
+          - tab "📋 原始資料" [ref=e172] [cursor=pointer]:
+            - paragraph [ref=e174]: 📋 原始資料
+          - tab "📈 多股對比" [ref=e175] [cursor=pointer]:
+            - paragraph [ref=e177]: 📈 多股對比
+          - tab "🏛️ 主力動向" [ref=e178] [cursor=pointer]:
+            - paragraph [ref=e180]: 🏛️ 主力動向
+          - tab "🔔 持股監控" [ref=e181] [cursor=pointer]:
+            - paragraph [ref=e183]: 🔔 持股監控
+        - tabpanel "📊 技術分析" [ref=e184]:
+          - generic [ref=e35]:
+            - generic [ref=e37]:
+              - paragraph [ref=e41]: 帳號
+              - textbox "帳號" [ref=e44]:
+                - /placeholder: ""
+                - text: testotc
+            - generic [ref=e46]:
+              - paragraph [ref=e50]: 密碼
+              - generic [ref=e52]:
+                - textbox "密碼" [ref=e53]:
+                  - /placeholder: ""
+                  - text: test1234
+                - button "Show password text" [ref=e54] [cursor=pointer]:
+                  - img "Show password text" [ref=e55]
+            - button "登入" [active] [ref=e59] [cursor=pointer]:
+              - paragraph [ref=e63]: 登入
+      - alert [ref=e187]:
+        - paragraph [ref=e191]: 無法取得股票資料，請確認代碼是否正確

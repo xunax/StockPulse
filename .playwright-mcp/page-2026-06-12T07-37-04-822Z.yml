@@ -1,0 +1,289 @@
+- generic [ref=e2]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - link "Hugging Face's logo Hugging Face" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "Hugging Face's logo" [ref=e8]
+          - generic [ref=e9]: Hugging Face
+        - generic [ref=e10]:
+          - textbox "Search models, datasets, users..." [ref=e11]
+          - img [ref=e12]
+      - navigation "Main" [ref=e14]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Models" [ref=e17] [cursor=pointer]:
+              - /url: /models
+              - img [ref=e18]
+              - text: Models
+          - listitem [ref=e22]:
+            - link "Datasets" [ref=e23] [cursor=pointer]:
+              - /url: /datasets
+              - img [ref=e24]
+              - text: Datasets
+          - listitem [ref=e29]:
+            - link "Spaces" [ref=e30] [cursor=pointer]:
+              - /url: /spaces
+              - img [ref=e31]
+              - text: Spaces
+          - listitem [ref=e35]:
+            - link "Buckets new" [ref=e36] [cursor=pointer]:
+              - /url: /storage
+              - img [ref=e37]
+              - text: Buckets
+              - generic [ref=e41]: new
+          - listitem [ref=e42]:
+            - link "Docs" [ref=e43] [cursor=pointer]:
+              - /url: /docs
+              - img [ref=e44]
+              - text: Docs
+          - listitem [ref=e48]:
+            - link "Enterprise" [ref=e49] [cursor=pointer]:
+              - /url: /enterprise
+              - img [ref=e50]
+              - text: Enterprise
+          - listitem [ref=e52]:
+            - link "Pricing" [ref=e53] [cursor=pointer]:
+              - /url: /pricing
+          - listitem [ref=e54]:
+            - generic [ref=e55]:
+              - button [ref=e56] [cursor=pointer]:
+                - img [ref=e57]
+              - navigation [ref=e62]:
+                - list [ref=e63]:
+                  - listitem [ref=e64]:
+                    - generic [ref=e65]: Website
+                    - list [ref=e66]:
+                      - listitem [ref=e67]:
+                        - link "Tasks" [ref=e68] [cursor=pointer]:
+                          - /url: /tasks
+                          - img [ref=e69]
+                          - generic: Tasks
+                      - listitem [ref=e72]:
+                        - link "HuggingChat" [ref=e73] [cursor=pointer]:
+                          - /url: /chat
+                          - img [ref=e74]
+                          - generic: HuggingChat
+                      - listitem [ref=e77]:
+                        - link "Collections" [ref=e78] [cursor=pointer]:
+                          - /url: /collections
+                          - img [ref=e79]
+                          - generic: Collections
+                      - listitem [ref=e83]:
+                        - link "Languages" [ref=e84] [cursor=pointer]:
+                          - /url: /languages
+                          - img [ref=e85]
+                          - generic: Languages
+                      - listitem [ref=e87]:
+                        - link "Organizations" [ref=e88] [cursor=pointer]:
+                          - /url: /organizations
+                          - img [ref=e89]
+                          - generic: Organizations
+                  - listitem [ref=e94]:
+                    - generic [ref=e95]: Community
+                    - list [ref=e96]:
+                      - listitem [ref=e97]:
+                        - link "Blog" [ref=e98] [cursor=pointer]:
+                          - /url: /blog/zh
+                          - img [ref=e99]
+                          - generic: Blog
+                      - listitem [ref=e101]:
+                        - link "Posts" [ref=e102] [cursor=pointer]:
+                          - /url: /posts
+                          - img [ref=e103]
+                          - generic: Posts
+                      - listitem [ref=e105]:
+                        - link "Daily Papers" [ref=e106] [cursor=pointer]:
+                          - /url: /papers
+                          - img [ref=e107]
+                          - generic: Daily Papers
+                      - listitem [ref=e110]:
+                        - link "Learn" [ref=e111] [cursor=pointer]:
+                          - /url: /learn
+                          - img [ref=e112]
+                          - generic: Learn
+                      - listitem [ref=e118]:
+                        - link "Discord" [ref=e119] [cursor=pointer]:
+                          - /url: /join/discord
+                          - img [ref=e120]
+                          - generic: Discord
+                      - listitem [ref=e122]:
+                        - link "Forum" [ref=e123] [cursor=pointer]:
+                          - /url: https://discuss.huggingface.co/
+                          - img [ref=e124]
+                          - generic: Forum
+                      - listitem [ref=e126]:
+                        - link "GitHub" [ref=e127] [cursor=pointer]:
+                          - /url: https://github.com/huggingface
+                          - img [ref=e128]
+                          - generic: GitHub
+                  - listitem [ref=e130]:
+                    - generic [ref=e131]: Solutions
+                    - list [ref=e132]:
+                      - listitem [ref=e133]:
+                        - link "Team & Enterprise" [ref=e134] [cursor=pointer]:
+                          - /url: /enterprise
+                          - img [ref=e135]
+                          - generic: Team & Enterprise
+                      - listitem [ref=e137]:
+                        - link "Hugging Face PRO" [ref=e138] [cursor=pointer]:
+                          - /url: /pro
+                          - img [ref=e139]
+                          - generic: Hugging Face PRO
+                      - listitem [ref=e141]:
+                        - link "Enterprise Support" [ref=e142] [cursor=pointer]:
+                          - /url: /support
+                          - img [ref=e143]
+                          - generic: Enterprise Support
+                      - listitem [ref=e146]:
+                        - link "Inference Providers" [ref=e147] [cursor=pointer]:
+                          - /url: /inference/models
+                          - img [ref=e148]
+                          - generic: Inference Providers
+                      - listitem [ref=e151]:
+                        - link "Inference Endpoints" [ref=e152] [cursor=pointer]:
+                          - /url: https://endpoints.huggingface.co
+                          - img [ref=e153]
+                          - generic: Inference Endpoints
+                      - listitem [ref=e156]:
+                        - link "Storage Buckets" [ref=e157] [cursor=pointer]:
+                          - /url: /storage
+                          - img [ref=e158]
+                          - generic: Storage Buckets
+          - listitem [ref=e162]:
+            - separator [ref=e163]
+          - listitem [ref=e164]:
+            - button [ref=e166] [cursor=pointer]
+  - main [ref=e168]:
+    - generic [ref=e171]:
+      - 'heading "Spaces: stockpulse-app / stock-analyzer-mobile like 0 Running Logs" [level=1] [ref=e172]':
+        - link "Spaces:" [ref=e173] [cursor=pointer]:
+          - /url: /spaces
+          - img [ref=e174]
+          - generic [ref=e180]: "Spaces:"
+        - generic [ref=e181]:
+          - link [ref=e185] [cursor=pointer]:
+            - /url: /stockpulse-app
+          - link "stockpulse-app" [ref=e189] [cursor=pointer]:
+            - /url: /stockpulse-app
+          - generic [ref=e190]: /
+        - generic [ref=e191]:
+          - link "stock-analyzer-mobile" [ref=e192] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile
+          - button "Copy space name to clipboard" [ref=e193] [cursor=pointer]:
+            - img [ref=e194]
+        - generic [ref=e198]:
+          - button "like" [ref=e201] [cursor=pointer]:
+            - img [ref=e202]
+            - generic [ref=e204]: like
+          - button "0" [ref=e205] [cursor=pointer]
+        - generic [ref=e209] [cursor=pointer]: Running
+        - button "Logs" [ref=e211] [cursor=pointer]:
+          - img [ref=e212]
+          - generic [ref=e214]: Logs
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - link "App" [ref=e217] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile
+            - img [ref=e218]
+            - text: App
+          - link "Files" [ref=e222] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/tree/main
+            - img [ref=e223]
+            - generic [ref=e226]: Files
+          - link "Community" [ref=e227] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/discussions
+            - img [ref=e228]
+            - text: Community
+          - link "Settings" [ref=e231] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/settings
+            - img [ref=e232]
+            - text: Settings
+        - button [ref=e236] [cursor=pointer]:
+          - img [ref=e237]
+    - generic [ref=e242]:
+      - generic [ref=e244]:
+        - generic [ref=e246]:
+          - button "main" [ref=e248] [cursor=pointer]:
+            - img [ref=e249]
+            - text: main
+            - img [ref=e251]
+          - generic [ref=e253]:
+            - link "stock-analyzer-mobile" [ref=e254] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/tree/main
+            - generic [ref=e255]: /
+            - generic [ref=e256]: .streamlit
+            - button "Copy path" [ref=e257] [cursor=pointer]:
+              - img [ref=e258]
+          - generic [ref=e262]: 466 Bytes
+        - generic [ref=e263]:
+          - generic [ref=e265]:
+            - searchbox "Go to file" [ref=e266]
+            - img [ref=e267]
+            - generic: Ctrl+K
+          - link "1 contributor" [ref=e269] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commits/main/.streamlit
+            - list [ref=e270]:
+              - listitem "xuanx1905" [ref=e271]
+              - listitem [ref=e272]: 1 contributor
+          - 'link "History: 3 commits" [ref=e273] [cursor=pointer]':
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commits/main/.streamlit
+            - img [ref=e274]
+            - generic [ref=e276]: "History:"
+            - generic [ref=e277]: 3 commits
+        - generic [ref=e278]:
+          - separator [ref=e279]
+          - button "Contribute" [ref=e281] [cursor=pointer]:
+            - img [ref=e282]
+            - text: Contribute
+            - img [ref=e284]
+          - button [ref=e287] [cursor=pointer]:
+            - img [ref=e288]
+      - generic [ref=e293]:
+        - img "xuanx1905's picture" [ref=e294]
+        - link "xuanx1905" [ref=e296] [cursor=pointer]:
+          - /url: /xuanx1905
+        - link "Switch TW stocks to TWSE API (ttl=60, no retries)" [ref=e298] [cursor=pointer]:
+          - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/c3ba95a55a59e2e4b02a2427cb644b33a6990a5f
+        - link "c3ba95a" [ref=e299] [cursor=pointer]:
+          - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/c3ba95a55a59e2e4b02a2427cb644b33a6990a5f
+        - time [ref=e300]: 1 day ago
+      - list [ref=e302]:
+        - listitem [ref=e303]:
+          - generic [ref=e304]:
+            - link "config.toml" [ref=e305] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/.streamlit/config.toml
+              - img [ref=e306]
+              - generic [ref=e308]: config.toml
+            - button "Safe" [ref=e310] [cursor=pointer]:
+              - img [ref=e311]
+              - generic [ref=e315]: Safe
+          - link "182 Bytes" [ref=e316] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/.streamlit/config.toml?download=true
+            - generic [ref=e317]: 182 Bytes
+            - img [ref=e319]
+          - link "Fix config.toml BOM corruption" [ref=e321] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/c65db714208de78ba688912f91a6c2890941d067
+            - generic [ref=e322]: Fix config.toml BOM corruption
+          - link "1 day ago" [ref=e323] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/c65db714208de78ba688912f91a6c2890941d067
+            - time [ref=e324]: 1 day ago
+        - listitem [ref=e325]:
+          - generic [ref=e326]:
+            - link "secrets.toml" [ref=e327] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/.streamlit/secrets.toml
+              - img [ref=e328]
+              - generic [ref=e330]: secrets.toml
+            - button "Safe" [ref=e332] [cursor=pointer]:
+              - img [ref=e333]
+              - generic [ref=e337]: Safe
+          - link "284 Bytes" [ref=e338] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/.streamlit/secrets.toml?download=true
+            - generic [ref=e339]: 284 Bytes
+            - img [ref=e341]
+          - link "Switch TW stocks to TWSE API (ttl=60, no retries)" [ref=e343] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/c3ba95a55a59e2e4b02a2427cb644b33a6990a5f
+            - generic [ref=e344]: Switch TW stocks to TWSE API (ttl=60, no retries)
+          - link "1 day ago" [ref=e345] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/c3ba95a55a59e2e4b02a2427cb644b33a6990a5f
+            - time [ref=e346]: 1 day ago

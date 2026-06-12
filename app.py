@@ -13,6 +13,7 @@ from charts import plot_candlestick, plot_volume_profile
 from backtest import backtest, format_metrics, Action
 from strategies import STRATEGIES
 import auth
+import database as db
 
 st.set_page_config(
     page_title="股票分析系統",
@@ -101,6 +102,11 @@ if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
     st.session_state["username"] = ""
 
+if st.session_state.get("supabase_session") and not st.session_state["logged_in"]:
+    auth.restore_session_from_state()
+    if st.session_state.get("username"):
+        st.session_state["logged_in"] = True
+
 if not st.session_state["logged_in"]:
     st.title("📈 股票技術分析與回測系統")
 
@@ -145,8 +151,7 @@ if not st.session_state["logged_in"]:
 with st.sidebar:
     st.markdown(f"👤 **{st.session_state['username']}**")
     if st.button("🚪 登出", key="btn_logout"):
-        st.session_state["logged_in"] = False
-        st.session_state["username"] = ""
+        auth.logout()
         st.rerun()
 
 st.title("📈 股票技術分析與回測系統")

@@ -1,0 +1,454 @@
+- generic [ref=e2]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - link "Hugging Face's logo Hugging Face" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "Hugging Face's logo" [ref=e8]
+          - generic [ref=e9]: Hugging Face
+        - generic [ref=e10]:
+          - textbox "Search models, datasets, users..." [ref=e11]
+          - img [ref=e12]
+      - navigation "Main" [ref=e14]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Models" [ref=e17] [cursor=pointer]:
+              - /url: /models
+              - img [ref=e18]
+              - text: Models
+          - listitem [ref=e22]:
+            - link "Datasets" [ref=e23] [cursor=pointer]:
+              - /url: /datasets
+              - img [ref=e24]
+              - text: Datasets
+          - listitem [ref=e29]:
+            - link "Spaces" [ref=e30] [cursor=pointer]:
+              - /url: /spaces
+              - img [ref=e31]
+              - text: Spaces
+          - listitem [ref=e35]:
+            - link "Buckets new" [ref=e36] [cursor=pointer]:
+              - /url: /storage
+              - img [ref=e37]
+              - text: Buckets
+              - generic [ref=e41]: new
+          - listitem [ref=e42]:
+            - link "Docs" [ref=e43] [cursor=pointer]:
+              - /url: /docs
+              - img [ref=e44]
+              - text: Docs
+          - listitem [ref=e48]:
+            - link "Enterprise" [ref=e49] [cursor=pointer]:
+              - /url: /enterprise
+              - img [ref=e50]
+              - text: Enterprise
+          - listitem [ref=e52]:
+            - link "Pricing" [ref=e53] [cursor=pointer]:
+              - /url: /pricing
+          - listitem [ref=e54]:
+            - generic [ref=e55]:
+              - button [ref=e56] [cursor=pointer]:
+                - img [ref=e57]
+              - navigation [ref=e62]:
+                - list [ref=e63]:
+                  - listitem [ref=e64]:
+                    - generic [ref=e65]: Website
+                    - list [ref=e66]:
+                      - listitem [ref=e67]:
+                        - link "Tasks" [ref=e68] [cursor=pointer]:
+                          - /url: /tasks
+                          - img [ref=e69]
+                          - generic: Tasks
+                      - listitem [ref=e72]:
+                        - link "HuggingChat" [ref=e73] [cursor=pointer]:
+                          - /url: /chat
+                          - img [ref=e74]
+                          - generic: HuggingChat
+                      - listitem [ref=e77]:
+                        - link "Collections" [ref=e78] [cursor=pointer]:
+                          - /url: /collections
+                          - img [ref=e79]
+                          - generic: Collections
+                      - listitem [ref=e83]:
+                        - link "Languages" [ref=e84] [cursor=pointer]:
+                          - /url: /languages
+                          - img [ref=e85]
+                          - generic: Languages
+                      - listitem [ref=e87]:
+                        - link "Organizations" [ref=e88] [cursor=pointer]:
+                          - /url: /organizations
+                          - img [ref=e89]
+                          - generic: Organizations
+                  - listitem [ref=e94]:
+                    - generic [ref=e95]: Community
+                    - list [ref=e96]:
+                      - listitem [ref=e97]:
+                        - link "Blog" [ref=e98] [cursor=pointer]:
+                          - /url: /blog/zh
+                          - img [ref=e99]
+                          - generic: Blog
+                      - listitem [ref=e101]:
+                        - link "Posts" [ref=e102] [cursor=pointer]:
+                          - /url: /posts
+                          - img [ref=e103]
+                          - generic: Posts
+                      - listitem [ref=e105]:
+                        - link "Daily Papers" [ref=e106] [cursor=pointer]:
+                          - /url: /papers
+                          - img [ref=e107]
+                          - generic: Daily Papers
+                      - listitem [ref=e110]:
+                        - link "Learn" [ref=e111] [cursor=pointer]:
+                          - /url: /learn
+                          - img [ref=e112]
+                          - generic: Learn
+                      - listitem [ref=e118]:
+                        - link "Discord" [ref=e119] [cursor=pointer]:
+                          - /url: /join/discord
+                          - img [ref=e120]
+                          - generic: Discord
+                      - listitem [ref=e122]:
+                        - link "Forum" [ref=e123] [cursor=pointer]:
+                          - /url: https://discuss.huggingface.co/
+                          - img [ref=e124]
+                          - generic: Forum
+                      - listitem [ref=e126]:
+                        - link "GitHub" [ref=e127] [cursor=pointer]:
+                          - /url: https://github.com/huggingface
+                          - img [ref=e128]
+                          - generic: GitHub
+                  - listitem [ref=e130]:
+                    - generic [ref=e131]: Solutions
+                    - list [ref=e132]:
+                      - listitem [ref=e133]:
+                        - link "Team & Enterprise" [ref=e134] [cursor=pointer]:
+                          - /url: /enterprise
+                          - img [ref=e135]
+                          - generic: Team & Enterprise
+                      - listitem [ref=e137]:
+                        - link "Hugging Face PRO" [ref=e138] [cursor=pointer]:
+                          - /url: /pro
+                          - img [ref=e139]
+                          - generic: Hugging Face PRO
+                      - listitem [ref=e141]:
+                        - link "Enterprise Support" [ref=e142] [cursor=pointer]:
+                          - /url: /support
+                          - img [ref=e143]
+                          - generic: Enterprise Support
+                      - listitem [ref=e146]:
+                        - link "Inference Providers" [ref=e147] [cursor=pointer]:
+                          - /url: /inference/models
+                          - img [ref=e148]
+                          - generic: Inference Providers
+                      - listitem [ref=e151]:
+                        - link "Inference Endpoints" [ref=e152] [cursor=pointer]:
+                          - /url: https://endpoints.huggingface.co
+                          - img [ref=e153]
+                          - generic: Inference Endpoints
+                      - listitem [ref=e156]:
+                        - link "Storage Buckets" [ref=e157] [cursor=pointer]:
+                          - /url: /storage
+                          - img [ref=e158]
+                          - generic: Storage Buckets
+          - listitem [ref=e162]:
+            - separator [ref=e163]
+          - listitem [ref=e164]:
+            - button [ref=e166] [cursor=pointer]
+  - main [ref=e168]:
+    - generic [ref=e171]:
+      - 'heading "Spaces: stockpulse-app / stock-analyzer-mobile like 0 Running Logs" [level=1] [ref=e172]':
+        - link "Spaces:" [ref=e173] [cursor=pointer]:
+          - /url: /spaces
+          - img [ref=e174]
+          - generic [ref=e180]: "Spaces:"
+        - generic [ref=e181]:
+          - link [ref=e185] [cursor=pointer]:
+            - /url: /stockpulse-app
+          - link "stockpulse-app" [ref=e189] [cursor=pointer]:
+            - /url: /stockpulse-app
+          - generic [ref=e190]: /
+        - generic [ref=e191]:
+          - link "stock-analyzer-mobile" [ref=e192] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile
+          - button "Copy space name to clipboard" [ref=e193] [cursor=pointer]:
+            - img [ref=e194]
+        - generic [ref=e198]:
+          - button "like" [ref=e201] [cursor=pointer]:
+            - img [ref=e202]
+            - generic [ref=e204]: like
+          - button "0" [ref=e205] [cursor=pointer]
+        - generic [ref=e209] [cursor=pointer]: Running
+        - button "Logs" [ref=e211] [cursor=pointer]:
+          - img [ref=e212]
+          - generic [ref=e214]: Logs
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - link "App" [ref=e217] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile
+            - img [ref=e218]
+            - text: App
+          - link "Files" [ref=e222] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/tree/main
+            - img [ref=e223]
+            - generic [ref=e226]: Files
+          - link "Community" [ref=e227] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/discussions
+            - img [ref=e228]
+            - text: Community
+          - link "Settings" [ref=e231] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/settings
+            - img [ref=e232]
+            - text: Settings
+        - button [ref=e236] [cursor=pointer]:
+          - img [ref=e237]
+    - generic [ref=e242]:
+      - generic [ref=e244]:
+        - generic [ref=e246]:
+          - button "main" [ref=e248] [cursor=pointer]:
+            - img [ref=e249]
+            - text: main
+            - img [ref=e251]
+          - link "stock-analyzer-mobile" [ref=e254] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/tree/main
+        - generic [ref=e255]:
+          - generic [ref=e257]:
+            - searchbox "Go to file" [ref=e258]
+            - img [ref=e259]
+            - generic: Ctrl+K
+          - link "1 contributor" [ref=e261] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commits/main
+            - list [ref=e262]:
+              - listitem "xuanx1905" [ref=e263]
+              - listitem [ref=e264]: 1 contributor
+          - 'link "History: 14 commits" [ref=e265] [cursor=pointer]':
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commits/main
+            - img [ref=e266]
+            - generic [ref=e268]: "History:"
+            - generic [ref=e269]: 14 commits
+        - generic [ref=e270]:
+          - separator [ref=e271]
+          - button "Contribute" [ref=e273] [cursor=pointer]:
+            - img [ref=e274]
+            - text: Contribute
+            - img [ref=e276]
+      - generic [ref=e279]:
+        - img "xuanx1905's picture" [ref=e280]
+        - link "xuanx1905" [ref=e282] [cursor=pointer]:
+          - /url: /xuanx1905
+        - generic [ref=e283]: revert to original _tw_suffix version
+        - link "b132681" [ref=e284] [cursor=pointer]:
+          - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/b1326819b05f0bb519d6098d5db000c7eb62553c
+        - time [ref=e285]: 13 minutes ago
+      - list [ref=e287]:
+        - listitem [ref=e288]:
+          - link ".devcontainer" [ref=e289] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/tree/main/.devcontainer
+            - img [ref=e290]
+            - generic [ref=e292]: .devcontainer
+          - link "Initial commit" [ref=e294] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - generic [ref=e295]: Initial commit
+          - link "1 day ago" [ref=e296] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - time [ref=e297]: 1 day ago
+        - listitem [ref=e298]:
+          - link ".streamlit" [ref=e299] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/tree/main/.streamlit
+            - img [ref=e300]
+            - generic [ref=e302]: .streamlit
+          - link "Switch TW stocks to TWSE API (ttl=60, no retries)" [ref=e304] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/c3ba95a55a59e2e4b02a2427cb644b33a6990a5f
+            - generic [ref=e305]: Switch TW stocks to TWSE API (ttl=60, no retries)
+          - link "1 day ago" [ref=e306] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/c3ba95a55a59e2e4b02a2427cb644b33a6990a5f
+            - time [ref=e307]: 1 day ago
+        - listitem [ref=e308]:
+          - generic [ref=e309]:
+            - link "Dockerfile" [ref=e310] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/Dockerfile
+              - img [ref=e311]
+              - generic [ref=e313]: Dockerfile
+            - button "Safe" [ref=e315] [cursor=pointer]:
+              - img [ref=e316]
+              - generic [ref=e320]: Safe
+          - link "219 Bytes" [ref=e321] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/Dockerfile?download=true
+            - generic [ref=e322]: 219 Bytes
+            - img [ref=e324]
+          - link "Initial commit" [ref=e326] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - generic [ref=e327]: Initial commit
+          - link "1 day ago" [ref=e328] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - time [ref=e329]: 1 day ago
+        - listitem [ref=e330]:
+          - generic [ref=e331]:
+            - link "README.md" [ref=e332] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/README.md
+              - img [ref=e333]
+              - generic [ref=e335]: README.md
+            - button "Safe" [ref=e337] [cursor=pointer]:
+              - img [ref=e338]
+              - generic [ref=e342]: Safe
+          - link "119 Bytes" [ref=e343] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/README.md?download=true
+            - generic [ref=e344]: 119 Bytes
+            - img [ref=e346]
+          - link "Initial commit" [ref=e348] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - generic [ref=e349]: Initial commit
+          - link "1 day ago" [ref=e350] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - time [ref=e351]: 1 day ago
+        - listitem [ref=e352]:
+          - generic [ref=e353]:
+            - link "app.py" [ref=e354] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/app.py
+              - img [ref=e355]
+              - generic [ref=e357]: app.py
+            - button "Safe" [ref=e359] [cursor=pointer]:
+              - img [ref=e360]
+              - generic [ref=e364]: Safe
+          - link "62.9 kB" [ref=e365] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/app.py?download=true
+            - generic [ref=e366]: 62.9 kB
+            - img [ref=e368]
+          - link "revert to original _tw_suffix version" [ref=e370] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/b1326819b05f0bb519d6098d5db000c7eb62553c
+            - generic [ref=e371]: revert to original _tw_suffix version
+          - link "13 minutes ago" [ref=e372] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/b1326819b05f0bb519d6098d5db000c7eb62553c
+            - time [ref=e373]: 13 minutes ago
+        - listitem [ref=e374]:
+          - generic [ref=e375]:
+            - link "auth.py" [ref=e376] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/auth.py
+              - img [ref=e377]
+              - generic [ref=e379]: auth.py
+            - button "Safe" [ref=e381] [cursor=pointer]:
+              - img [ref=e382]
+              - generic [ref=e386]: Safe
+          - link "1.84 kB" [ref=e387] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/auth.py?download=true
+            - generic [ref=e388]: 1.84 kB
+            - img [ref=e390]
+          - link "Initial commit" [ref=e392] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - generic [ref=e393]: Initial commit
+          - link "1 day ago" [ref=e394] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - time [ref=e395]: 1 day ago
+        - listitem [ref=e396]:
+          - generic [ref=e397]:
+            - link "backtest.py" [ref=e398] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/backtest.py
+              - img [ref=e399]
+              - generic [ref=e401]: backtest.py
+            - button "Safe" [ref=e403] [cursor=pointer]:
+              - img [ref=e404]
+              - generic [ref=e408]: Safe
+          - link "7.99 kB" [ref=e409] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/backtest.py?download=true
+            - generic [ref=e410]: 7.99 kB
+            - img [ref=e412]
+          - link "Initial commit" [ref=e414] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - generic [ref=e415]: Initial commit
+          - link "1 day ago" [ref=e416] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - time [ref=e417]: 1 day ago
+        - listitem [ref=e418]:
+          - generic [ref=e419]:
+            - link "charts.py" [ref=e420] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/charts.py
+              - img [ref=e421]
+              - generic [ref=e423]: charts.py
+            - button "Safe" [ref=e425] [cursor=pointer]:
+              - img [ref=e426]
+              - generic [ref=e430]: Safe
+          - link "9.01 kB" [ref=e431] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/charts.py?download=true
+            - generic [ref=e432]: 9.01 kB
+            - img [ref=e434]
+          - link "Initial commit" [ref=e436] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - generic [ref=e437]: Initial commit
+          - link "1 day ago" [ref=e438] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - time [ref=e439]: 1 day ago
+        - listitem [ref=e440]:
+          - generic [ref=e441]:
+            - link "database.py" [ref=e442] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/database.py
+              - img [ref=e443]
+              - generic [ref=e445]: database.py
+            - button "Safe" [ref=e447] [cursor=pointer]:
+              - img [ref=e448]
+              - generic [ref=e452]: Safe
+          - link "1.73 kB" [ref=e453] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/database.py?download=true
+            - generic [ref=e454]: 1.73 kB
+            - img [ref=e456]
+          - link "Initial commit" [ref=e458] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - generic [ref=e459]: Initial commit
+          - link "1 day ago" [ref=e460] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - time [ref=e461]: 1 day ago
+        - listitem [ref=e462]:
+          - generic [ref=e463]:
+            - link "requirements.txt" [ref=e464] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/requirements.txt
+              - img [ref=e465]
+              - generic [ref=e467]: requirements.txt
+            - button "Safe" [ref=e469] [cursor=pointer]:
+              - img [ref=e470]
+              - generic [ref=e474]: Safe
+          - link "94 Bytes" [ref=e475] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/requirements.txt?download=true
+            - generic [ref=e476]: 94 Bytes
+            - img [ref=e478]
+          - link "Revert to yfinance-only (simple, no retries, ttl=60)" [ref=e480] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/efba40b50165abb4b612532e0ff6ebbea3011997
+            - generic [ref=e481]: Revert to yfinance-only (simple, no retries, ttl=60)
+          - link "1 day ago" [ref=e482] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/efba40b50165abb4b612532e0ff6ebbea3011997
+            - time [ref=e483]: 1 day ago
+        - listitem [ref=e484]:
+          - generic [ref=e485]:
+            - link "strategies.py" [ref=e486] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/strategies.py
+              - img [ref=e487]
+              - generic [ref=e489]: strategies.py
+            - button "Safe" [ref=e491] [cursor=pointer]:
+              - img [ref=e492]
+              - generic [ref=e496]: Safe
+          - link "3.96 kB" [ref=e497] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/strategies.py?download=true
+            - generic [ref=e498]: 3.96 kB
+            - img [ref=e500]
+          - link "Initial commit" [ref=e502] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - generic [ref=e503]: Initial commit
+          - link "1 day ago" [ref=e504] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/2a44e61b8b4f045a9af6f51504dc37ceb2f23cfd
+            - time [ref=e505]: 1 day ago
+        - listitem [ref=e506]:
+          - generic [ref=e507]:
+            - link "utils.py" [ref=e508] [cursor=pointer]:
+              - /url: /spaces/stockpulse-app/stock-analyzer-mobile/blob/main/utils.py
+              - img [ref=e509]
+              - generic [ref=e511]: utils.py
+            - button "Safe" [ref=e513] [cursor=pointer]:
+              - img [ref=e514]
+              - generic [ref=e518]: Safe
+          - link "9.59 kB" [ref=e519] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/resolve/main/utils.py?download=true
+            - generic [ref=e520]: 9.59 kB
+            - img [ref=e522]
+          - 'link "fix: OTC stocks use .TWO suffix for yfinance" [ref=e524] [cursor=pointer]':
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/fbdc0bd24705332361597ef45729fa58ba5688b2
+            - generic [ref=e525]: "fix: OTC stocks use .TWO suffix for yfinance"
+          - link "about 6 hours ago" [ref=e526] [cursor=pointer]:
+            - /url: /spaces/stockpulse-app/stock-analyzer-mobile/commit/fbdc0bd24705332361597ef45729fa58ba5688b2
+            - time [ref=e527]: about 6 hours ago

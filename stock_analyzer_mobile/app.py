@@ -17,6 +17,7 @@ from charts import plot_candlestick, plot_volume_profile
 from backtest import backtest, format_metrics, Action
 from strategies import STRATEGIES
 import auth
+import database as db
 
 st.set_page_config(
     page_title="股票分析系統",
@@ -62,6 +63,11 @@ st.markdown("""
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
     st.session_state["username"] = ""
+
+if st.session_state.get("supabase_session") and not st.session_state["logged_in"]:
+    auth.restore_session_from_state()
+    if st.session_state.get("username"):
+        st.session_state["logged_in"] = True
 
 if not st.session_state["logged_in"]:
     st.title("📈 股票分析系統")
@@ -134,8 +140,7 @@ with c2:
 if st.session_state.get("show_user"):
     st.markdown(f"<div style='text-align:right;margin-bottom:8px;'>👤 {st.session_state['username']} &nbsp;", unsafe_allow_html=True)
     if st.button("🚪 登出", key="btn_logout", use_container_width=True):
-        st.session_state["logged_in"] = False
-        st.session_state["username"] = ""
+        auth.logout()
         st.rerun()
 
 # ─── 股票選擇 (永遠在畫面上) ───

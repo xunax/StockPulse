@@ -20,17 +20,28 @@ def get_client() -> Client:
     return _client
 
 
+def restore_session(access_token: str, refresh_token: str):
+    client = get_client()
+    client.auth.set_session(access_token, refresh_token)
+
+
 def get_user_by_username(username: str) -> dict | None:
     client = get_client()
     result = client.table("users").select("*").eq("username", username).execute()
     return result.data[0] if result.data else None
 
 
-def create_user(username: str, password_hash: str) -> dict:
+def get_user_by_auth_id(auth_id: str) -> dict | None:
+    client = get_client()
+    result = client.table("users").select("*").eq("auth_id", auth_id).execute()
+    return result.data[0] if result.data else None
+
+
+def create_user(username: str, auth_id: str) -> dict:
     client = get_client()
     result = client.table("users").insert({
         "username": username,
-        "password_hash": password_hash,
+        "auth_id": auth_id,
     }).execute()
     return result.data[0]
 

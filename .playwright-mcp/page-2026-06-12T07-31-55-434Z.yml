@@ -1,0 +1,612 @@
+- generic [ref=e2]:
+  - generic [ref=e66]:
+    - button "keyboard_double_arrow_left" [ref=e453] [cursor=pointer]:
+      - generic [ref=e455]: keyboard_double_arrow_left
+    - generic [ref=e70]:
+      - paragraph [ref=e75]:
+        - text: 👤
+        - strong [ref=e76]: testotc
+      - button "🚪 登出" [ref=e79] [cursor=pointer]:
+        - paragraph [ref=e83]: 🚪 登出
+      - heading "📊 參數設定" [level=2] [ref=e87]
+      - generic [ref=e192]:
+        - paragraph [ref=e196]: 漲跌配色
+        - radiogroup "漲跌配色" [ref=e197] [cursor=pointer]:
+          - generic [ref=e198]:
+            - radio "紅漲綠跌 (台股)" [checked]
+            - paragraph [ref=e203]: 紅漲綠跌 (台股)
+          - generic [ref=e204]:
+            - radio "綠漲紅跌 (美股)"
+            - paragraph [ref=e209]: 綠漲紅跌 (美股)
+      - generic [ref=e210]:
+        - paragraph [ref=e214]: 輸入方式
+        - radiogroup "輸入方式" [ref=e215] [cursor=pointer]:
+          - generic [ref=e216]:
+            - radio "下拉選擇" [checked]
+            - paragraph [ref=e221]: 下拉選擇
+          - generic [ref=e222]:
+            - radio "手動輸入"
+            - paragraph [ref=e227]: 手動輸入
+      - generic [ref=e228]:
+        - paragraph [ref=e232]: 市場
+        - radiogroup "市場" [ref=e233] [cursor=pointer]:
+          - generic [ref=e234]:
+            - radio "上市"
+            - paragraph [ref=e239]: 上市
+          - generic [ref=e240]:
+            - radio "上櫃"
+            - paragraph [ref=e245]: 上櫃
+          - generic [ref=e246]:
+            - radio "國際" [checked] [active]
+            - paragraph [ref=e251]: 國際
+      - generic [ref=e252]:
+        - paragraph [ref=e256]: 分類
+        - generic [ref=e258]:
+          - generic [ref=e259]:
+            - generic [ref=e260]: 美股
+            - combobox "Selected 美股. 分類" [ref=e456]
+          - img "open" [ref=e264]
+      - generic [ref=e266]:
+        - paragraph [ref=e270]: 選擇標的
+        - generic [ref=e272]:
+          - generic [ref=e273]:
+            - generic [ref=e274]: AAPL
+            - combobox "Selected AAPL. 選擇標的" [ref=e457]
+          - img "open" [ref=e278]
+      - generic [ref=e280]:
+        - paragraph [ref=e284]: 資料區間
+        - generic [ref=e286]:
+          - generic [ref=e287]:
+            - generic [ref=e288]: 1 年
+            - combobox "Selected 1 年. 資料區間" [ref=e290]
+          - img "open" [ref=e292]
+      - separator [ref=e104]
+      - heading "🔧 技術指標" [level=2] [ref=e108]
+      - generic [ref=e295] [cursor=pointer]:
+        - checkbox "5日均線" [checked]
+        - paragraph [ref=e300]: 5日均線
+      - generic [ref=e302] [cursor=pointer]:
+        - checkbox "10日均線" [checked]
+        - paragraph [ref=e307]: 10日均線
+      - generic [ref=e309] [cursor=pointer]:
+        - checkbox "20日均線" [checked]
+        - paragraph [ref=e314]: 20日均線
+      - generic [ref=e316] [cursor=pointer]:
+        - checkbox "60日均線"
+        - paragraph [ref=e321]: 60日均線
+      - generic [ref=e323] [cursor=pointer]:
+        - checkbox "120日均線"
+        - paragraph [ref=e328]: 120日均線
+      - generic [ref=e330] [cursor=pointer]:
+        - checkbox "布林通道" [checked]
+        - paragraph [ref=e335]: 布林通道
+      - generic [ref=e337] [cursor=pointer]:
+        - checkbox "KD 指標" [checked]
+        - paragraph [ref=e342]: KD 指標
+      - generic [ref=e344] [cursor=pointer]:
+        - checkbox "成交量分布圖"
+        - paragraph [ref=e349]: 成交量分布圖
+      - separator [ref=e129]
+      - heading "⚙️ 指標參數" [level=2] [ref=e133]
+      - generic [ref=e351]:
+        - paragraph [ref=e355]: RSI 計算天數
+        - generic [ref=e356]:
+          - slider "RSI 計算天數" [ref=e360]:
+            - generic:
+              - generic:
+                - paragraph: "14"
+          - generic:
+            - generic:
+              - paragraph: "6"
+            - generic:
+              - paragraph: "30"
+      - generic [ref=e363]:
+        - paragraph [ref=e367]: 布林通道天數
+        - generic [ref=e368]:
+          - slider "布林通道天數" [ref=e372]:
+            - generic:
+              - generic:
+                - paragraph: "20"
+          - generic:
+            - generic:
+              - paragraph: "10"
+            - generic:
+              - paragraph: "40"
+      - generic [ref=e375]:
+        - paragraph [ref=e379]: 布林標準差倍數
+        - generic [ref=e380]:
+          - slider "布林標準差倍數" [ref=e384]:
+            - generic:
+              - generic:
+                - paragraph: "2.00"
+          - generic:
+            - generic:
+              - paragraph: "1.00"
+            - generic:
+              - paragraph: "3.00"
+      - generic [ref=e387]:
+        - paragraph [ref=e391]: KD 計算天數
+        - generic [ref=e392]:
+          - slider "KD 計算天數" [ref=e396]:
+            - generic:
+              - generic:
+                - paragraph: "14"
+          - generic:
+            - generic:
+              - paragraph: "5"
+            - generic:
+              - paragraph: "30"
+      - separator [ref=e146]
+      - heading "🔄 回測設定" [level=2] [ref=e150]
+      - generic [ref=e398]:
+        - paragraph [ref=e402]: 交易策略
+        - generic [ref=e404]:
+          - generic [ref=e405]:
+            - generic [ref=e406]: 均線黃金交叉
+            - combobox "Selected 均線黃金交叉. 交易策略" [ref=e408]
+          - img "open" [ref=e410]
+      - generic [ref=e412]:
+        - paragraph [ref=e416]: 初始資金
+        - generic [ref=e417]:
+          - spinbutton "初始資金" [ref=e420]: "1000000"
+          - generic [ref=e421]:
+            - button [ref=e422] [cursor=pointer]:
+              - img [ref=e423]
+            - button [ref=e425] [cursor=pointer]:
+              - img [ref=e426]
+      - separator [ref=e159]
+      - heading "⚙️ 策略參數" [level=2] [ref=e163]
+      - generic [ref=e429]:
+        - paragraph [ref=e433]: 快線天數
+        - generic [ref=e434]:
+          - slider "快線天數" [ref=e438]:
+            - generic:
+              - generic:
+                - paragraph: "5"
+          - generic:
+            - generic:
+              - paragraph: "3"
+            - generic:
+              - paragraph: "60"
+      - generic [ref=e441]:
+        - paragraph [ref=e445]: 慢線天數
+        - generic [ref=e446]:
+          - slider "慢線天數" [ref=e450]:
+            - generic:
+              - generic:
+                - paragraph: "20"
+          - generic:
+            - generic:
+              - paragraph: "10"
+            - generic:
+              - paragraph: "120"
+  - generic [ref=e3]:
+    - banner [ref=e6]:
+      - generic [ref=e9]:
+        - generic [ref=e459]:
+          - img "Running..." [ref=e460]:
+            - img [ref=e461]
+          - button "Stop" [ref=e465] [cursor=pointer]
+        - button "Main menu" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+    - generic [ref=e15]:
+      - heading "📈 股票技術分析與回測系統" [level=1] [ref=e20]:
+        - text: 📈 股票技術分析與回測系統
+        - generic [ref=e21]:
+          - link "Link to heading":
+            - /url: "#5b8c596d"
+            - img
+      - generic [ref=e23]:
+        - tablist [ref=e25]:
+          - tab "📊 技術分析" [selected] [ref=e170] [cursor=pointer]:
+            - paragraph [ref=e28]: 📊 技術分析
+          - tab "💰 回測系統" [ref=e171] [cursor=pointer]:
+            - paragraph [ref=e31]: 💰 回測系統
+          - tab "📋 原始資料" [ref=e172] [cursor=pointer]:
+            - paragraph [ref=e174]: 📋 原始資料
+          - tab "📈 多股對比" [ref=e175] [cursor=pointer]:
+            - paragraph [ref=e177]: 📈 多股對比
+          - tab "🏛️ 主力動向" [ref=e178] [cursor=pointer]:
+            - paragraph [ref=e180]: 🏛️ 主力動向
+          - tab "🔔 持股監控" [ref=e181] [cursor=pointer]:
+            - paragraph [ref=e183]: 🔔 持股監控
+        - tabpanel "📊 技術分析" [ref=e184]:
+          - generic [ref=e35]:
+            - heading "📌 AAPL (AAPL) — 2026-06-11" [level=3] [ref=e471]:
+              - text: 📌 AAPL (AAPL) — 2026-06-11
+              - generic [ref=e472]:
+                - link "Link to heading":
+                  - /url: "#aapl-aapl-2026-06-11"
+                  - img
+            - generic [ref=e474]:
+              - paragraph [ref=e481]:
+                - strong [ref=e482]: 現價
+                - text: "295.63"
+                - text: +4.05 (+1.39%)
+              - paragraph [ref=e489]:
+                - strong [ref=e490]: 開盤
+                - text: "293.72"
+              - paragraph [ref=e497]:
+                - strong [ref=e498]: 最高
+                - text: "297.00"
+              - paragraph [ref=e505]:
+                - strong [ref=e506]: 最低
+                - text: "289.59"
+              - paragraph [ref=e513]:
+                - strong [ref=e514]: 成交量
+                - text: 42,523,300
+            - generic [ref=e516]:
+              - generic [ref=e518]:
+                - generic [ref=e523]:
+                  - generic [ref=e524]: ⚡ 短期（當沖/波段）
+                  - generic [ref=e525]: 🟢 偏多，可考慮買入
+                  - generic [ref=e526]: 綜合評分：10 分
+                - group [ref=e529]:
+                  - generic "keyboard_arrow_right 📋 短期評估項目" [ref=e530] [cursor=pointer]:
+                    - generic [ref=e531]:
+                      - generic [ref=e533]: keyboard_arrow_right
+                      - paragraph [ref=e536]: 📋 短期評估項目
+              - generic [ref=e538]:
+                - generic [ref=e543]:
+                  - generic [ref=e544]: 📅 長期（存股/波段）
+                  - generic [ref=e545]: 🟢 強烈建議買入
+                  - generic [ref=e546]: 綜合評分：20 分
+                - group [ref=e549]:
+                  - generic "keyboard_arrow_right 📋 長期評估項目" [ref=e550] [cursor=pointer]:
+                    - generic [ref=e551]:
+                      - generic [ref=e553]: keyboard_arrow_right
+                      - paragraph [ref=e556]: 📋 長期評估項目
+            - generic [ref=e563]:
+              - generic [ref=e564]: KD 指標
+              - generic [ref=e565]: K值 27.5
+              - generic [ref=e566]: D值 16.9
+              - generic [ref=e567]: 🟡 正常
+              - generic [ref=e568]: ↑ 黃金交叉
+            - heading "📖 指標完整解讀" [level=3] [ref=e574]:
+              - text: 📖 指標完整解讀
+              - generic [ref=e575]:
+                - link "Link to heading":
+                  - /url: "#fa99c6a0"
+                  - img
+            - group [ref=e578]:
+              - generic "keyboard_arrow_down 🔵 K線（蠟燭圖）— 最基本的看盤工具" [ref=e579] [cursor=pointer]:
+                - generic [ref=e580]:
+                  - generic [ref=e582]: keyboard_arrow_down
+                  - paragraph [ref=e585]: 🔵 K線（蠟燭圖）— 最基本的看盤工具
+              - list [ref=e592]:
+                - listitem [ref=e593]:
+                  - text: 每根 K 線代表一天的四個價位：
+                  - strong [ref=e594]: 開盤 / 最高 / 最低 / 收盤
+                - listitem [ref=e595]:
+                  - text: 🔴 紅色 K 線：
+                  - strong [ref=e596]: 收盤 > 開盤
+                  - text: （當天上漲）
+                - listitem [ref=e597]:
+                  - text: 🟢 綠色 K 線：
+                  - strong [ref=e598]: 收盤 < 開盤
+                  - text: （當天下跌）
+                - listitem [ref=e599]: 上下「影線」代表當天曾經到過的最高和最低價
+                - listitem [ref=e600]:
+                  - strong [ref=e601]: 長紅 K 線 + 大量
+                  - text: ：買方力道強，未來可能繼續上漲
+                - listitem [ref=e602]:
+                  - strong [ref=e603]: 長綠 K 線 + 大量
+                  - text: ：賣方力道強，未來可能繼續下跌
+                - listitem [ref=e604]:
+                  - strong [ref=e605]: 十字星（上下影線都很長）
+                  - text: ：多空交戰，方向不明，觀望為主
+                - listitem [ref=e606]:
+                  - text: 當前收盤：
+                  - strong [ref=e607]: "295.63"
+                  - text: ，距離近 20 日高點 317.40 21.77，距離低點 287.38 8.25
+            - group [ref=e610]:
+              - generic "keyboard_arrow_down 📈 均線（MA）— 判斷趨勢方向" [ref=e611] [cursor=pointer]:
+                - generic [ref=e612]:
+                  - generic [ref=e614]: keyboard_arrow_down
+                  - paragraph [ref=e617]: 📈 均線（MA）— 判斷趨勢方向
+              - generic [ref=e623]:
+                - paragraph [ref=e624]:
+                  - strong [ref=e625]: 均線是什麼
+                  - text: ：把過去 N 天的收盤價平均後畫成的線，N 越小越敏感、越大越平穩。
+                - paragraph [ref=e626]:
+                  - strong [ref=e627]: 重要訊號
+                  - text: ：
+                - list [ref=e628]:
+                  - listitem [ref=e629]:
+                    - strong [ref=e630]: 黃金交叉
+                    - text: ：短期均線由下往上穿越長期均線 → 未來偏多
+                  - listitem [ref=e631]:
+                    - strong [ref=e632]: 死亡交叉
+                    - text: ：短期均線由上往下穿越長期均線 → 未來偏空
+                  - listitem [ref=e633]:
+                    - text: 股價在所有均線
+                    - strong [ref=e634]: 之上
+                    - text: → 強勢多頭
+                  - listitem [ref=e635]:
+                    - text: 股價在所有均線
+                    - strong [ref=e636]: 之下
+                    - text: → 弱勢空頭
+                - paragraph [ref=e637]:
+                  - strong [ref=e638]: 當前狀態
+                  - text: ： ⚠️
+                  - strong [ref=e639]: 5日(297.3) < 20日(304.2)
+                  - text: — 短線偏空 ✅
+                  - strong [ref=e640]: 20日(304.2) > 60日(278.9)
+                  - text: — 中期趨勢向上 📊 均線排列：
+                  - strong [ref=e641]: 20日(304.2) > 10日(304.2) > 5日(297.3)
+                  - text: （由上而下 = 多頭排列 / 由下而上 = 空頭排列）
+            - group [ref=e644]:
+              - generic "keyboard_arrow_down 📊 RSI 相對強弱指標（14日，0~100）— 判斷超買超賣" [ref=e645] [cursor=pointer]:
+                - generic [ref=e646]:
+                  - generic [ref=e648]: keyboard_arrow_down
+                  - paragraph [ref=e651]: 📊 RSI 相對強弱指標（14日，0~100）— 判斷超買超賣
+              - generic [ref=e657]:
+                - paragraph [ref=e658]:
+                  - strong [ref=e659]: RSI 是什麼
+                  - text: ：衡量過去 14 天內「漲的力道」相對於「跌的力道」，數值 0-100。
+                - paragraph [ref=e660]:
+                  - strong [ref=e661]: 判讀原則
+                  - text: ：
+                - list [ref=e662]:
+                  - listitem [ref=e663]:
+                    - strong [ref=e664]: "> 70 超買"
+                    - text: ：股價可能被過度炒作，隨時拉回
+                  - listitem [ref=e665]:
+                    - strong [ref=e666]: < 30 超賣
+                    - text: ：股價可能被過度拋售，隨時反彈
+                  - listitem [ref=e667]:
+                    - strong [ref=e668]: 50 為多空分界
+                - paragraph [ref=e669]:
+                  - strong [ref=e670]:
+                    - text: 當前值：41.5 — ⚠️
+                    - strong [ref=e671]: 偏空區
+                    - text: （30-50）
+                - list [ref=e672]:
+                  - listitem [ref=e673]: 💡 意義：空方力道略佔上風，趨勢偏弱但尚未超跌
+                  - listitem [ref=e674]: 📌 建議：觀望為主，等待止跌訊號
+            - group [ref=e677]:
+              - generic "keyboard_arrow_down 📉 MACD 指標 — 判斷趨勢動能" [ref=e678] [cursor=pointer]:
+                - generic [ref=e679]:
+                  - generic [ref=e681]: keyboard_arrow_down
+                  - paragraph [ref=e684]: 📉 MACD 指標 — 判斷趨勢動能
+              - generic [ref=e690]:
+                - paragraph [ref=e691]:
+                  - strong [ref=e692]: MACD 是什麼
+                  - text: ：由兩條指數移動平均線（EMA）相減而成，用來看趨勢方向與動能。
+                - list [ref=e693]:
+                  - listitem [ref=e694]: MACD 線 = 12日EMA − 26日EMA
+                  - listitem [ref=e695]: 信號線 = MACD 的 9日EMA
+                  - listitem [ref=e696]: 柱狀圖 = MACD − 信號線
+                - paragraph [ref=e697]:
+                  - strong [ref=e698]: 重要訊號
+                  - text: ：
+                - list [ref=e699]:
+                  - listitem [ref=e700]:
+                    - strong [ref=e701]: MACD 向上穿越信號線
+                    - text: ：買進訊號，未來偏多
+                  - listitem [ref=e702]:
+                    - strong [ref=e703]: MACD 向下穿越信號線
+                    - text: ：賣出訊號，未來偏空
+                  - listitem [ref=e704]:
+                    - strong [ref=e705]: 柱狀圖由負轉正
+                    - text: ：動能轉強
+                  - listitem [ref=e706]:
+                    - strong [ref=e707]: 柱狀圖由正轉負
+                    - text: ：動能轉弱
+                - paragraph [ref=e708]:
+                  - strong [ref=e709]:
+                    - text: 當前狀態：⚠️
+                    - strong [ref=e710]: 空頭訊號
+                    - text: ：MACD 在信號線之下，且柱狀圖為負
+                - list [ref=e711]:
+                  - listitem [ref=e712]: 💡 意義：短期均線跌幅 > 長期均線，動能向下，未來偏空
+            - group [ref=e715]:
+              - generic "keyboard_arrow_down 🔀 KD 隨機指標（0~100）— 判斷短期超買超賣" [ref=e716] [cursor=pointer]:
+                - generic [ref=e717]:
+                  - generic [ref=e719]: keyboard_arrow_down
+                  - paragraph [ref=e722]: 🔀 KD 隨機指標（0~100）— 判斷短期超買超賣
+              - generic [ref=e728]:
+                - paragraph [ref=e729]:
+                  - strong [ref=e730]: KD 是什麼
+                  - text: ：根據最近一段時間的價格範圍，判斷目前收盤價「相對高低位置」的指標。
+                - list [ref=e731]:
+                  - listitem [ref=e732]: K 值 = 快速隨機指標，對價格變化敏感
+                  - listitem [ref=e733]: D 值 = K 值的移動平均，較平穩
+                - paragraph [ref=e734]:
+                  - strong [ref=e735]: 判讀原則
+                  - text: ：
+                - list [ref=e736]:
+                  - listitem [ref=e737]:
+                    - strong [ref=e738]: "> 80 超買"
+                    - text: ：股價接近近期高檔，回檔風險高
+                  - listitem [ref=e739]:
+                    - strong [ref=e740]: < 20 超賣
+                    - text: ：股價接近近期低檔，反彈機會高
+                  - listitem [ref=e741]:
+                    - strong [ref=e742]: K 向上穿越 D
+                    - text: ：黃金交叉，偏多
+                  - listitem [ref=e743]:
+                    - strong [ref=e744]: K 向下穿越 D
+                    - text: ：死亡交叉，偏空
+                - paragraph [ref=e745]:
+                  - strong [ref=e746]:
+                    - text: 當前值：K = 27.5，D = 16.9 — ✅
+                    - strong [ref=e747]: 偏多
+                    - text: ：K 值在 D 值之上
+                - list [ref=e748]:
+                  - listitem [ref=e749]: 💡 意義：短期多方力道較強，股價有上漲動能
+                  - listitem [ref=e750]: 📌 建議：可順勢偏多操作，但留意上方壓力
+                  - listitem [ref=e751]:
+                    - text: 🔀 ✅
+                    - strong [ref=e752]: 黃金交叉
+                    - text: ：K 值由下往上穿越 D 值，偏多訊號
+            - group [ref=e755]:
+              - generic "keyboard_arrow_down 📦 布林通道（BB）— 判斷波動與相對位置" [ref=e756] [cursor=pointer]:
+                - generic [ref=e757]:
+                  - generic [ref=e759]: keyboard_arrow_down
+                  - paragraph [ref=e762]: 📦 布林通道（BB）— 判斷波動與相對位置
+              - generic [ref=e768]:
+                - paragraph [ref=e769]:
+                  - strong [ref=e770]: 布林通道是什麼
+                  - text: ：以 20日均線為中線，上下 ± 2.0 個標準差畫成的通道，衡量波動範圍。
+                - paragraph [ref=e771]:
+                  - strong [ref=e772]: 判讀原則
+                  - text: ：
+                - list [ref=e773]:
+                  - listitem [ref=e774]:
+                    - text: 股價碰到
+                    - strong [ref=e775]: 上軌
+                    - text: ：過熱訊號
+                  - listitem [ref=e776]:
+                    - text: 股價碰到
+                    - strong [ref=e777]: 下軌
+                    - text: ：超跌訊號
+                  - listitem [ref=e778]:
+                    - text: 通道
+                    - strong [ref=e779]: 變窄
+                    - text: ：盤整中，隨時可能大波動（噴出或急殺）
+                  - listitem [ref=e780]:
+                    - text: 通道
+                    - strong [ref=e781]: 變寬
+                    - text: ：趨勢明確中
+                - paragraph [ref=e782]:
+                  - strong [ref=e783]: 當前狀態
+                  - text: ：
+                - list [ref=e784]:
+                  - listitem [ref=e785]: 上軌：318.63，下軌：289.84，通道寬度：9.7%
+                  - listitem [ref=e786]: 目前股價在通道的 20% 位置
+                  - listitem [ref=e787]:
+                    - text: ⚠️
+                    - strong [ref=e788]: 下半部
+                    - text: ：偏空位置
+            - group [ref=e791]:
+              - generic "keyboard_arrow_down 📊 成交量 — 確認趨勢真假" [ref=e792] [cursor=pointer]:
+                - generic [ref=e793]:
+                  - generic [ref=e795]: keyboard_arrow_down
+                  - paragraph [ref=e798]: 📊 成交量 — 確認趨勢真假
+              - generic [ref=e804]:
+                - paragraph [ref=e805]:
+                  - strong [ref=e806]: 成交量是什麼
+                  - text: ：當天買賣的總股數，量是「趨勢的燃料」。
+                - paragraph [ref=e807]:
+                  - strong [ref=e808]: 重要原則
+                  - text: ：
+                - list [ref=e809]:
+                  - listitem [ref=e810]:
+                    - strong [ref=e811]: 價漲量增
+                    - text: ：健康的上涨，趨勢可信
+                  - listitem [ref=e812]:
+                    - strong [ref=e813]: 價漲量縮
+                    - text: ：虛涨，上漲動能不足
+                  - listitem [ref=e814]:
+                    - strong [ref=e815]: 價跌量增
+                    - text: ：恐慌賣壓，趨勢弱
+                  - listitem [ref=e816]:
+                    - strong [ref=e817]: 價跌量縮
+                    - text: ：賣壓減輕，可能接近底部
+                - paragraph [ref=e818]:
+                  - strong [ref=e819]: 當前狀態
+                  - text: ：
+                - list [ref=e820]:
+                  - listitem [ref=e821]: 今日成交量：42,523,300
+                  - listitem [ref=e822]: 5日均量：61,737,000
+                  - listitem [ref=e823]: 量比：0.69 倍
+                  - listitem [ref=e824]:
+                    - text: ⚠️
+                    - strong [ref=e825]: 縮量
+                    - text: （量能 < 5日均量）
+                  - listitem [ref=e826]: 💡 價漲量縮 → 追價意願不高，上漲動能不足，留意拉回
+            - group [ref=e829]:
+              - generic "keyboard_arrow_down 📌 支撐與壓力線 — 關鍵價位" [ref=e830] [cursor=pointer]:
+                - generic [ref=e831]:
+                  - generic [ref=e833]: keyboard_arrow_down
+                  - paragraph [ref=e836]: 📌 支撐與壓力線 — 關鍵價位
+              - generic [ref=e842]:
+                - paragraph [ref=e843]:
+                  - strong [ref=e844]: 支撐線
+                  - text: ：近期股價跌到這價位附近會止跌的位置（買方進場意願強）
+                  - strong [ref=e845]: 壓力線
+                  - text: ：近期股價漲到這價位附近會遇到賣壓的位置（賣方出貨意願強）
+                - paragraph [ref=e846]:
+                  - strong [ref=e847]: 近 20 日關鍵價位
+                  - text: ：
+                - list [ref=e848]:
+                  - listitem [ref=e849]:
+                    - text: 🔴
+                    - strong [ref=e850]: 壓力線：317.40
+                    - text: （距離現價 +7.36%）— 突破後上看，可能開啟新一波上漲
+                  - listitem [ref=e851]:
+                    - text: 🟢
+                    - strong [ref=e852]: 支撐線：287.38
+                    - text: （距離現價 +2.79%）— 跌破後下殺，可能加速趨勢走弱
+                - paragraph [ref=e853]:
+                  - strong [ref=e854]: 操作建議
+                  - text: ：
+                - list [ref=e855]:
+                  - listitem [ref=e856]:
+                    - text: 股價接近
+                    - strong [ref=e857]: 壓力線
+                    - text: 時：留意是否帶量突破，突破失敗可考慮減碼
+                  - listitem [ref=e858]:
+                    - text: 股價接近
+                    - strong [ref=e859]: 支撐線
+                    - text: 時：留意是否止跌回穩，守住支撐可考慮加碼
+            - heading "🔮 未來走勢綜合分析" [level=3] [ref=e865]:
+              - text: 🔮 未來走勢綜合分析
+              - generic [ref=e866]:
+                - link "Link to heading":
+                  - /url: "#e1c7022f"
+                  - img
+            - heading "整體判斷：🔴 強烈偏空 — 多項指標看空，未來下跌機率高" [level=4] [ref=e872]:
+              - generic [ref=e873]:
+                - text: 整體判斷：🔴
+                - strong [ref=e874]: 強烈偏空
+                - text: — 多項指標看空，未來下跌機率高
+              - generic [ref=e875]:
+                - link "Link to heading":
+                  - /url: "#34aff769"
+                  - img
+            - paragraph [ref=e880]:
+              - strong [ref=e881]: 多空票數：偏多 2 票 / 偏空 4 票
+            - heading "📋 各指標訊號明細" [level=4] [ref=e887]:
+              - text: 📋 各指標訊號明細
+              - generic [ref=e888]:
+                - link "Link to heading":
+                  - /url: "#3d52b5c1"
+                  - img
+            - heading "🎯 未來可能的三種情境" [level=4] [ref=e896]:
+              - text: 🎯 未來可能的三種情境
+              - generic [ref=e897]:
+                - link "Link to heading":
+                  - /url: "#a890138c"
+                  - img
+            - generic [ref=e901]:
+              - paragraph [ref=e902]:
+                - strong [ref=e903]: 🟢 多頭情境
+                - text: （機率約 20%）
+              - list [ref=e904]:
+                - listitem [ref=e905]: 條件：股價站穩所有均線、成交量放大、MACD 翻正
+                - listitem [ref=e906]: 目標價：突破壓力線 317.40，上看近期新高
+                - listitem [ref=e907]: 時間：1~2 週內可能實現
+              - paragraph [ref=e908]:
+                - strong [ref=e909]: 🟡 盤整情境
+                - text: （機率約 0%）
+              - list [ref=e910]:
+                - listitem [ref=e911]: 條件：股價在支撐 287.38 ~ 壓力 317.40 區間震盪
+                - listitem [ref=e912]: 目標價：在區間內高賣低買
+                - listitem [ref=e913]: 時間：可能持續 2~4 週
+              - paragraph [ref=e914]:
+                - strong [ref=e915]: 🔴 空頭情境
+                - text: （機率約 80%）
+              - list [ref=e916]:
+                - listitem [ref=e917]: 條件：跌破支撐線 287.38、均線空頭排列、量縮
+                - listitem [ref=e918]: 目標價：下看更低支撐（建議參考 60日均線 278.9 若有）
+                - listitem [ref=e919]: 時間：1~2 週內可能發生
+            - paragraph [ref=e924]: ⚠️ 免責聲明：以上分析僅基於技術指標的統計參考，非投資建議。投資有風險，請審慎評估。
+            - group [ref=e927]:
+              - generic "keyboard_arrow_right 📊 最新技術指標數值" [ref=e928] [cursor=pointer]:
+                - generic [ref=e929]:
+                  - generic [ref=e931]: keyboard_arrow_right
+                  - paragraph [ref=e934]: 📊 最新技術指標數值
+      - alert [ref=e187]:
+        - paragraph [ref=e191]: 無法取得股票資料，請確認代碼是否正確
