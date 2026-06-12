@@ -54,7 +54,7 @@ st.markdown("""
     .st-emotion-cache-1avcm0n { padding-top: 1rem; }
     .element-container { margin-bottom: 0.5rem; }
     div.stMarkdown p { line-height: 1.6; }
-    .card { background: #1a1a2e; border-radius: 16px; padding: 16px 20px; margin: 12px 0; color: #e0e0e0; }
+    .card { border-radius: 16px; padding: 16px 20px; margin: 12px 0; }
     .main .block-container { max-width: 100% !important; padding-left: 0 !important; }
 </style>
 """, unsafe_allow_html=True)
@@ -316,7 +316,7 @@ with tab1:
             verdict_icon, verdict_text = "🟡", "短空但醞釀反彈 — 均線偏空，但 RSI 脫離弱勢區"
         else:
             verdict_icon, verdict_text = "⚪", "方向不明 — 多空指標分歧"
-        st.markdown(f"<div style='background:#1a1a2e;border-radius:12px;padding:10px 14px;margin:8px 0;font-size:0.9rem;color:#e0e0e0;'>"
+        st.markdown(f"<div style='border-radius:12px;padding:10px 14px;margin:8px 0;font-size:0.9rem;color:#e0e0e0;background:var(--secondary-background-color);'>"
                     f"{verdict_icon} <b>{verdict_text}</b></div>", unsafe_allow_html=True)
 
     if info:
@@ -421,7 +421,7 @@ with tab1:
 
     col_s, col_l = st.columns(2)
     with col_s:
-        st.markdown(f"<div style='background:#1a1a2e;border:2px solid {sc};border-radius:12px;padding:10px;text-align:center;'>"
+        st.markdown(f"<div style='background:var(--secondary-background-color);border:2px solid {sc};border-radius:12px;padding:10px;text-align:center;'>"
                     f"<div style='font-size:0.8rem;color:#888;'>⚡ 短期</div>"
                     f"<div style='font-size:1rem;font-weight:bold;color:{sc};'>{sv}</div>"
                     f"<div style='font-size:0.75rem;color:#aaa;'>評分 {s_score}</div></div>", unsafe_allow_html=True)
@@ -429,7 +429,7 @@ with tab1:
             for r in s_reasons:
                 st.markdown(f"- {r}")
     with col_l:
-        st.markdown(f"<div style='background:#1a1a2e;border:2px solid {lc};border-radius:12px;padding:10px;text-align:center;'>"
+        st.markdown(f"<div style='background:var(--secondary-background-color);border:2px solid {lc};border-radius:12px;padding:10px;text-align:center;'>"
                     f"<div style='font-size:0.8rem;color:#888;'>📅 長期</div>"
                     f"<div style='font-size:1rem;font-weight:bold;color:{lc};'>{lv}</div>"
                     f"<div style='font-size:0.75rem;color:#aaa;'>評分 {l_score}</div></div>", unsafe_allow_html=True)
@@ -1200,7 +1200,7 @@ with tab6:
 
             with st.container():
                 st.markdown(f"""
-<div style="background:#1a1a2e;border-left:4px solid {action_color};border-radius:8px;padding:10px 14px;margin:6px 0;color:#e0e0e0;">
+<div style="background:var(--secondary-background-color);border-left:4px solid {action_color};border-radius:8px;padding:10px 14px;margin:6px 0;color:#e0e0e0;">
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
     <div>
       <span style="font-size:1em;font-weight:bold;color:#e0e0e0;">{name} ({sym})</span>

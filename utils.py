@@ -95,7 +95,18 @@ def get_stock_data(symbol, period="6mo"):
         sym = symbol
     else:
         sym = symbol
-    df = yf.download(sym, period=period, auto_adjust=True, progress=False)
+    import time
+    for attempt in range(3):
+        try:
+            df = yf.download(sym, period=period, auto_adjust=True, progress=False, timeout=15)
+            if not df.empty:
+                break
+        except Exception:
+            if attempt < 2:
+                time.sleep(2)
+                continue
+            return pd.DataFrame()
+        time.sleep(1)
     if df.empty:
         return df
     if isinstance(df.columns, pd.MultiIndex):
