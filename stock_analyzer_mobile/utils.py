@@ -2,8 +2,6 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import streamlit as st
-import requests
-from datetime import datetime
 
 STOCKS = {
     "台股上市": {
@@ -83,171 +81,52 @@ _OTC_CODES = {
     6561, 6757, 6763, 6805, 6811, 6854, 6861, 6870, 6901, 6928,
 }
 
-_PERIOD_MONTHS = {"6mo": 6, "1y": 12, "2y": 24, "3y": 36, "5y": 60, "ytd": 6, "max": 60}
 
-
-def _roc_to_ad(roc_str):
-    parts = roc_str.split("/")
-    return f"{int(parts[0]) + 1911}-{parts[1]}-{parts[2]}"
-
-
-def _is_tw_stock(symbol):
-    return symbol.isdigit()
-
-
-def _tw_prefix(symbol):
-    return "otc" if int(symbol) >= 5000 or int(symbol) in _OTC_CODES else "tse"
-
-
-def _fetch_twse_realtime(symbol):
-    prefix = _tw_prefix(symbol)
-    try:
-        resp = requests.get(
-            f"https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch={prefix}_{symbol}.tw&json=1",
-            timeout=5,
-        )
-        if resp.status_code == 200:
-            rt = resp.json()
-            if rt.get("msgArray"):
-                return rt["msgArray"][0]
-    except:
-        pass
-    return None
-
-
-def _fetch_twse_history(symbol, n_months=6):
-    all_rows = []
-    today = datetime.today()
-    for i in range(n_months):
-        m = today.month - i
-        y = today.year
-        while m < 1:
-            m += 12
-            y -= 1
-        try:
-            resp = requests.get(
-                f"https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date={y}{m:02d}01&stockNo={symbol}",
-                timeout=10,
-            )
-            if resp.status_code == 200:
-                d = resp.json()
-                if d.get("stat") == "OK" and d.get("data"):
-                    all_rows.extend(d["data"])
-                    fields = d.get("fields", [])
-        except:
-            continue
-
-    if not all_rows:
-        return pd.DataFrame(), []
-
-    fields = d.get("fields", [])
-    df = pd.DataFrame(all_rows, columns=fields)
-    col_map = {
-        "日期": "date", "成交股數": "volume", "開盤價": "open",
-        "最高價": "high", "最低價": "low", "收盤價": "close",
-    }
-    df.rename(columns={k: v for k, v in col_map.items() if k in df.columns}, inplace=True)
-    df["date"] = df["date"].apply(_roc_to_ad)
-    for col in ["open", "high", "low", "close"]:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col].astype(str).str.replace(",", ""), errors="coerce")
-    if "volume" in df.columns:
-        df["volume"] = pd.to_numeric(df["volume"].astype(str).str.replace(",", ""), errors="coerce")
-    df = df.dropna(subset=["open", "high", "low", "close"])
-    df = df.sort_values("date").drop_duplicates(subset="date")
-    df.set_index("date", inplace=True)
-    df.index = pd.to_datetime(df.index)
-    cols = [c for c in ["open", "high", "low", "close", "volume"] if c in df.columns]
-    df = df[cols]
-    return df, cols
+def _tw_suffix(symbol):
+    n = int(symbol)
+    return ".TWO" if n >= 5000 or n in _OTC_CODES else ".TW"
 
 
 @st.cache_data(ttl=60)
 def get_stock_data(symbol, period="6mo"):
-    if not _is_tw_stock(symbol):
+    if symbol.isdigit():
+        sym = symbol + _tw_suffix(symbol)
+    elif symbol.endswith(".TW") or symbol.endswith(".TWO"):
         sym = symbol
-        df = yf.download(sym, period=period, auto_adjust=True, progress=False)
-        if df.empty:
-            return df
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = [col[0].lower() for col in df.columns]
-        else:
-            df.columns = [c.lower() for c in df.columns]
-        return df
-
-    n_months = _PERIOD_MONTHS.get(period, 6)
-    df, cols = _fetch_twse_history(symbol, n_months)
+    else:
+        sym = symbol
+    df = yf.download(sym, period=period, auto_adjust=True, progress=False)
     if df.empty:
         return df
-
-    item = _fetch_twse_realtime(symbol)
-    if item:
-        z = item.get("z")
-        if z and z != "-":
-            today_str = datetime.today().strftime("%Y-%m-%d")
-            close = float(z)
-            open_p = float(item["o"]) if item.get("o", "-") != "-" else close
-            high_v = float(item["h"]) if item.get("h", "-") != "-" else close
-            low_v = float(item["l"]) if item.get("l", "-") != "-" else close
-            vol = int(item["v"].replace(",", "")) if item.get("v", "-") != "-" else 0
-            if today_str not in df.index:
-                nr = pd.DataFrame(
-                    [[open_p, high_v, low_v, close, vol]],
-                    columns=cols,
-                    index=[pd.Timestamp(today_str)],
-                )
-                df = pd.concat([df, nr])
-            else:
-                df.loc[today_str, "close"] = close
-                df.loc[today_str, "high"] = max(df.loc[today_str, "high"], high_v)
-                df.loc[today_str, "low"] = min(df.loc[today_str, "low"], low_v)
-
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [col[0].lower() for col in df.columns]
+    else:
+        df.columns = [c.lower() for c in df.columns]
     return df
 
 
 @st.cache_data(ttl=60)
 def get_stock_info(symbol):
-    if not _is_tw_stock(symbol):
-        try:
-            tk = yf.Ticker(symbol)
-            info = tk.info
-            if info and info.get("regularMarketPrice"):
-                return {
-                    "name": info.get("longName", info.get("shortName", symbol)),
-                    "market_cap": info.get("marketCap", 0),
-                    "pe_ratio": info.get("trailingPE", 0),
-                    "eps": info.get("trailingEps", 0),
-                    "dividend_yield": info.get("dividendYield", 0),
-                    "high_52w": info.get("fiftyTwoWeekHigh", 0),
-                    "low_52w": info.get("fiftyTwoWeekLow", 0),
-                    "volume_avg": info.get("averageVolume", 0),
-                }
-        except:
-            pass
-        return {"name": symbol}
-
-    for cat in STOCKS.values():
-        if symbol in cat:
-            name = cat[symbol]
-            break
+    if symbol.isdigit():
+        sym = symbol + _tw_suffix(symbol)
     else:
-        name = symbol
-
-    item = _fetch_twse_realtime(symbol)
-    if item:
-        z = item.get("z")
-        price = float(z) if z and z != "-" else 0
+        sym = symbol
+    try:
+        tk = yf.Ticker(sym)
+        info = tk.info
         return {
-            "name": name,
-            "market_cap": 0,
-            "pe_ratio": 0,
-            "eps": 0,
-            "dividend_yield": 0,
-            "high_52w": 0,
-            "low_52w": 0,
-            "volume_avg": 0,
+            "name": info.get("longName", info.get("shortName", symbol)),
+            "market_cap": info.get("marketCap", 0),
+            "pe_ratio": info.get("trailingPE", 0),
+            "eps": info.get("trailingEps", 0),
+            "dividend_yield": info.get("dividendYield", 0),
+            "high_52w": info.get("fiftyTwoWeekHigh", 0),
+            "low_52w": info.get("fiftyTwoWeekLow", 0),
+            "volume_avg": info.get("averageVolume", 0),
         }
-    return {"name": name}
+    except:
+        pass
+    return {"name": symbol}
 
 
 SECTORS_TW = {

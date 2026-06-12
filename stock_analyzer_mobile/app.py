@@ -192,7 +192,7 @@ with col_manual:
     st.text_input("🔍", key="manual_symbol", placeholder="代碼", label_visibility="collapsed")
     st.caption("非清單內可手動輸入")
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 主力", "🔔 監控"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術", "💰 回測", "📋 資料", "📈 對比", "🏛️ 比價", "🔔 監控"])
 
 # ─── 讀取 session_state 中的選擇值 ───
 color_theme = st.session_state.get("color_theme", "紅漲綠跌")
@@ -290,6 +290,7 @@ with tab1:
   <div style="font-size:2.5rem;font-weight:bold;color:{price_color};">{arrow} {latest['close']:.2f}</div>
   <div style="font-size:1rem;color:{price_color};">{chg:+.2f} ({chg_pct:+.2f}%)</div>
 </div>""", unsafe_allow_html=True)
+    st.caption("資料來源：Yahoo Finance / yfinance，價格可能延遲15-20分鐘；技術指標口徑可能與看盤軟體不同，本圖僅供研究參考。")
 
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
     col_m1.metric("開盤", f"{latest['open']:.2f}")
@@ -480,6 +481,7 @@ with tab1:
 # ═══════════════════════════════════════
 with tab2:
     st.subheader(f"📈 策略回測 - {strategy_name}")
+    st.caption("回測假設：每日以收盤價成交，未納入滑價、流動性風險、匯率與不同市場稅制；歷史績效不保證未來表現。")
 
     col_params = st.columns(2)
     with col_params[0]:
@@ -737,11 +739,11 @@ with tab4:
                 st.dataframe(pd.DataFrame(summary_records), hide_index=True, use_container_width=True)
 
 # ═══════════════════════════════════════
-# TAB 5: 主力動向分析
+# TAB 5: 比價估訊號
 # ═══════════════════════════════════════
 with tab5:
-    st.subheader("🏛️ 主力買賣超動向")
-    st.caption("透過價量結構分析，非實際法人進出場資料。")
+    st.subheader("🏛️ 比價估訊號")
+    st.caption("透過價量結構與技術指標估市場強弱。")
     st.info("⚠️ **使用提醒**：\n\n"
             "• **買超** ≠ 馬上買：主力可能早已佈局，追高容易住套房\n"
             "• **賣超 + 漲停**：主力趁漲停出貨給散戶，隔天易開高走低\n"
@@ -757,7 +759,7 @@ with tab5:
         inst_period_label = st.selectbox("區間", list(inst_period_map.keys()), index=1, key="inst_period")
         inst_period = inst_period_map[inst_period_label]
 
-    if st.button("🔍 分析主力動向", type="primary", use_container_width=True, key="btn_inst"):
+    if st.button("🔍 分析比價訊號", type="primary", use_container_width=True, key="btn_inst"):
         if market_type == "全部市場":
             all_sectors = {"台股": SECTORS_TW, "美股": SECTORS_US, "ETF": SECTORS_ETF}
         elif market_type == "台股":
