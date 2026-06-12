@@ -295,13 +295,29 @@ with tab1:
   <div style="font-size:2.5rem;font-weight:bold;color:{price_color};">{arrow} {latest['close']:.2f}</div>
   <div style="font-size:1rem;color:{price_color};">{chg:+.2f} ({chg_pct:+.2f}%)</div>
 </div>""", unsafe_allow_html=True)
-    st.caption("資料來源：Yahoo Finance / yfinance，價格可能延遲15-20分鐘；技術指標口徑可能與看盤軟體不同，本圖僅供研究參考。")
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+    st.caption(f"資料來源：Yahoo Finance / yfinance（最後更新 {now_str}），價格可能延遲15-20分鐘")
 
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
     col_m1.metric("開盤", f"{latest['open']:.2f}")
     col_m2.metric("最高", f"{latest['high']:.2f}")
     col_m3.metric("最低", f"{latest['low']:.2f}")
     col_m4.metric("成交量", f"{latest['volume']:,.0f}")
+
+    # 一句話結論
+    if ma5_val is not None and ma20_val is not None and rsi_val is not None:
+        if ma5_val > ma20_val and rsi_val > 50:
+            verdict_icon, verdict_text = "🟢", "整體偏多 — 短均線在長均線之上，RSI 偏多區"
+        elif ma5_val < ma20_val and rsi_val < 50:
+            verdict_icon, verdict_text = "🔴", "整體偏空 — 短均線在長均線之下，RSI 偏空區"
+        elif ma5_val > ma20_val and rsi_val < 50:
+            verdict_icon, verdict_text = "🟡", "短多但動能不足 — 均線偏多，但 RSI 中性偏弱"
+        elif ma5_val < ma20_val and rsi_val > 50:
+            verdict_icon, verdict_text = "🟡", "短空但醞釀反彈 — 均線偏空，但 RSI 脫離弱勢區"
+        else:
+            verdict_icon, verdict_text = "⚪", "方向不明 — 多空指標分歧，建議觀望"
+        st.markdown(f"<div style='background:#1a1a2e;border-radius:12px;padding:10px 14px;margin:8px 0;font-size:0.9rem;'>"
+                    f"{verdict_icon} <b>{verdict_text}</b></div>", unsafe_allow_html=True)
 
     if info:
         col_i1, col_i2, col_i3, col_i4 = st.columns(4)
@@ -486,7 +502,7 @@ with tab1:
 # TAB 2: 回測系統
 # ═══════════════════════════════════════
 with tab2:
-    st.subheader(f"📈 策略回測 - {strategy_name}")
+    st.subheader(f"📈 回測 · {strategy_name}")
     st.caption("回測假設：每日以收盤價成交，未納入滑價、流動性風險、匯率與不同市場稅制；歷史績效不保證未來表現。")
 
     col_params = st.columns(2)

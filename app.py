@@ -194,38 +194,28 @@ with st.sidebar:
     period_label = st.selectbox("資料區間", list(period_map.keys()), index=3, key="period")
     period = period_map[period_label]
 
-    st.divider()
-    st.header("🔧 技術指標")
-    show_ma5 = st.checkbox("5日均線", True, key="ma5")
-    show_ma10 = st.checkbox("10日均線", True, key="ma10")
-    show_ma20 = st.checkbox("20日均線", True, key="ma20")
-    show_ma60 = st.checkbox("60日均線", False, key="ma60")
-    show_ma120 = st.checkbox("120日均線", False, key="ma120")
-    show_bb = st.checkbox("布林通道", True, key="bb")
-    show_kd = st.checkbox("KD 指標", True, key="kd")
-    show_volume_profile = st.checkbox("成交量分布圖", False, key="vp")
+    with st.expander("🔧 技術指標", expanded=True):
+        show_ma5 = st.checkbox("5日均線", True, key="ma5")
+        show_ma10 = st.checkbox("10日均線", True, key="ma10")
+        show_ma20 = st.checkbox("20日均線", True, key="ma20")
+        show_ma60 = st.checkbox("60日均線", False, key="ma60")
+        show_ma120 = st.checkbox("120日均線", False, key="ma120")
+        show_bb = st.checkbox("布林通道", True, key="bb")
+        show_kd = st.checkbox("KD 指標", True, key="kd")
+        show_volume_profile = st.checkbox("成交量分布圖", False, key="vp")
 
-    st.divider()
-    st.header("⚙️ 指標參數")
-    rsi_period = st.slider("RSI 計算天數", 6, 30, 14, key="rsi_period")
-    bb_period = st.slider("布林通道天數", 10, 40, 20, key="bb_period")
-    bb_std = st.slider("布林標準差倍數", 1.0, 3.0, 2.0, 0.1, key="bb_std")
-    kd_period = st.slider("KD 計算天數", 5, 30, 14, key="kd_period")
+    with st.expander("⚙️ 指標參數", expanded=False):
+        rsi_period = st.slider("RSI 天數", 6, 30, 14, key="rsi_period")
+        bb_period = st.slider("布林天數", 10, 40, 20, key="bb_period")
+        bb_std = st.slider("布林標準差", 1.0, 3.0, 2.0, 0.1, key="bb_std")
+        kd_period = st.slider("KD 天數", 5, 30, 14, key="kd_period")
 
-    st.divider()
-    st.header("🔄 回測設定")
-    strategy_name = st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
-    bt_initial = st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
-
-    st.divider()
-    st.header("⚙️ 策略參數")
-    strategy_info = STRATEGIES[strategy_name]
-    strategy_params = {}
-    for p in strategy_info["params"]:
-        strategy_params[p["name"]] = st.slider(
-            p["label"], p["min"], p["max"], p["default"],
-            step=p["step"], key=f"sp_{p['name']}"
-        )
+    with st.expander("🔄 回測設定", expanded=False):
+        strategy_name = st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
+        bt_initial = st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
+        strategy_info = STRATEGIES[strategy_name]
+        for p in strategy_info["params"]:
+            st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術分析", "💰 回測系統", "📋 原始資料", "📈 多股對比", "🏛️ 主力動向", "🔔 持股監控"])
 
@@ -258,12 +248,14 @@ with tab1:
     all_stocks = {k: v for cat in STOCKS.values() for k, v in cat.items()}
     stock_display_name = all_stocks.get(symbol, symbol)
 
-    st.markdown(f"### 📌 {stock_display_name} ({symbol}) — {df.index[-1].strftime('%Y-%m-%d')}")
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+    st.markdown(f"### 📌 {stock_display_name} ({symbol})")
+    st.caption(f"最後更新 {now_str} · 資料來源 Yahoo Finance，價格可能延遲15-20分鐘")
 
     col1, col2, col3, col4, col5 = st.columns(5)
     price_color = up_color if chg >= 0 else down_color
     col1.markdown(f"**現價**<br><span style='font-size:1.5em;color:{price_color}'>{latest['close']:.2f}</span><br><small style='color:{price_color}'>{chg:+.2f} ({chg_pct:+.2f}%)</small>", unsafe_allow_html=True)
-    col2.markdown(f"**開盤**<br><span style='font-size:1.3em'>{latest['open']:.2f}</span>", unsafe_allow_html=True)
+    col2.markdown(f"**開盤**<br><span style='font-size:1.3em'>{latest['open']:.2f}</span>", unsafe_allow_html=True) 
     col3.markdown(f"**最高**<br><span style='font-size:1.3em;color:{up_color}'>{latest['high']:.2f}</span>", unsafe_allow_html=True)
     col4.markdown(f"**最低**<br><span style='font-size:1.3em;color:{down_color}'>{latest['low']:.2f}</span>", unsafe_allow_html=True)
     col5.markdown(f"**成交量**<br><span style='font-size:1.3em'>{latest['volume']:,.0f}</span>", unsafe_allow_html=True)
@@ -275,6 +267,20 @@ with tab1:
         dy_val = info['dividend_yield'] * 100 if info['dividend_yield'] < 1 else info['dividend_yield']
         c3.markdown(f"**殖利率**<br>{dy_val:.2f}%" if info['dividend_yield'] else "**殖利率**<br>N/A", unsafe_allow_html=True)
         c4.markdown(f"**市值**<br>{info['market_cap']/1e8:.1f}億" if info['market_cap'] else "**市值**<br>N/A", unsafe_allow_html=True)
+
+    # 一句話結論
+    if ma5_val is not None and ma20_val is not None and rsi_val is not None:
+        if ma5_val > ma20_val and rsi_val > 50:
+            verdict = f"🟢 整體偏多 — 短均線在長均線之上，RSI {rsi_val:.1f} 偏多區"
+        elif ma5_val < ma20_val and rsi_val < 50:
+            verdict = f"🔴 整體偏空 — 短均線在長均線之下，RSI {rsi_val:.1f} 偏空區"
+        elif ma5_val > ma20_val and rsi_val < 50:
+            verdict = f"🟡 短多但動能不足 — 均線偏多，但 RSI {rsi_val:.1f} 中性偏弱"
+        elif ma5_val < ma20_val and rsi_val > 50:
+            verdict = f"🟡 短空但醞釀反彈 — 均線偏空，但 RSI {rsi_val:.1f} 脫離弱勢區"
+        else:
+            verdict = "⚪ 方向不明 — 多空指標分歧，建議觀望"
+        st.info(verdict)
 
     if info and info.get("high_52w") and info.get("low_52w"):
         high_52w = info["high_52w"]
@@ -1012,8 +1018,11 @@ with tab2:
             st.warning("資料筆數不足，請選擇更長的區間")
         else:
             strategy_fn = strategy_info["fn"]
+            sp = {}
+            for p in strategy_info["params"]:
+                sp[p["name"]] = st.session_state.get(f"sp_{p['name']}", p["default"])
             result = backtest(bt_df, strategy_fn, initial_cash=bt_initial,
-                              commission=bt_commission, strategy_params=strategy_params)
+                              commission=bt_commission, strategy_params=sp)
 
             col_a, col_b = st.columns([1, 2])
 
