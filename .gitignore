@@ -9,3 +9,6 @@ Thumbs.db
 .env.local
 secrets.toml
 .streamlit/secrets.toml
+.playwright-mcp/
+StockPulse/
+hf-mobile-files

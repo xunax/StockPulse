@@ -20,6 +20,17 @@ def get_client() -> Client:
     return _client
 
 
+def get_admin_client() -> Client:
+    try:
+        import streamlit as st
+        url = st.secrets.get("SUPABASE_URL", "")
+        key = st.secrets.get("SUPABASE_SERVICE_KEY", "")
+    except Exception:
+        url = os.environ.get("SUPABASE_URL", "")
+        key = os.environ.get("SUPABASE_SERVICE_KEY", "")
+    return create_client(url, key)
+
+
 def restore_session(access_token: str, refresh_token: str):
     client = get_client()
     client.auth.set_session(access_token, refresh_token)

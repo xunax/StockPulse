@@ -10,24 +10,18 @@ def register(username: str, password: str) -> tuple[bool, str]:
     if len(password) < 4:
         return False, "密碼至少 4 個字元"
     try:
-        client = db.get_client()
         email = f"{username}{SUPABASE_EMAIL_DOMAIN}"
-        result = client.auth.sign_up({
+        admin = db.get_admin_client()
+        result = admin.auth.admin.create_user({
             "email": email,
             "password": password,
-            "options": {"data": {"username": username}},
+            "email_confirm": True,
+            "user_metadata": {"username": username},
         })
         if result.user:
             auth_id = result.user.id
             db.create_user(username, auth_id)
-            session = result.session
-            if session:
-                st.session_state["supabase_session"] = {
-                    "access_token": session.access_token,
-                    "refresh_token": session.refresh_token,
-                }
-                _store_user_info(auth_id)
-            return True, "註冊成功"
+            return True, "註冊成功，請登入"
         return False, "註冊失敗"
     except Exception as e:
         msg = str(e)
