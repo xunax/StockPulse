@@ -19,10 +19,13 @@ def register(username: str, password: str) -> tuple[bool, str]:
         })
         if result.user:
             auth_id = result.user.id
-            client.rpc("create_user_profile", {
-                "p_username": username,
-                "p_auth_id": auth_id,
-            }).execute()
+            try:
+                client.rpc("create_user_profile", {
+                    "p_username": username,
+                    "p_auth_id": auth_id,
+                }).execute()
+            except Exception:
+                pass
             return True, "註冊成功，請登入"
         return False, "註冊失敗"
     except Exception as e:
