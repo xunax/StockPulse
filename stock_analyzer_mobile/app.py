@@ -1203,7 +1203,7 @@ with tab6:
 <div style="background:var(--secondary-background-color);border-left:4px solid {action_color};border-radius:8px;padding:10px 14px;margin:6px 0;color:#e0e0e0;">
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
     <div>
-      <span style="font-size:1em;font-weight:bold;color:#e0e0e0;">{name} ({sym})</span>
+      <span style="font-size:1em;font-weight:bold;color:#333;">{name} ({sym})</span>
       <span style="font-size:0.75em;color:#888;margin-left:6px;">{strat_icon} {total_shares:,}股</span>
     </div>
     <div style="text-align:right;">
