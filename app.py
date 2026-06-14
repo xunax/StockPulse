@@ -113,37 +113,39 @@ if not st.session_state["logged_in"]:
     login_tab, register_tab = st.tabs(["🔑 登入", "📝 註冊"])
 
     with login_tab:
-        login_user = st.text_input("帳號", key="login_user")
-        login_pass = st.text_input("密碼", type="password", key="login_pass")
-        if st.button("登入", type="primary", use_container_width=True, key="btn_login"):
-            if login_user and login_pass:
-                ok, msg = auth.login(login_user, login_pass)
-                if ok:
-                    st.session_state["logged_in"] = True
-                    st.session_state["username"] = login_user
-                    st.success(msg)
-                    st.rerun()
-                else:
-                    st.error(msg)
-            else:
-                st.warning("請輸入帳號和密碼")
-
-    with register_tab:
-        reg_user = st.text_input("帳號（至少 2 個字元）", key="reg_user")
-        reg_pass = st.text_input("密碼（至少 4 個字元）", type="password", key="reg_pass")
-        reg_pass2 = st.text_input("確認密碼", type="password", key="reg_pass2")
-        if st.button("註冊", type="primary", use_container_width=True, key="btn_register"):
-            if reg_user and reg_pass:
-                if reg_pass != reg_pass2:
-                    st.error("兩次密碼不一致")
-                else:
-                    ok, msg = auth.register(reg_user, reg_pass)
+        with st.form("login_form"):
+            login_user = st.text_input("帳號")
+            login_pass = st.text_input("密碼", type="password")
+            if st.form_submit_button("登入", type="primary", use_container_width=True):
+                if login_user and login_pass:
+                    ok, msg = auth.login(login_user, login_pass)
                     if ok:
-                        st.success(msg + "，請登入")
+                        st.session_state["logged_in"] = True
+                        st.session_state["username"] = login_user
+                        st.success(msg)
+                        st.rerun()
                     else:
                         st.error(msg)
-            else:
-                st.warning("請輸入帳號和密碼")
+                else:
+                    st.warning("請輸入帳號和密碼")
+
+    with register_tab:
+        with st.form("register_form"):
+            reg_user = st.text_input("帳號（至少 2 個字元）")
+            reg_pass = st.text_input("密碼（至少 4 個字元）", type="password")
+            reg_pass2 = st.text_input("確認密碼", type="password")
+            if st.form_submit_button("註冊", type="primary", use_container_width=True):
+                if reg_user and reg_pass:
+                    if reg_pass != reg_pass2:
+                        st.error("兩次密碼不一致")
+                    else:
+                        ok, msg = auth.register(reg_user, reg_pass)
+                        if ok:
+                            st.success(msg + "，請登入")
+                        else:
+                            st.error(msg)
+                else:
+                    st.warning("請輸入帳號和密碼")
 
     st.stop()
 
@@ -1004,6 +1006,7 @@ with tab1:
 # ═══════════════════════════════════════
 with tab2:
     st.subheader(f"📈 策略回測 - {strategy_name}")
+    st.caption(f"資料來源：Yahoo Finance / yfinance（最後更新 {now_str}），價格可能延遲15-20分鐘")
 
     col_params = st.columns(3)
     with col_params[0]:
@@ -1172,6 +1175,7 @@ with tab2:
 # ═══════════════════════════════════════
 with tab3:
     st.subheader("📋 原始股價資料")
+    st.caption(f"資料來源：Yahoo Finance / yfinance（最後更新 {now_str}），價格可能延遲15-20分鐘")
     col_map = {"open": "開盤", "high": "最高", "low": "最低", "close": "收盤", "volume": "成交量",
                "rsi": f"RSI({rsi_period}日)", "macd": "MACD", "macd_signal": "MACD 信號線"}
     display_cols = ["open", "high", "low", "close", "volume"]
@@ -1188,6 +1192,13 @@ with tab3:
         df_display.sort_index(ascending=False),
         use_container_width=True,
         height=500,
+    )
+
+    st.subheader("🔍 最新 5 筆資料")
+    st.dataframe(
+        df_display.sort_index(ascending=False).head(5),
+        use_container_width=True,
+        height=210,
     )
 
     csv = df_display.to_csv().encode("utf-8-sig")

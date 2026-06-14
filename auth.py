@@ -26,7 +26,7 @@ def register(username: str, password: str) -> tuple[bool, str]:
                 }).execute()
             except Exception:
                 pass
-            return True, "註冊成功，請登入"
+            return True, "註冊成功"
         return False, "註冊失敗"
     except Exception as e:
         msg = str(e)
