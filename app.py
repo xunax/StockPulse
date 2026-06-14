@@ -212,12 +212,6 @@ with st.sidebar:
         bb_std = st.slider("布林標準差", 1.0, 3.0, 2.0, 0.1, key="bb_std")
         kd_period = st.slider("KD 天數", 5, 30, 14, key="kd_period")
 
-    with st.expander("🔄 回測設定", expanded=False):
-        strategy_name = st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
-        bt_initial = st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
-        strategy_info = STRATEGIES[strategy_name]
-        for p in strategy_info["params"]:
-            st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 技術分析", "💰 回測系統", "📋 原始資料", "📈 多股對比", "🏛️ 主力動向", "🔔 持股監控"])
 
@@ -1005,8 +999,20 @@ with tab1:
 # TAB 2: 回測系統
 # ═══════════════════════════════════════
 with tab2:
-    st.subheader(f"📈 策略回測 - {strategy_name}")
+    st.subheader("📈 策略回測")
     st.caption(f"資料來源：Yahoo Finance / yfinance（最後更新 {now_str}），價格可能延遲15-20分鐘")
+
+    col_strat = st.columns([2, 1])
+    with col_strat[0]:
+        strategy_name = st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
+    with col_strat[1]:
+        bt_initial = st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
+    strategy_info = STRATEGIES[strategy_name]
+    with st.expander("🔧 策略參數", expanded=False):
+        for p in strategy_info["params"]:
+            st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
+
+    st.caption("回測假設：每日以收盤價成交，未納入滑價、流動性風險、匯率與不同市場稅制；歷史績效不保證未來表現。")
 
     col_params = st.columns(3)
     with col_params[0]:

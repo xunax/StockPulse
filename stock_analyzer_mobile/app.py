@@ -176,12 +176,6 @@ with col_dum:
             st.slider("布林天數", 10, 40, 20, key="bb_period")
             st.slider("布林標準差", 1.0, 3.0, 2.0, 0.1, key="bb_std")
             st.slider("KD 天數", 5, 30, 14, key="kd_period")
-        st.markdown("**🔄 回測設定**")
-        st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
-        st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
-        strategy_info_ui = STRATEGIES[st.session_state.strategy]
-        for p in strategy_info_ui["params"]:
-            st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
 
 col_cat, col_sym, col_manual = st.columns([3, 3.5, 2.5])
 with col_cat:
@@ -222,12 +216,6 @@ period_map = {"1 個月": "1mo", "3 個月": "3mo", "6 個月": "6mo", "1 年": 
 period_label = st.session_state.get("period", "1 年")
 period = period_map.get(period_label, "1y")
 
-strategy_name = st.session_state.get("strategy", "均線黃金交叉")
-strategy_info = STRATEGIES[strategy_name]
-strategy_params = {}
-for p in strategy_info["params"]:
-    strategy_params[p["name"]] = st.session_state.get(f"sp_{p['name']}", p["default"])
-
 rsi_period = st.session_state.get("rsi_period", 14)
 bb_period = st.session_state.get("bb_period", 20)
 bb_std = st.session_state.get("bb_std", 2.0)
@@ -241,7 +229,6 @@ show_ma120 = st.session_state.get("ma120", False)
 show_bb = st.session_state.get("bb", True)
 show_kd = st.session_state.get("kd", True)
 show_volume_profile = st.session_state.get("vp", False)
-bt_initial = st.session_state.get("bt_init", 1000000)
 
 # ─── Load data（共用） ───
 with st.spinner("載入資料中..."):
@@ -504,8 +491,18 @@ with tab1:
 # TAB 2: 回測系統
 # ═══════════════════════════════════════
 with tab2:
-    st.subheader(f"📈 回測 · {strategy_name}")
+    st.subheader("📈 回測")
     st.caption(f"資料來源：Yahoo Finance / yfinance（最後更新 {now_str}），價格可能延遲15-20分鐘")
+
+    strategy_name = st.selectbox("交易策略", list(STRATEGIES.keys()), key="strategy")
+    bt_initial = st.number_input("初始資金", 100000, 10000000, 1000000, step=100000, key="bt_init")
+    strategy_info = STRATEGIES[strategy_name]
+    with st.expander("🔧 策略參數", expanded=False):
+        strategy_params = {}
+        for p in strategy_info["params"]:
+            v = st.slider(p["label"], p["min"], p["max"], p["default"], step=p["step"], key=f"sp_{p['name']}")
+            strategy_params[p["name"]] = v
+
     st.caption("回測假設：每日以收盤價成交，未納入滑價、流動性風險、匯率與不同市場稅制；歷史績效不保證未來表現。")
 
     col_params = st.columns(2)
